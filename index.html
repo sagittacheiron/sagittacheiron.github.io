@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Cours de maths — avec Quiz pop-up</title>
+  <title>Cours de maths — Quiz & suivi</title>
   <style>
     :root{
       --bleu:#2563eb; --vert:#16a34a; --jaune:#f59e0b; --rouge:#dc2626;
@@ -24,53 +24,22 @@
       color:white; text-align:center; padding:2.8rem 1rem;
       box-shadow:var(--ombre); position:relative; overflow:hidden;
     }
-    header h1{
-      font-size:2.6rem; font-weight:800; margin:0; z-index:3;
-      text-shadow:0 2px 8px rgba(0,0,0,0.25);
-      animation:pulseTitle 3s ease-in-out infinite alternate;
-      display:inline-block;
-    }
+    header h1{ font-size:2.6rem; font-weight:800; margin:0; z-index:3; display:inline-block; text-shadow:0 2px 8px rgba(0,0,0,0.25); animation:pulseTitle 3s ease-in-out infinite alternate; }
     @keyframes pulseTitle{ from{transform:scale(1);} to{transform:scale(1.04);} }
-    header p.citation{
-      font-size:1rem; margin-top:0.4rem; color:rgba(255,255,255,0.95);
-      opacity:0; animation:fadeIn 1.6s ease forwards;
-    }
+    header p.citation{ font-size:1rem; margin-top:0.4rem; color:rgba(255,255,255,0.95); opacity:0; animation:fadeIn 1.6s ease forwards; }
     @keyframes fadeIn{ from{opacity:0;transform:translateY(8px);} to{opacity:1;transform:none;} }
 
-    /* floating symbols (visual only) */
-    .math-symbol{
-      position:absolute; color:rgba(255,255,255,0.18);
-      font-size:1.8rem; font-weight:700;
-      animation:floatSymbol 12s linear infinite;
-      user-select:none; pointer-events:none; z-index:1;
-    }
-    @keyframes floatSymbol{
-      0%{ transform:translateY(60vh) rotate(0deg); opacity:0; }
-      10%{ opacity:0.8; }
-      70%{ opacity:0.6; }
-      100%{ transform:translateY(-20vh) rotate(360deg); opacity:0; }
-    }
+    .math-symbol{ position:absolute; color:rgba(255,255,255,0.18); font-size:1.8rem; font-weight:700; animation:floatSymbol 12s linear infinite; user-select:none; pointer-events:none; z-index:1; }
+    @keyframes floatSymbol{ 0%{ transform:translateY(60vh) rotate(0deg); opacity:0; } 10%{ opacity:0.8; } 70%{ opacity:0.6; } 100%{ transform:translateY(-20vh) rotate(360deg); opacity:0; } }
 
     /* Nav */
-    nav{
-      display:flex; justify-content:center; gap:1rem;
-      background:rgba(226,232,240,0.92); padding:0.6rem; position:sticky; top:0; z-index:20;
-      backdrop-filter: blur(3px);
-    }
-    nav button{
-      background:var(--bleu); color:#fff; border:0; padding:0.55rem 1.1rem; border-radius:999px;
-      cursor:pointer; font-weight:600; transition:var(--transition);
-    }
+    nav{ display:flex; justify-content:center; gap:1rem; background:rgba(226,232,240,0.92); padding:0.6rem; position:sticky; top:0; z-index:20; backdrop-filter: blur(3px); }
+    nav button{ background:var(--bleu); color:#fff; border:0; padding:0.55rem 1.1rem; border-radius:999px; cursor:pointer; font-weight:600; transition:var(--transition); }
     nav button.active, nav button:hover{ background:#1e40af; transform:translateY(-2px); }
 
     /* Content */
     main{ max-width:960px; margin:1.6rem auto; padding:0 1rem 3rem; }
-    section{
-      display:none; opacity:0; transform:translateY(15px);
-      transition:opacity 0.6s ease, transform 0.6s ease;
-      background:linear-gradient(180deg,var(--rose-section) 0%, var(--rose-clair) 100%);
-      border-radius:var(--radius); padding:1.25rem; box-shadow:inset 0 0 20px rgba(0,0,0,0.03); margin-bottom:1.25rem;
-    }
+    section{ display:none; opacity:0; transform:translateY(15px); transition:opacity 0.6s ease, transform 0.6s ease; background:linear-gradient(180deg,var(--rose-section) 0%, var(--rose-clair) 100%); border-radius:var(--radius); padding:1.25rem; box-shadow:inset 0 0 20px rgba(0,0,0,0.03); margin-bottom:1.25rem; }
     section.active{ display:block; opacity:1; transform:translateY(0); }
 
     .bloc{ background:var(--carte); border-radius:12px; padding:1.25rem; margin-bottom:1rem; box-shadow:var(--ombre); }
@@ -89,101 +58,42 @@
     .subtab-content{ display:none; animation:fadeInSub 0.45s ease; }
     .subtab-content.active{ display:block; }
     @keyframes fadeInSub{ from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:none;} }
-
     .bloc, .subtab-content { position: relative; z-index:2; }
 
-    /* Quiz section styles (inline buttons when not using modal) */
     .chapter-quiz-buttons { display:flex; flex-wrap:wrap; gap:0.5rem; margin-bottom:0.75rem; }
-    .chapter-quiz-buttons button {
-      background: var(--bleu); color: #fff; border:0; padding:0.45rem 0.8rem; border-radius:999px; cursor:pointer; font-weight:700; transition:var(--transition);
-    }
+    .chapter-quiz-buttons button { background: var(--bleu); color: #fff; border:0; padding:0.45rem 0.8rem; border-radius:999px; cursor:pointer; font-weight:700; transition:var(--transition); }
     .chapter-quiz-buttons button:hover { transform:translateY(-3px); background:#1e40af; }
 
-    /* Ensure visually distinct quiz-panels if any */
-    .quiz-panel { display:none; margin-top:0.8rem; border-radius:12px; padding:0.9rem; background:linear-gradient(180deg, rgba(255,255,255,0.98), rgba(250,250,250,0.98)); border:1px solid rgba(0,0,0,0.03); }
-    .quiz-panel.active { display:block; }
-
-    @media (max-width:640px){
-      main{padding:0 0.6rem;} nav{flex-wrap:wrap;} nav button{width:48%}
-      .chapter-quiz-buttons { gap:0.4rem; }
-    }
-
-    /* ============================
-       Modal pop-up styles (assorti)
-       ============================ */
-    .quiz-modal-backdrop {
-      position: fixed; inset: 0; background: rgba(15,23,42,0.45);
-      display: none; align-items: center; justify-content: center; z-index: 2000;
-    }
+    /* Modal pop-up */
+    .quiz-modal-backdrop { position: fixed; inset: 0; background: rgba(15,23,42,0.45); display: none; align-items: center; justify-content: center; z-index: 2000; }
     .quiz-modal-backdrop.active { display:flex; }
-
-    .quiz-modal {
-      width: min(920px, 96%); max-height: 92vh; overflow:auto;
-      border-radius: 16px; padding: 18px;
-      box-shadow: 0 20px 60px rgba(2,6,23,0.45);
-      background: linear-gradient(180deg, rgba(255,255,255,0.98), rgba(254,243,250,0.98));
-      border: 1px solid rgba(0,0,0,0.05);
-      position: relative;
-    }
-
-    .quiz-modal header {
-      display:flex; align-items:center; justify-content:space-between; gap:12px;
-      margin-bottom:8px;
-    }
+    .quiz-modal { width: min(920px, 96%); max-height: 92vh; overflow:auto; border-radius: 16px; padding: 18px; box-shadow: 0 20px 60px rgba(2,6,23,0.45); background: linear-gradient(180deg, rgba(255,255,255,0.98), rgba(254,243,250,0.98)); border: 1px solid rgba(0,0,0,0.05); position: relative; }
+    .quiz-modal header { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:8px; }
     .quiz-modal h3 { margin:0; font-size:1.1rem; color:var(--texte); }
     .quiz-modal .meta { font-size:0.9rem; color:rgba(0,0,0,0.6); }
-
-    .quiz-close {
-      background:transparent; border:0; font-size:1.1rem; cursor:pointer; padding:6px 8px;
-      border-radius:10px; color:var(--texte);
-    }
+    .quiz-close { background:transparent; border:0; font-size:1.1rem; cursor:pointer; padding:6px 8px; border-radius:10px; color:var(--texte); }
     .quiz-close:hover { background:rgba(0,0,0,0.04); }
-
     .quiz-body { padding: 6px 0 10px 0; }
-
-    .quiz-question {
-      display:flex; flex-direction:column; gap:8px;
-      padding:12px; border-radius:10px; margin-bottom:10px;
-      background: linear-gradient(90deg, rgba(255,255,255,0.95), rgba(250,250,250,0.95));
-      border:1px solid rgba(0,0,0,0.03);
-    }
+    .quiz-question { display:flex; flex-direction:column; gap:8px; padding:12px; border-radius:10px; margin-bottom:10px; background: linear-gradient(90deg, rgba(255,255,255,0.95), rgba(250,250,250,0.95)); border:1px solid rgba(0,0,0,0.03); }
     .quiz-qtext { font-weight:700; font-size:0.98rem; color:var(--texte); margin:0; }
-
     .quiz-answers { display:flex; flex-direction:column; gap:8px; margin-top:6px; }
-    .quiz-answers button.answer {
-      text-align:left; padding:10px 12px; border-radius:10px; border:1px solid rgba(0,0,0,0.06);
-      background:transparent; cursor:pointer; font-weight:600;
-      transition:all .20s ease; display:flex; gap:10px; align-items:center;
-    }
+    .quiz-answers button.answer { text-align:left; padding:10px 12px; border-radius:10px; border:1px solid rgba(0,0,0,0.06); background:transparent; cursor:pointer; font-weight:600; transition:all .20s ease; display:flex; gap:10px; align-items:center; }
     .quiz-answers button.answer:hover { transform:translateY(-2px); box-shadow:0 6px 18px rgba(2,6,23,0.06); }
-
-    /* states */
     .quiz-answers button.correct { background: rgba(22,163,74,0.12); border-color: rgba(22,163,74,0.32); }
     .quiz-answers button.wrong { background: rgba(220,38,38,0.06); border-color: rgba(220,38,38,0.24); opacity:0.98; }
-
     .quiz-footer { display:flex; align-items:center; justify-content:space-between; gap:10px; margin-top:6px; flex-wrap:wrap; }
     .quiz-footer .controls { display:flex; gap:8px; align-items:center; }
-    .btn {
-      padding:8px 12px; border-radius:999px; border:0; cursor:pointer; font-weight:800;
-    }
+    .btn { padding:8px 12px; border-radius:999px; border:0; cursor:pointer; font-weight:800; }
     .btn.primary { background:var(--bleu); color:white; }
     .btn.ghost { background:transparent; border:1px solid rgba(0,0,0,0.06); color:var(--texte); }
     .quiz-progress { font-weight:700; color:var(--texte); }
-
-    .quiz-score {
-      padding:10px; border-radius:10px; min-width:160px; text-align:center;
-      background: linear-gradient(180deg, rgba(255,255,255,0.98), rgba(250,250,250,0.98));
-      border:1px solid rgba(0,0,0,0.04);
-    }
-
+    .quiz-score { padding:10px; border-radius:10px; min-width:160px; text-align:center; background: linear-gradient(180deg, rgba(255,255,255,0.98), rgba(250,250,250,0.98)); border:1px solid rgba(0,0,0,0.04); }
     .quiz-modal[data-classe="4e"] { box-shadow: 0 20px 60px rgba(37,99,235,0.12); }
     .quiz-modal[data-classe="6e"] { box-shadow: 0 20px 60px rgba(16,163,74,0.12); }
 
-    @media (max-width:600px) {
-      .quiz-modal { padding:12px; }
-      .quiz-answers button.answer { padding:10px; font-size:0.95rem; }
+    @media (max-width:640px){
+      main{padding:0 0.6rem;} nav{flex-wrap:wrap;} nav button{width:48%}
     }
-
   </style>
 </head>
 <body>
@@ -191,8 +101,6 @@
   <header>
     <h1>📐 Cours de maths</h1>
     <p class="citation"></p>
-
-    <!-- floating symbols -->
     <span class="math-symbol" style="left:6%; animation-delay:0s;">π</span>
     <span class="math-symbol" style="left:18%; animation-delay:2s;">√</span>
     <span class="math-symbol" style="left:34%; animation-delay:4s;">Σ</span>
@@ -256,14 +164,12 @@
             <li><input type="checkbox" class="checkbox"><a href="#" target="_blank" rel="noopener noreferrer">Vidéo 2 — Exercices corrigés</a></li>
           </ul>
         </div>
-
         <div class="subtab-content" id="videos4e-ch2">
           <ul>
             <li><input type="checkbox" class="checkbox"><a href="#" target="_blank" rel="noopener noreferrer">Vidéo 1 — Démonstration</a></li>
             <li><input type="checkbox" class="checkbox"><a href="#" target="_blank" rel="noopener noreferrer">Vidéo 2 — Applications</a></li>
           </ul>
         </div>
-
         <div class="subtab-content" id="videos4e-ch3">
           <ul>
             <li><input type="checkbox" class="checkbox"><a href="#" target="_blank" rel="noopener noreferrer">Vidéo 1 — Notion de proportion</a></li>
@@ -281,18 +187,14 @@
         </ul>
       </div>
 
-      <!-- NEW: Quiz section for 4e -->
+      <!-- Quiz 4e -->
       <div class="bloc">
         <h2>❓ Quiz par chapitre — 4e</h2>
-        <p>Choisis un chapitre ci-dessous pour lancer le quiz correspondant (10 questions par chapitre).</p>
-
+        <p>Choisis un chapitre ci-dessous pour lancer le quiz (10 questions par chapitre).</p>
         <div class="chapter-quiz-buttons" data-classe="4e">
-          <!-- Buttons placed here will open modal -->
           <button class="btn primary open-quiz" data-classe="4e" data-quiz="quiz-4e-ch1">🎯 Quiz Chapitre 1 — Nombres relatifs</button>
-          <!-- For other chapters you can add buttons with data-quiz pointing to other quiz keys when ready -->
         </div>
       </div>
-
     </section>
 
     <!-- SECTION 6e -->
@@ -361,23 +263,21 @@
         </ul>
       </div>
 
-      <!-- NEW: Quiz section for 6e -->
+      <!-- Quiz 6e -->
       <div class="bloc">
         <h2>❓ Quiz par chapitre — 6e</h2>
-        <p>Choisis un chapitre ci-dessous pour lancer le quiz correspondant (10 questions par chapitre).</p>
-
+        <p>Choisis un chapitre ci-dessous pour lancer le quiz (10 questions par chapitre).</p>
         <div class="chapter-quiz-buttons" data-classe="6e">
           <button class="btn primary open-quiz" data-classe="6e" data-quiz="quiz-6e-ch1">🎯 Quiz Chapitre 1 — Nombres entiers</button>
-          <!-- More buttons for other chapters can be added -->
         </div>
       </div>
-
     </section>
+
   </main>
 
   <footer>© 2025 — Cours de maths • Ressources pour les élèves de 4e et 6e</footer>
 
-  <!-- Modal backdrop + modal (single modal reused for all quizzes) -->
+  <!-- Modal (réutilisé pour tous les quiz) -->
   <div class="quiz-modal-backdrop" id="quiz-backdrop" aria-hidden="true">
     <div class="quiz-modal" role="dialog" aria-modal="true" aria-labelledby="quiz-title" data-classe="">
       <header>
@@ -390,9 +290,7 @@
         </div>
       </header>
 
-      <div class="quiz-body" id="quiz-body">
-        <!-- questions injected here by JS -->
-      </div>
+      <div class="quiz-body" id="quiz-body"></div>
 
       <div class="quiz-footer">
         <div class="controls">
@@ -406,11 +304,61 @@
   </div>
 
   <script>
-// ======================================================
-// 🌸 Script complet : citations, navigation, progression + quiz pop-up
-// ======================================================
+/*
+  ================================================================
+  Script complet : navigation, sauvegarde, quiz pop-up + envoi GS
+  ================================================================
 
-// CITATIONS / ASTUCES
+  → IMPORTANT : pour activer l'envoi vers Google Sheets, tu dois :
+    1) Créer un Google Sheet et ouvrir Extensions > Apps Script
+    2) Coller le code Apps Script fourni ci-dessous et déployer en "Application web"
+       (Exécuter en tant que : Toi-même ; Accès : Tout le monde)
+    3) Copier l'URL fournie par Google (qui finit par /exec)
+    4) Remplacer la valeur WEBHOOK_URL ci-dessous par cette URL.
+*/
+
+/* -------------------------
+   APPS SCRIPT (à copier dans ton Google Sheet > Extensions > Apps Script)
+   Ce script enregistre la PREMIÈRE tentative d'un élève pour un quiz.
+   Il vérifie si une ligne existe déjà pour (prénom, chapitre) : si oui, NE FAIT RIEN.
+   Sinon ajoute une ligne.
+   Copier-coller exactement ceci dans Apps Script : 
+-------------------------
+function doPost(e) {
+  var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+  var data = JSON.parse(e.postData.contents);
+  var prenom = (data.prenom || "").toString().trim();
+  var chapitre = (data.chapitre || "").toString().trim();
+  var classe = (data.classe || "").toString().trim();
+  var score = data.score;
+  var total = data.total;
+  var pourcentage = data.pourcentage;
+
+  // lire toutes les lignes
+  var rows = sheet.getDataRange().getValues();
+  for (var i = 1; i < rows.length; i++) {
+    var rowPrenom = (rows[i][1] || "").toString().trim();
+    var rowChapitre = (rows[i][3] || "").toString().trim();
+    if (rowPrenom.toLowerCase() === prenom.toLowerCase() && rowChapitre === chapitre) {
+      // Déjà enregistré → ne rien faire (conserver la première tentative)
+      return ContentService.createTextOutput("ALREADY");
+    }
+  }
+
+  // Sinon : ajouter la nouvelle ligne
+  sheet.appendRow([ new Date(), prenom, classe, chapitre, score, total, pourcentage ]);
+  return ContentService.createTextOutput("OK");
+}
+-------------------------
+  Ensuite "Déployer > Nouveau déploiement" > Application web > Exécuter en tant que : Moi > Accès : Tout le monde
+  Copie l'URL /exec et remplace WEBHOOK_URL plus bas.
+*/
+
+/* -------------------------
+   Variables & UI initiales
+   ------------------------- */
+const WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbwOmNBnD1Hpuy2mpc5__Bp_NqFNa8jbKp_AGR52iwA4PaUXX4q_vc-IFDozwKqKlxxkAQ/exec"; // ← remplace par l'URL fournie par Google Apps Script (finissant par /exec)
+
 const citations = [
   "« Les mathématiques sont la poésie des sciences. » — Albert Einstein",
   "Le zéro n’a pas toujours existé — il a été inventé en Inde au 5e siècle !",
@@ -423,10 +371,9 @@ const citations = [
   "« La vie est comme une équation : elle ne fonctionne pas sans variables. » — Anonyme",
   "Il y a plus de façons d’ordonner un jeu de cartes que d’atomes dans l’univers observable."
 ];
-document.querySelector(".citation").textContent =
-  citations[Math.floor(Math.random() * citations.length)];
+document.querySelector(".citation").textContent = citations[Math.floor(Math.random()*citations.length)];
 
-// NAVIGATION ENTRE 4E / 6E
+/* NAVIGATION 4e/6e */
 document.querySelectorAll('.tablink').forEach(button => {
   button.addEventListener('click', () => {
     const target = button.dataset.target;
@@ -439,7 +386,7 @@ document.querySelectorAll('.tablink').forEach(button => {
   });
 });
 
-// SOUS-ONGLETS VIDÉOS
+/* Sous-onglets vidéos */
 document.querySelectorAll('.subtabs').forEach(group => {
   const buttons = group.querySelectorAll('.subtab');
   buttons.forEach(btn => {
@@ -455,7 +402,7 @@ document.querySelectorAll('.subtabs').forEach(group => {
   });
 });
 
-// PROGRESSION : cases cochées
+/* Progression : sauvegarde des cases cochées */
 document.querySelectorAll('.checkbox').forEach((checkbox, idx) => {
   const key = 'cours-progress-' + idx;
   const saved = localStorage.getItem(key);
@@ -465,10 +412,11 @@ document.querySelectorAll('.checkbox').forEach((checkbox, idx) => {
   });
 });
 
-
-// ======================================================
-// 🧠 QUIZ POP-UP (Chapitre 1 — 4e & 6e)
-// ======================================================
+/* =========================
+   QUIZ POP-UP (Chapitre 1 — 4e & 6e)
+   - envoi vers Google Sheets : ENREGISTRE LA PREMIÈRE TENTATIVE
+   - localStorage stocke le prénom et un flag 'submitted-<quizKey>' pour éviter renvoi depuis le même navigateur
+   ========================= */
 (function() {
   const QUIZZES = {
     "quiz-4e-ch1": {
@@ -505,7 +453,7 @@ document.querySelectorAll('.checkbox').forEach((checkbox, idx) => {
     }
   };
 
-  // Elements
+  // DOM
   const backdrop = document.getElementById('quiz-backdrop');
   const modal = backdrop.querySelector('.quiz-modal');
   const titleEl = document.getElementById('quiz-title');
@@ -519,7 +467,7 @@ document.querySelectorAll('.checkbox').forEach((checkbox, idx) => {
 
   let activeQuiz = null, qIndex = 0, score = 0, answered = false;
 
-  // 🎵 Sons (version joyeuse et cartoon)
+  // WebAudio improved sounds (only on click)
   const AudioCtx = window.AudioContext || window.webkitAudioContext;
   const audioCtx = AudioCtx ? new AudioCtx() : null;
   function playTone(type) {
@@ -529,32 +477,43 @@ document.querySelectorAll('.checkbox').forEach((checkbox, idx) => {
     const g = audioCtx.createGain();
     const f = audioCtx.createBiquadFilter();
     o.connect(f); f.connect(g); g.connect(audioCtx.destination);
-
     g.gain.setValueAtTime(0.0001, now);
     g.gain.exponentialRampToValueAtTime(0.2, now + 0.01);
 
     if (type === "ok") {
-      // 🎶 Ding clair et joyeux
       o.type = "triangle";
       o.frequency.setValueAtTime(880, now);
       o.frequency.exponentialRampToValueAtTime(1320, now + 0.15);
       f.type = "highpass";
       f.frequency.setValueAtTime(800, now);
-      g.gain.exponentialRampToValueAtTime(0.0001, now + 0.4);
-      o.start(now);
-      o.stop(now + 0.4);
+      g.gain.exponentialRampToValueAtTime(0.0001, now + 0.45);
+      o.start(now); o.stop(now + 0.45);
     }
-
     if (type === "bad") {
-      // 💥 Boum cartoon doux
       o.type = "sawtooth";
-      o.frequency.setValueAtTime(180, now);
-      o.frequency.exponentialRampToValueAtTime(90, now + 0.3);
+      o.frequency.setValueAtTime(220, now);
+      o.frequency.exponentialRampToValueAtTime(80, now + 0.32);
       f.type = "lowpass";
-      f.frequency.setValueAtTime(300, now);
-      g.gain.exponentialRampToValueAtTime(0.0001, now + 0.35);
-      o.start(now);
-      o.stop(now + 0.35);
+      f.frequency.setValueAtTime(400, now);
+      g.gain.exponentialRampToValueAtTime(0.0001, now + 0.38);
+      o.start(now); o.stop(now + 0.38);
+    }
+  }
+
+  // Envoi vers Google Sheet (si WEBHOOK_URL configurée)
+  async function envoyerScoreGoogle(prenom, classe, chapitre, scoreVal, total) {
+    if (!WEBHOOK_URL || WEBHOOK_URL === "WEBHOOK_URL_ICI") return;
+    const pourcentage = Math.round((scoreVal / total) * 100);
+    const payload = { prenom, classe, chapitre, score: scoreVal, total, pourcentage };
+    try {
+      await fetch(WEBHOOK_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      });
+      // ignore body; Apps Script renverra OK ou ALREADY
+    } catch (err) {
+      console.warn("Erreur envoy. Google Sheet:", err);
     }
   }
 
@@ -567,18 +526,15 @@ document.querySelectorAll('.checkbox').forEach((checkbox, idx) => {
     metaEl.textContent = `Question ${qIndex + 1} / ${quizObj.questions.length}`;
     modal.dataset.classe = quizObj.classe;
 
-    const qBlock = document.createElement('div');
-    qBlock.className = 'quiz-question';
-    const qText = document.createElement('p');
-    qText.className = 'quiz-qtext';
-    qText.textContent = qObj.q;
+    const qBlock = document.createElement('div'); qBlock.className = 'quiz-question';
+    const qText = document.createElement('p'); qText.className = 'quiz-qtext'; qText.textContent = qObj.q;
     qBlock.appendChild(qText);
 
-    const answersDiv = document.createElement('div');
-    answersDiv.className = 'quiz-answers';
+    const answersDiv = document.createElement('div'); answersDiv.className = 'quiz-answers';
     qObj.choices.forEach(choice => {
       const btn = document.createElement('button');
       btn.className = 'answer';
+      btn.type = 'button';
       btn.textContent = choice;
       btn.dataset.value = choice;
       btn.addEventListener('click', () => onAnswer(btn, qObj.answer));
@@ -587,12 +543,14 @@ document.querySelectorAll('.checkbox').forEach((checkbox, idx) => {
 
     qBlock.appendChild(answersDiv);
     bodyEl.appendChild(qBlock);
+
     progressEl.textContent = `Q ${qIndex + 1} / ${quizObj.questions.length}`;
     scoreEl.textContent = `Score : ${score} / ${quizObj.questions.length}`;
     answered = false;
     nextBtn.disabled = true;
   }
 
+  // Réponse (clic) — joue son, applique classes
   function onAnswer(btn, correctVal) {
     if (answered) return;
     answered = true;
@@ -600,111 +558,118 @@ document.querySelectorAll('.checkbox').forEach((checkbox, idx) => {
     Array.from(parent.children).forEach(b => b.disabled = true);
     const selected = btn.dataset.value;
 
-    Array.from(parent.children).forEach(b => {
-      if (b.dataset.value === correctVal) b.classList.add('correct');
-    });
+    // highlight correct
+    Array.from(parent.children).forEach(b => { if (b.dataset.value === correctVal) b.classList.add('correct'); });
 
     if (selected === correctVal) {
       btn.classList.add('correct');
       score++;
       playTone('ok');
+      btn.animate([{ transform:'scale(1)' }, { transform:'scale(1.03)' }, { transform:'scale(1)' }], { duration:220 });
     } else {
       btn.classList.add('wrong');
       playTone('bad');
+      btn.animate([{ transform:'translateX(0)' }, { transform:'translateX(-6px)' }, { transform:'translateX(0)' }], { duration:200 });
     }
+
     nextBtn.disabled = false;
-    const total = QUIZZES[activeQuiz].questions.length;
-    scoreEl.textContent = `Score : ${score} / ${total}`;
+    scoreEl.textContent = `Score : ${score} / ${QUIZZES[activeQuiz].questions.length}`;
   }
 
+  // Avancer
   function nextQuestion() {
-    const total = QUIZZES[activeQuiz].questions.length;
-    if (!answered) return;
+    if (!answered) return; // forcer réponse
     qIndex++;
-    if (qIndex >= total) finishQuiz();
-    else renderQuestion();
+    if (qIndex >= QUIZZES[activeQuiz].questions.length) {
+      finishQuiz();
+    } else {
+      renderQuestion();
+    }
   }
 
-  function finishQuiz() {
+  // Fin du quiz : afficher résultat et envoyer la première tentative seulement
+  async function finishQuiz() {
     const total = QUIZZES[activeQuiz].questions.length;
     bodyEl.innerHTML = '';
     titleEl.textContent = QUIZZES[activeQuiz].titre + " — Résultat";
     metaEl.textContent = "Terminé";
-    const res = document.createElement('div');
-    res.style.display = 'flex';
-    res.style.flexDirection = 'column';
-    res.style.gap = '8px';
 
-    const scoreBig = document.createElement('div');
-    scoreBig.style.fontWeight = '900';
-    scoreBig.style.fontSize = '1.2rem';
-    scoreBig.textContent = `${score} / ${total} bonnes réponses`;
-    res.appendChild(scoreBig);
+    const res = document.createElement('div'); res.style.display='flex'; res.style.flexDirection='column'; res.style.gap='8px';
+    const scoreBig = document.createElement('div'); scoreBig.style.fontWeight='900'; scoreBig.style.fontSize='1.2rem';
+    scoreBig.textContent = `${score} / ${total} bonnes réponses`; res.appendChild(scoreBig);
+    const percent = Math.round(score/total*100);
+    const percentEl = document.createElement('div'); percentEl.style.fontWeight='700'; percentEl.textContent = `${percent}%`; res.appendChild(percentEl);
 
-    const percent = Math.round(score / total * 100);
-    const percentEl = document.createElement('div');
-    percentEl.style.fontWeight = '700';
-    percentEl.textContent = `${percent}%`;
-    res.appendChild(percentEl);
-
-    const btns = document.createElement('div');
-    btns.style.display = 'flex';
-    btns.style.gap = '8px';
-    btns.style.marginTop = '6px';
-
-    const r = document.createElement('button');
-    r.className = 'btn ghost';
-    r.textContent = 'Recommencer';
-    r.addEventListener('click', () => startQuiz(activeQuiz));
-    btns.appendChild(r);
-
-    const c = document.createElement('button');
-    c.className = 'btn primary';
-    c.textContent = 'Fermer';
-    c.addEventListener('click', closeModal);
-    btns.appendChild(c);
-
+    const btns = document.createElement('div'); btns.style.display='flex'; btns.style.gap='8px'; btns.style.marginTop='6px';
+    const r = document.createElement('button'); r.className='btn ghost'; r.textContent='Recommencer'; r.addEventListener('click', ()=>startQuiz(activeQuiz)); btns.appendChild(r);
+    const c = document.createElement('button'); c.className='btn primary'; c.textContent='Fermer'; c.addEventListener('click', closeModal); btns.appendChild(c);
     res.appendChild(btns);
     bodyEl.appendChild(res);
 
-    const key = 'best-' + activeQuiz;
-    const prev = parseInt(localStorage.getItem(key) || '0', 10);
-    if (score > prev) localStorage.setItem(key, score);
-    scoreEl.textContent = `Score : ${score} / ${total}`;
-    nextBtn.disabled = true;
+    // envoyer vers Google Sheet : on envoie la PREMIERE tentative uniquement
+    try {
+      const keySubmitted = 'submitted-' + activeQuiz + '-' + (localStorage.getItem('prenom-eleve') || '').toLowerCase();
+      const alreadySubmitted = localStorage.getItem(keySubmitted);
+      if (!alreadySubmitted) {
+        // prénom : demander / stocker
+        let prenom = localStorage.getItem('prenom-eleve');
+        if (!prenom || prenom.trim() === "") {
+          prenom = prompt("Indique ton prénom (pour enregistrer ton score)");
+          if (prenom && prenom.trim() !== "") localStorage.setItem('prenom-eleve', prenom.trim());
+        }
+        // uniquement si prenom existe et webhook configuré
+        if ((prenom && prenom.trim() !== "") && WEBHOOK_URL && WEBHOOK_URL !== "WEBHOOK_URL_ICI") {
+          await envoyerScoreGoogle(prenom.trim(), QUIZZES[activeQuiz].classe, QUIZZES[activeQuiz].titre, score, total);
+          // marque localement que l'élève a soumis pour ce quiz (empêche renvoi depuis ce navigateur)
+          localStorage.setItem(keySubmitted, "true");
+        }
+      }
+    } catch (e) {
+      console.warn("Erreur envoi score:", e);
+    }
   }
 
   function startQuiz(quizKey) {
-    activeQuiz = quizKey;
-    qIndex = 0;
-    score = 0;
-    backdrop.classList.add('active');
+    activeQuiz = quizKey; qIndex=0; score=0; answered=false;
+    backdrop.classList.add('active'); backdrop.setAttribute('aria-hidden','false');
     renderQuestion();
   }
 
   function closeModal() {
-    backdrop.classList.remove('active');
-    bodyEl.innerHTML = '';
-    activeQuiz = null;
-    qIndex = 0;
-    score = 0;
-    answered = false;
+    backdrop.classList.remove('active'); backdrop.setAttribute('aria-hidden','true');
+    bodyEl.innerHTML=''; activeQuiz=null; qIndex=0; score=0; answered=false;
   }
 
+  // hooks
   document.querySelectorAll('.open-quiz').forEach(btn => {
     btn.addEventListener('click', () => {
       const quizKey = btn.dataset.quiz;
       if (QUIZZES[quizKey]) startQuiz(quizKey);
     });
+    // show tooltip best info if available
+    const qk = btn.dataset.quiz;
+    const localBestKey = 'best-' + qk;
+    const best = localStorage.getItem(localBestKey);
+    if (best) btn.title = `Meilleur score local : ${best} / 10`;
   });
 
   nextBtn.addEventListener('click', nextQuestion);
-  restartBtn.addEventListener('click', () => {
-    if (activeQuiz) startQuiz(activeQuiz);
-  });
+  restartBtn.addEventListener('click', ()=> { if (activeQuiz) startQuiz(activeQuiz); });
   closeBtn.addEventListener('click', closeModal);
-  backdrop.addEventListener('click', e => {
-    if (e.target === backdrop) closeModal();
+  backdrop.addEventListener('click', e=> { if (e.target===backdrop) closeModal(); });
+
+  // Keyboard minimal support: Escape closes
+  document.addEventListener('keydown', e=> {
+    if (!backdrop.classList.contains('active')) return;
+    if (e.key === 'Escape') closeModal();
+    // no sound on enter — we don't handle Enter for answering (only click)
+    if (e.key === 'Enter') {
+      // if student already answered current question, Next
+      if (answered && !nextBtn.disabled) nextQuestion();
+    }
   });
+
 })();
-</script>
+  </script>
+</body>
+</html>
