@@ -1,1 +1,193 @@
 # sagittacheiron.github.io
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Cours de maths</title>
+  <style>
+    :root{
+      --bleu:#2563eb; --vert:#16a34a; --jaune:#f59e0b; --rouge:#dc2626;
+      --texte:#1e293b; --rose-clair:#fde8f0; --rose-section:#fcd5e8;
+      --carte:rgba(255,255,255,0.94); --ombre:0 10px 30px rgba(0,0,0,0.06);
+      --radius:14px; --transition:all 0.35s ease;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0; font-family:"Segoe UI", Roboto, Arial, sans-serif;
+      color:var(--texte); background:var(--rose-clair);
+    }
+    header{
+      background:linear-gradient(135deg,var(--bleu),#1e40af);
+      color:white; text-align:center; padding:2.2rem 1rem; box-shadow:var(--ombre);
+    }
+    nav{
+      display:flex; justify-content:center; gap:1rem;
+      background:rgba(226,232,240,0.92); padding:0.6rem; position:sticky; top:0; z-index:10;
+    }
+    nav button{
+      background:var(--bleu); color:#fff; border:0; padding:0.55rem 1.1rem; border-radius:999px;
+      cursor:pointer; font-weight:600; transition:var(--transition);
+    }
+    nav button.active, nav button:hover{ background:#1e40af; transform:translateY(-2px); }
+    main{ max-width:960px; margin:1.6rem auto; padding:0 1rem 3rem; }
+    section{ display:none; opacity:0; transform:translateY(15px); transition:opacity 0.8s ease, transform 0.8s ease;
+      background:linear-gradient(180deg,var(--rose-section) 0%, var(--rose-clair) 100%);
+      border-radius:var(--radius); padding:1.25rem; box-shadow:inset 0 0 20px rgba(0,0,0,0.03); margin-bottom:1.25rem;
+    }
+    section.active{ display:block; opacity:1; transform:translateY(0); }
+    .bloc{ background:var(--carte); border-radius:12px; padding:1.25rem; margin-bottom:1rem; box-shadow:var(--ombre); }
+    h2{ margin:0 0 0.6rem 0; font-size:1.15rem; display:flex; align-items:center; gap:0.6rem; }
+    ul{ margin:0; padding-left:1.1rem; }
+    li{ margin:0.45rem 0; }
+    a{ color:var(--bleu); text-decoration:none; font-weight:600; }
+    a:hover{text-decoration:underline}
+    footer{ text-align:center; padding:1.25rem; background:rgba(226,232,240,0.9); color:#475569; margin-top:1rem; }
+    @media (max-width:640px){ main{padding:0 0.6rem;} nav{flex-wrap:wrap;} nav button{width:48%} }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Cours de maths</h1>
+    <p>Ressources interactives pour les classes de 4e et 6e</p>
+  </header>
+
+  <nav aria-label="Choisir une classe">
+    <button class="tablink active" data-target="4e">Classe de 4e</button>
+    <button class="tablink" data-target="6e">Classe de 6e</button>
+  </nav>
+
+  <main>
+    <!-- SECTION 4e -->
+    <section id="4e" class="active" tabindex="-1">
+      <div class="bloc">
+        <h2>📘 Cours</h2>
+        <ul>
+          <li><a href="https://drive.google.com/uc?export=download&id=1DildOn4eWYLFInbhn8_DpaeO72Tlt0gm" target="_blank">Chapitre 1 — Nombres relatifs (PDF)</a></li>
+          <li><a href="https://drive.google.com/uc?export=download&id=1lqivoBymp0cBgLHQmuVegMdIBbfe6Itf" target="_blank">Chapitre 2 — Théorème de Pythagore (PDF)</a></li>
+          <li><a href="https://drive.google.com/uc?export=download&id=1Afj680YIxU7Dg0aXiZ9-XWODyJTaY69x" target="_blank">Chapitre 3 — Proportionnalité (PDF)</a></li>
+          <li><a href="https://drive.google.com/uc?export=download&id=1Kl-psekWgG0jjKCsJlbaCV8teDQLvScL" target="_blank">Chapitre 4 — Puissances & Notation scientifique (PDF)</a></li>
+          <li><a href="https://drive.google.com/uc?export=download&id=1JMrROLExxW8h0JxFAqUGRry3-47vjXf1" target="_blank">Chapitre 5 — Complément (PDF)</a></li>
+        </ul>
+      </div>
+
+      <div class="bloc">
+        <h2>🟢 Activités</h2>
+        <ul>
+          <li>Chapitre 1 — Nombres relatifs (à venir)</li>
+          <li>Chapitre 2 — Théorème de Pythagore (à venir)</li>
+          <li>Chapitre 3 — Proportionnalité (à venir)</li>
+          <li>Chapitre 4 — Puissances (à venir)</li>
+          <li>Chapitre 5 — Complément (à venir)</li>
+        </ul>
+      </div>
+
+      <div class="bloc">
+        <h2>🎬 Vidéos</h2>
+        <ul>
+          <li>Chapitre 1 — <a href="https://www.youtube.com/watch?v=u-bqCheDpHc&t=207s" target="_blank">Nombres relatifs</a></li>
+          <li>Chapitre 2 — Théorème de Pythagore (à venir)</li>
+          <li>Chapitre 3 — Proportionnalité (à venir)</li>
+          <li>Chapitre 4 — Puissances (à venir)</li>
+          <li>Chapitre 5 — Complément (à venir)</li>
+        </ul>
+      </div>
+
+      <div class="bloc">
+        <h2>🧩 Exercices</h2>
+        <ul>
+          <li>Chapitre 1 — Nombres relatifs (exercices — à venir)</li>
+          <li>Chapitre 2 — Théorème de Pythagore (exercices — à venir)</li>
+          <li>Chapitre 3 — Proportionnalité (exercices — à venir)</li>
+          <li>Chapitre 4 — Puissances (exercices — à venir)</li>
+          <li>Chapitre 5 — Complément (exercices — à venir)</li>
+        </ul>
+      </div>
+
+      <div class="bloc">
+        <h2>📝 Contrôles</h2>
+        <ul>
+          <li><a href="https://drive.google.com/uc?export=download&id=1JfCpuUWJOT7s2lgqVAQBdMyik4_hxhB-" target="_blank">Contrôle 1 — Nombres relatifs (PDF)</a></li>
+          <li><a href="https://drive.google.com/uc?export=download&id=1DvZiJUKtoo1kXwP3jgBIWJ1zsjE33AZL" target="_blank">Contrôle 2 — Théorème de Pythagore (PDF)</a></li>
+          <li><a href="https://drive.google.com/uc?export=download&id=1rygNA6MbaPitbTFni0W7ACDbbblDW9h9" target="_blank">Contrôle 3 — Proportionnalité (PDF)</a></li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- SECTION 6e -->
+    <section id="6e" tabindex="-1">
+      <div class="bloc">
+        <h2>📘 Cours</h2>
+        <ul>
+          <li><a href="https://drive.google.com/uc?export=download&id=1d1A5TERex3tDKJvuZCT3TlcYtgkgaLJs" target="_blank">Chapitre 1 — Nombres entiers (PDF)</a></li>
+          <li><a href="https://drive.google.com/uc?export=download&id=1qz7eIXffeyYvq2sPpVK3u1cZn2vAg_Nb" target="_blank">Chapitre 2 — Géométrie (PDF)</a></li>
+          <li><a href="https://drive.google.com/uc?export=download&id=1TAPH-k6e0WWXuCTzOY3wNL0Qf7TQZZRA" target="_blank">Chapitre 3 — Fractions (PDF)</a></li>
+          <li><a href="https://drive.google.com/uc?export=download&id=1z1S6Kl6J7L7cVIgMGXfv01Q_S1epuVrB" target="_blank">Chapitre 4 — Droites (PDF)</a></li>
+          <li><a href="https://drive.google.com/uc?export=download&id=1hC4aAPK2ltN-GlbZdkTiBLEqufuUjlX6" target="_blank">Chapitre 5 — Angles (PDF)</a></li>
+        </ul>
+      </div>
+
+      <div class="bloc">
+        <h2>🟢 Activités</h2>
+        <ul>
+          <li>Chapitre 1 — Nombres entiers (à venir)</li>
+          <li>Chapitre 2 — Géométrie (à venir)</li>
+          <li>Chapitre 3 — Fractions (à venir)</li>
+          <li>Chapitre 4 — Droites (à venir)</li>
+          <li>Chapitre 5 — Angles (à venir)</li>
+        </ul>
+      </div>
+
+      <div class="bloc">
+        <h2>🎬 Vidéos</h2>
+        <ul>
+          <li>Chapitre 1 — Nombres entiers (à venir)</li>
+          <li>Chapitre 2 — Géométrie (à venir)</li>
+          <li>Chapitre 3 — Fractions (à venir)</li>
+          <li>Chapitre 4 — Droites (à venir)</li>
+          <li>Chapitre 5 — Angles (à venir)</li>
+        </ul>
+      </div>
+
+      <div class="bloc">
+        <h2>🧩 Exercices</h2>
+        <ul>
+          <li>Chapitre 1 — Nombres entiers (exercices — à venir)</li>
+          <li>Chapitre 2 — Géométrie (exercices — à venir)</li>
+          <li>Chapitre 3 — Fractions (exercices — à venir)</li>
+          <li>Chapitre 4 — Droites (exercices — à venir)</li>
+          <li>Chapitre 5 — Angles (exercices — à venir)</li>
+        </ul>
+      </div>
+
+      <div class="bloc">
+        <h2>📝 Contrôles</h2>
+        <ul>
+          <li><a href="https://drive.google.com/uc?export=download&id=1d-y45Eg0ieW64ac-6QEtXlCQxjey40Z_" target="_blank">Contrôle 1 — Nombres entiers (PDF)</a></li>
+          <li><a href="https://drive.google.com/uc?export=download&id=1OqzxiUVfIZQWwNH_8c79YfZiDFpNLvIi" target="_blank">Contrôle 2 — Géométrie (PDF)</a></li>
+          <li><a href="https://drive.google.com/uc?export=download&id=14__pQ2BFgdeqCUlgfprVfHmoEPJjRZAQ" target="_blank">Contrôle 3 — Fractions (PDF)</a></li>
+        </ul>
+      </div>
+    </section>
+  </main>
+
+  <footer>© 2025 — Cours de maths • Ressources pour les élèves de 4e et 6e</footer>
+
+  <script>
+    document.querySelectorAll('.tablink').forEach(button => {
+      button.addEventListener('click', () => {
+        const target = button.dataset.target;
+        const current = document.querySelector('section.active');
+        if (current && current.id === target) return;
+        if (current) current.classList.remove('active');
+        document.querySelectorAll('.tablink').forEach(b => b.classList.remove('active'));
+        button.classList.add('active');
+        const next = document.getElementById(target);
+        next.classList.add('active');
+        next.focus();
+      });
+    });
+  </script>
+</body>
+</html>
