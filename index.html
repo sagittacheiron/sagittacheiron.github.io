@@ -1,316 +1,291 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Cours de maths</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Cours de maths</title>
+  <style>
+    :root{
+      --bleu:#2563eb; --vert:#16a34a; --jaune:#f59e0b; --rouge:#dc2626;
+      --texte:#1e293b; --rose-clair:#fde8f0; --rose-section:#fcd5e8;
+      --carte:rgba(255,255,255,0.94); --ombre:0 10px 30px rgba(0,0,0,0.06);
+      --radius:14px; --transition:all 0.35s ease;
+    }
+    *{box-sizing:border-box;}
+    body{
+      margin:0; font-family:"Segoe UI", Roboto, Arial, sans-serif;
+      color:var(--texte); background:var(--rose-clair);
+      -webkit-font-smoothing:antialiased;
+    }
 
-<style>
-:root{
-  --bleu:#2563eb;
-  --vert:#16a34a;
-  --jaune:#f59e0b;
-  --rouge:#dc2626;
-  --texte:#1e293b;
-  --rose-clair:#fde8f0;
-  --rose-section:#fcd5e8;
-  --carte:rgba(255,255,255,0.94);
-  --ombre:0 10px 30px rgba(0,0,0,0.06);
-  --radius:14px;
-  --transition:all 0.35s ease;
-}
-*{box-sizing:border-box}
-body{
-  margin:0;
-  font-family:"Segoe UI", Roboto, Arial, sans-serif;
-  color:var(--texte);
-  background:var(--rose-clair);
-  -webkit-font-smoothing:antialiased;
-}
+    /* ---- HEADER animé ---- */
+    header{
+      background:linear-gradient(135deg,var(--bleu),#1e40af);
+      color:white; text-align:center; padding:3rem 1rem;
+      box-shadow:var(--ombre); position:relative; overflow:hidden;
+    }
+    header h1{
+      font-size:3rem; font-weight:800; margin:0;
+      position:relative; z-index:2; text-shadow:0 2px 8px rgba(0,0,0,0.25);
+      animation:pulseTitle 3s ease-in-out infinite alternate;
+    }
+    @keyframes pulseTitle{
+      from{transform:scale(1);}
+      to{transform:scale(1.04);}
+    }
+    header p{
+      font-size:1.1rem; color:rgba(255,255,255,0.9);
+      margin-top:0.4rem; position:relative; z-index:2;
+    }
+    .math-symbol{
+      position:absolute; color:rgba(255,255,255,0.25);
+      font-size:1.5rem; font-weight:bold;
+      animation:floatSymbol 12s linear infinite;
+      user-select:none; pointer-events:none;
+    }
+    @keyframes floatSymbol{
+      from{transform:translateY(100vh) rotate(0deg);opacity:0;}
+      20%{opacity:1;}
+      to{transform:translateY(-10vh) rotate(360deg);opacity:0;}
+    }
 
-/* ---------- HEADER ANIMÉ ---------- */
-header{
-  background:linear-gradient(135deg,var(--bleu),#1e40af);
-  color:white;
-  text-align:center;
-  padding:2.5rem 1rem 3rem;
-  box-shadow:var(--ombre);
-  position:relative;
-  overflow:hidden;
-}
-header h1{
-  font-size:3rem;
-  font-weight:800;
-  margin:0;
-  letter-spacing:1px;
-  text-shadow:0 2px 8px rgba(0,0,0,0.25);
-  animation:pulseTitle 3s ease-in-out infinite alternate;
-  position:relative;
-  z-index:2;
-}
-@keyframes pulseTitle{
-  from{transform:scale(1);}
-  to{transform:scale(1.04);}
-}
-header p{
-  font-size:1.1rem;
-  color:rgba(255,255,255,0.9);
-  margin-top:0.5rem;
-  font-weight:500;
-  position:relative;
-  z-index:2;
-}
-/* Symboles flottants */
-.math-symbol{
-  position:absolute;
-  color:rgba(255,255,255,0.25);
-  font-size:1.6rem;
-  font-weight:bold;
-  animation:floatSymbol 12s linear infinite;
-  user-select:none;
-  pointer-events:none;
-}
-@keyframes floatSymbol{
-  from{transform:translateY(100vh) rotate(0deg);opacity:0;}
-  20%{opacity:1;}
-  to{transform:translateY(-10vh) rotate(360deg);opacity:0;}
-}
+    /* ---- NAVIGATION ---- */
+    nav{
+      display:flex; justify-content:center; gap:1rem;
+      background:rgba(226,232,240,0.92);
+      padding:0.6rem; position:sticky; top:0; z-index:10;
+    }
+    nav button{
+      background:var(--bleu); color:#fff; border:0;
+      padding:0.55rem 1.1rem; border-radius:999px;
+      cursor:pointer; font-weight:600; transition:var(--transition);
+    }
+    nav button.active, nav button:hover{
+      background:#1e40af; transform:translateY(-2px);
+    }
 
-/* ---------- NAVIGATION ---------- */
-nav{
-  display:flex;
-  justify-content:center;
-  gap:1rem;
-  background:rgba(226,232,240,0.92);
-  padding:0.6rem;
-  position:sticky;
-  top:0;
-  z-index:10;
-}
-nav button{
-  background:var(--bleu);
-  color:#fff;
-  border:0;
-  padding:0.55rem 1.1rem;
-  border-radius:999px;
-  cursor:pointer;
-  font-weight:600;
-  transition:var(--transition);
-}
-nav button.active, nav button:hover{
-  background:#1e40af;
-  transform:translateY(-2px);
-}
+    /* ---- CONTENU ---- */
+    main{max-width:960px; margin:1.6rem auto; padding:0 1rem 3rem;}
+    section{
+      display:none; opacity:0; transform:translateY(15px);
+      transition:opacity 0.8s ease, transform 0.8s ease;
+      background:linear-gradient(180deg,var(--rose-section) 0%, var(--rose-clair) 100%);
+      border-radius:var(--radius); padding:1.25rem;
+      box-shadow:inset 0 0 20px rgba(0,0,0,0.03); margin-bottom:1.25rem;
+    }
+    section.active{display:block;opacity:1;transform:translateY(0);}
+    .bloc{
+      background:var(--carte); border-radius:12px;
+      padding:1.25rem; margin-bottom:1rem; box-shadow:var(--ombre);
+    }
+    h2{margin:0 0 0.6rem 0;font-size:1.15rem;display:flex;align-items:center;gap:0.6rem;}
+    ul{margin:0;padding-left:1.1rem;}
+    li{margin:0.45rem 0;}
+    a{color:var(--bleu);text-decoration:none;font-weight:600;}
+    a:hover{text-decoration:underline;}
+    footer{text-align:center;padding:1.25rem;background:rgba(226,232,240,0.9);color:#475569;margin-top:1rem;}
+    @media(max-width:640px){main{padding:0 0.6rem;}nav{flex-wrap:wrap;}nav button{width:48%;}}
 
-/* ---------- STRUCTURE ---------- */
-main{
-  max-width:960px;
-  margin:1.6rem auto;
-  padding:0 1rem 3rem;
-}
-section{
-  display:none;
-  opacity:0;
-  transform:translateY(15px);
-  transition:opacity 0.8s ease, transform 0.8s ease;
-  background:linear-gradient(180deg,var(--rose-section) 0%, var(--rose-clair) 100%);
-  border-radius:var(--radius);
-  padding:1.25rem;
-  box-shadow:inset 0 0 20px rgba(0,0,0,0.03);
-  margin-bottom:1.25rem;
-}
-section.active{
-  display:block;
-  opacity:1;
-  transform:translateY(0);
-}
-.bloc{
-  background:var(--carte);
-  border-radius:12px;
-  padding:1.25rem;
-  margin-bottom:1rem;
-  box-shadow:var(--ombre);
-}
-h2{
-  margin:0 0 0.6rem 0;
-  font-size:1.15rem;
-  display:flex;
-  align-items:center;
-  gap:0.6rem;
-}
-ul{margin:0;padding-left:1.1rem;}
-li{margin:0.45rem 0;}
-a{color:var(--bleu);text-decoration:none;font-weight:600;}
-a:hover{text-decoration:underline;}
-footer{
-  text-align:center;
-  padding:1.25rem;
-  background:rgba(226,232,240,0.9);
-  color:#475569;
-  margin-top:1rem;
-}
-
-/* ---------- SOUS-TABS VIDÉOS ---------- */
-.subtabs{
-  display:flex;
-  flex-wrap:wrap;
-  gap:0.4rem;
-  margin-bottom:0.8rem;
-}
-.subtab{
-  background:var(--bleu);
-  color:#fff;
-  border:0;
-  border-radius:8px;
-  padding:0.4rem 0.8rem;
-  cursor:pointer;
-  font-weight:600;
-  transition:var(--transition);
-}
-.subtab.active,.subtab:hover{
-  background:#1e40af;
-}
-.subtab-content{display:none;}
-.subtab-content.active{display:block;}
-
-@media (max-width:640px){
-  main{padding:0 0.6rem;}
-  nav{flex-wrap:wrap;}
-  nav button{width:48%}
-}
-</style>
+    /* ---- Sous-onglets vidéos ---- */
+    .subtabs{display:flex;gap:0.5rem;margin-bottom:0.8rem;flex-wrap:wrap;}
+    .subtab{
+      background:var(--jaune);color:#fff;border:none;
+      border-radius:999px;padding:0.45rem 0.9rem;cursor:pointer;
+      font-weight:600;transition:var(--transition);
+    }
+    .subtab:hover, .subtab.active{
+      background:#b45309;transform:translateY(-2px);
+    }
+    .subtab-content{display:none;animation:fadeIn 0.6s ease;}
+    .subtab-content.active{display:block;}
+    @keyframes fadeIn{
+      from{opacity:0;transform:translateY(10px);}
+      to{opacity:1;transform:translateY(0);}
+    }
+  </style>
 </head>
 
 <body>
-<header>
-  <h1>Cours de maths</h1>
-  <p>Ressources interactives pour les classes de 4e et 6e</p>
-  <!-- symboles flottants -->
-  <span class="math-symbol" style="left:5%; animation-delay:0s;">π</span>
-  <span class="math-symbol" style="left:20%; animation-delay:2s;">√</span>
-  <span class="math-symbol" style="left:35%; animation-delay:4s;">∞</span>
-  <span class="math-symbol" style="left:50%; animation-delay:1s;">Σ</span>
-  <span class="math-symbol" style="left:65%; animation-delay:3s;">Δ</span>
-  <span class="math-symbol" style="left:80%; animation-delay:5s;">θ</span>
-  <span class="math-symbol" style="left:90%; animation-delay:6s;">≈</span>
-</header>
+  <header>
+    <h1>Cours de maths</h1>
+    <p>Ressources interactives pour les classes de 4e et 6e</p>
 
-<nav aria-label="Choisir une classe">
-  <button class="tablink active" data-target="4e">Classe de 4e</button>
-  <button class="tablink" data-target="6e">Classe de 6e</button>
-</nav>
+    <!-- Symboles animés -->
+    <span class="math-symbol" style="left:5%;animation-delay:0s;">π</span>
+    <span class="math-symbol" style="left:20%;animation-delay:2s;">√</span>
+    <span class="math-symbol" style="left:35%;animation-delay:4s;">∞</span>
+    <span class="math-symbol" style="left:50%;animation-delay:1s;">Σ</span>
+    <span class="math-symbol" style="left:65%;animation-delay:3s;">Δ</span>
+    <span class="math-symbol" style="left:80%;animation-delay:5s;">θ</span>
+    <span class="math-symbol" style="left:90%;animation-delay:6s;">≈</span>
+  </header>
 
-<main>
+  <nav aria-label="Choisir une classe">
+    <button class="tablink active" data-target="4e">Classe de 4e</button>
+    <button class="tablink" data-target="6e">Classe de 6e</button>
+  </nav>
 
-<!-- SECTION 4e -->
-<section id="4e" class="active">
-  <div class="bloc">
-    <h2>📘 Cours</h2>
-    <ul>
-      <li><a href="#">Chapitre 1 — Nombres relatifs</a></li>
-      <li><a href="#">Chapitre 2 — Théorème de Pythagore</a></li>
-      <li><a href="#">Chapitre 3 — Proportionnalité</a></li>
-    </ul>
-  </div>
+  <main>
+    <!-- SECTION 4e -->
+    <section id="4e" class="active">
+      <div class="bloc">
+        <h2>📘 Cours</h2>
+        <ul>
+          <li><a href="#" target="_blank">Chapitre 1 — Nombres relatifs</a></li>
+          <li><a href="#" target="_blank">Chapitre 2 — Théorème de Pythagore</a></li>
+          <li><a href="#" target="_blank">Chapitre 3 — Proportionnalité</a></li>
+          <li><a href="#" target="_blank">Chapitre 4 — Puissances</a></li>
+          <li><a href="#" target="_blank">Chapitre 5 — Complément</a></li>
+        </ul>
+      </div>
 
-  <div class="bloc">
-    <h2>🎬 Vidéos</h2>
-    <div class="subtabs">
-      <button class="subtab active" data-target="videos4e-ch1">Chapitre 1</button>
-      <button class="subtab" data-target="videos4e-ch2">Chapitre 2</button>
-      <button class="subtab" data-target="videos4e-ch3">Chapitre 3</button>
-    </div>
+      <div class="bloc">
+        <h2>🟢 Activités</h2>
+        <ul>
+          <li>Chapitre 1 — Nombres relatifs (à venir)</li>
+          <li>Chapitre 2 — Pythagore (à venir)</li>
+          <li>Chapitre 3 — Proportionnalité (à venir)</li>
+        </ul>
+      </div>
 
-    <div class="subtab-content active" id="videos4e-ch1">
-      <ul>
-        <li><a href="https://www.youtube.com/watch?v=u-bqCheDpHc" target="_blank">Vidéo 1 — Introduction</a></li>
-        <li><a href="#">Vidéo 2 — Exercices corrigés</a></li>
-      </ul>
-    </div>
-    <div class="subtab-content" id="videos4e-ch2">
-      <ul>
-        <li><a href="#">Vidéo 1 — Démonstration</a></li>
-        <li><a href="#">Vidéo 2 — Applications</a></li>
-      </ul>
-    </div>
-    <div class="subtab-content" id="videos4e-ch3">
-      <ul>
-        <li><a href="#">Vidéo 1 — Notion de proportion</a></li>
-        <li><a href="#">Vidéo 2 — Exemples pratiques</a></li>
-      </ul>
-    </div>
-  </div>
-</section>
+      <div class="bloc">
+        <h2>🧩 Exercices</h2>
+        <ul>
+          <li><a href="#">Exercices Chapitre 1</a></li>
+          <li><a href="#">Exercices Chapitre 2</a></li>
+          <li><a href="#">Exercices Chapitre 3</a></li>
+        </ul>
+      </div>
 
-<!-- SECTION 6e -->
-<section id="6e">
-  <div class="bloc">
-    <h2>📘 Cours</h2>
-    <ul>
-      <li><a href="#">Chapitre 1 — Nombres entiers</a></li>
-      <li><a href="#">Chapitre 2 — Géométrie</a></li>
-    </ul>
-  </div>
+      <div class="bloc">
+        <h2>🎬 Vidéos</h2>
+        <div class="subtabs">
+          <button class="subtab active" data-target="videos4e-ch1">Chapitre 1</button>
+          <button class="subtab" data-target="videos4e-ch2">Chapitre 2</button>
+          <button class="subtab" data-target="videos4e-ch3">Chapitre 3</button>
+        </div>
+        <div class="subtab-content active" id="videos4e-ch1">
+          <ul>
+            <li><a href="https://www.youtube.com/watch?v=u-bqCheDpHc" target="_blank">Vidéo 1 — Introduction</a></li>
+            <li><a href="#">Vidéo 2 — Exercices corrigés</a></li>
+          </ul>
+        </div>
+        <div class="subtab-content" id="videos4e-ch2">
+          <ul>
+            <li><a href="#">Vidéo 1 — Démonstration</a></li>
+            <li><a href="#">Vidéo 2 — Applications</a></li>
+          </ul>
+        </div>
+        <div class="subtab-content" id="videos4e-ch3">
+          <ul>
+            <li><a href="#">Vidéo 1 — Notion de proportion</a></li>
+            <li><a href="#">Vidéo 2 — Exemples pratiques</a></li>
+          </ul>
+        </div>
+      </div>
 
-  <div class="bloc">
-    <h2>🎬 Vidéos</h2>
-    <div class="subtabs">
-      <button class="subtab active" data-target="videos6e-ch1">Chapitre 1</button>
-      <button class="subtab" data-target="videos6e-ch2">Chapitre 2</button>
-    </div>
+      <div class="bloc">
+        <h2>📝 Contrôles</h2>
+        <ul>
+          <li><a href="#">Contrôle 1 — Nombres relatifs</a></li>
+          <li><a href="#">Contrôle 2 — Pythagore</a></li>
+        </ul>
+      </div>
+    </section>
 
-    <div class="subtab-content active" id="videos6e-ch1">
-      <ul>
-        <li><a href="#">Vidéo 1 — Introduction</a></li>
-        <li><a href="#">Vidéo 2 — Exercices</a></li>
-      </ul>
-    </div>
-    <div class="subtab-content" id="videos6e-ch2">
-      <ul>
-        <li><a href="#">Vidéo 1 — Points et segments</a></li>
-        <li><a href="#">Vidéo 2 — Figures de base</a></li>
-      </ul>
-    </div>
-  </div>
-</section>
+    <!-- SECTION 6e -->
+    <section id="6e" tabindex="-1">
+      <div class="bloc">
+        <h2>📘 Cours</h2>
+        <ul>
+          <li><a href="#">Chapitre 1 — Nombres entiers</a></li>
+          <li><a href="#">Chapitre 2 — Géométrie</a></li>
+          <li><a href="#">Chapitre 3 — Fractions</a></li>
+        </ul>
+      </div>
 
-</main>
+      <div class="bloc">
+        <h2>🟢 Activités</h2>
+        <ul>
+          <li>Chapitre 1 — Nombres entiers (à venir)</li>
+          <li>Chapitre 2 — Géométrie (à venir)</li>
+          <li>Chapitre 3 — Fractions (à venir)</li>
+        </ul>
+      </div>
 
-<footer>
-  © 2025 — Cours de maths • Ressources pour les élèves de 4e et 6e
-</footer>
+      <div class="bloc">
+        <h2>🧩 Exercices</h2>
+        <ul>
+          <li><a href="#">Exercices Chapitre 1</a></li>
+          <li><a href="#">Exercices Chapitre 2</a></li>
+          <li><a href="#">Exercices Chapitre 3</a></li>
+        </ul>
+      </div>
 
-<script>
-/* Changement de classe (4e / 6e) */
-document.querySelectorAll('.tablink').forEach(button => {
-  button.addEventListener('click', () => {
-    const target = button.dataset.target;
-    const current = document.querySelector('section.active');
-    if (current && current.id === target) return;
-    if (current) current.classList.remove('active');
-    document.querySelectorAll('.tablink').forEach(b => b.classList.remove('active'));
-    button.classList.add('active');
-    const next = document.getElementById(target);
-    next.classList.add('active');
-  });
-});
+      <div class="bloc">
+        <h2>🎬 Vidéos</h2>
+        <div class="subtabs">
+          <button class="subtab active" data-target="videos6e-ch1">Chapitre 1</button>
+          <button class="subtab" data-target="videos6e-ch2">Chapitre 2</button>
+          <button class="subtab" data-target="videos6e-ch3">Chapitre 3</button>
+        </div>
+        <div class="subtab-content active" id="videos6e-ch1">
+          <ul>
+            <li><a href="#">Vidéo 1 — Introduction</a></li>
+            <li><a href="#">Vidéo 2 — Exercices</a></li>
+          </ul>
+        </div>
+        <div class="subtab-content" id="videos6e-ch2">
+          <ul>
+            <li><a href="#">Vidéo 1 — Points et segments</a></li>
+            <li><a href="#">Vidéo 2 — Figures de base</a></li>
+          </ul>
+        </div>
+        <div class="subtab-content" id="videos6e-ch3">
+          <ul>
+            <li><a href="#">Vidéo 1 — Introduction aux fractions</a></li>
+            <li><a href="#">Vidéo 2 — Exemples pratiques</a></li>
+          </ul>
+        </div>
+      </div>
 
-/* Sous-onglets vidéos */
-document.querySelectorAll('.subtabs').forEach(group => {
-  const buttons = group.querySelectorAll('.subtab');
-  buttons.forEach(btn => {
-    btn.addEventListener('click', () => {
-      buttons.forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      const bloc = group.parentElement;
-      bloc.querySelectorAll('.subtab-content').forEach(c => c.classList.remove('active'));
-      const target = bloc.querySelector('#' + btn.dataset.target);
-      if (target) target.classList.add('active');
+      <div class="bloc">
+        <h2>📝 Contrôles</h2>
+        <ul>
+          <li><a href="#">Contrôle 1 — Nombres entiers</a></li>
+          <li><a href="#">Contrôle 2 — Géométrie</a></li>
+        </ul>
+      </div>
+    </section>
+  </main>
+
+  <footer>© 2025 — Cours de maths • Ressources pour les élèves de 4e et 6e</footer>
+
+  <script>
+    // Navigation entre classes
+    document.querySelectorAll('.tablink').forEach(button=>{
+      button.addEventListener('click',()=>{
+        const target=button.dataset.target;
+        const current=document.querySelector('section.active');
+        if(current&&current.id===target)return;
+        if(current)current.classList.remove('active');
+        document.querySelectorAll('.tablink').forEach(b=>b.classList.remove('active'));
+        button.classList.add('active');
+        document.getElementById(target).classList.add('active');
+      });
     });
-  });
-});
-</script>
 
+    // Sous-onglets vidéos
+    document.querySelectorAll('.subtab').forEach(button=>{
+      button.addEventListener('click',()=>{
+        const bloc=button.closest('.bloc');
+        const target=button.dataset.target;
+        bloc.querySelectorAll('.subtab').forEach(b=>b.classList.remove('active'));
+        bloc.querySelectorAll('.subtab-content').forEach(c=>c.classList.remove('active'));
+        button.classList.add('active');
+        bloc.querySelector('#'+target).classList.add('active');
+      });
+    });
+  </script>
 </body>
 </html>
-
