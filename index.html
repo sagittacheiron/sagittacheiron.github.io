@@ -37,26 +37,59 @@
     section.active{ display:block; opacity:1; transform:translateY(0); }
     .bloc{ background:var(--carte); border-radius:12px; padding:1.25rem; margin-bottom:1rem; box-shadow:var(--ombre); }
     h2{ margin:0 0 0.6rem 0; font-size:1.15rem; display:flex; align-items:center; gap:0.6rem; }
-    ul{ margin:0; padding-left:1.1rem; }
+    ul{ margin:0; padding-left:0; list-style:none; }
     li{ margin:0.45rem 0; }
+
     a{ color:var(--bleu); text-decoration:none; font-weight:600; }
     a:hover{text-decoration:underline}
 
-    /* 🌸 Sous-listes de vidéos avec animation */
-    .sous-videos{
-      margin-top:0.4rem;
-      padding:0.7rem 1rem;
+    /* 🌸 Bouton de chapitre cliquable */
+    .chapitre-btn{
       background:rgba(37,99,235,0.08);
+      border:none;
       border-left:4px solid var(--bleu);
       border-radius:8px;
-      font-size:0.95rem;
-      list-style:none;
-      opacity:0;
-      transform:translateY(10px);
-      animation:fadeInSlide 0.7s ease forwards;
-      animation-delay:0.15s;
+      width:100%;
+      text-align:left;
+      padding:0.7rem 1rem;
+      font-size:1rem;
+      font-weight:600;
+      cursor:pointer;
+      color:var(--texte);
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      transition:background 0.3s ease;
+    }
+    .chapitre-btn:hover{
+      background:rgba(37,99,235,0.15);
+    }
+    .chapitre-btn span{
+      transition:transform 0.3s ease;
+    }
+    .chapitre-btn.active span{
+      transform:rotate(180deg);
     }
 
+    /* 🌟 Sous-liste vidéos animée */
+    .sous-videos{
+      overflow:hidden;
+      max-height:0;
+      opacity:0;
+      transform:translateY(-5px);
+      transition:all 0.45s ease;
+      margin-left:1.5rem;
+      background:rgba(37,99,235,0.05);
+      border-left:3px solid var(--bleu);
+      border-radius:8px;
+      padding-left:0.5rem;
+    }
+    .sous-videos.open{
+      max-height:400px;
+      opacity:1;
+      transform:translateY(0);
+      padding:0.7rem 0.5rem 0.7rem 0.8rem;
+    }
     .sous-videos li{
       margin:0.4rem 0;
       display:flex;
@@ -65,7 +98,6 @@
     }
     .sous-videos li::before{
       content:"🎥";
-      font-size:1rem;
     }
     .sous-videos a{
       color:var(--bleu);
@@ -78,18 +110,6 @@
       background:var(--bleu);
       color:white;
       text-decoration:none;
-    }
-
-    /* ✨ Animation d’apparition */
-    @keyframes fadeInSlide {
-      from {
-        opacity:0;
-        transform:translateY(10px);
-      }
-      to {
-        opacity:1;
-        transform:translateY(0);
-      }
     }
 
     footer{ text-align:center; padding:1.25rem; background:rgba(226,232,240,0.9); color:#475569; margin-top:1rem; }
@@ -114,7 +134,7 @@
         <h2>🎬 Vidéos</h2>
         <ul>
           <li>
-            Chapitre 1 — Nombres relatifs
+            <button class="chapitre-btn">Chapitre 1 — Nombres relatifs <span>▼</span></button>
             <ul class="sous-videos">
               <li><a href="https://www.youtube.com/watch?v=u-bqCheDpHc&t=207s" target="_blank">Cours principal (YouTube)</a></li>
               <li><a href="#">Exemples d'application</a></li>
@@ -122,14 +142,14 @@
             </ul>
           </li>
           <li>
-            Chapitre 2 — Théorème de Pythagore
+            <button class="chapitre-btn">Chapitre 2 — Théorème de Pythagore <span>▼</span></button>
             <ul class="sous-videos">
               <li><a href="#">Vidéo 1 — Introduction</a></li>
               <li><a href="#">Vidéo 2 — Exercices corrigés</a></li>
             </ul>
           </li>
           <li>
-            Chapitre 3 — Proportionnalité
+            <button class="chapitre-btn">Chapitre 3 — Proportionnalité <span>▼</span></button>
             <ul class="sous-videos">
               <li><a href="#">Vidéo 1 — Définition</a></li>
               <li><a href="#">Vidéo 2 — Exercices</a></li>
@@ -145,14 +165,14 @@
         <h2>🎬 Vidéos</h2>
         <ul>
           <li>
-            Chapitre 1 — Nombres entiers
+            <button class="chapitre-btn">Chapitre 1 — Nombres entiers <span>▼</span></button>
             <ul class="sous-videos">
               <li><a href="#">Vidéo 1 — Introduction</a></li>
               <li><a href="#">Vidéo 2 — Exercices</a></li>
             </ul>
           </li>
           <li>
-            Chapitre 3 — Fractions
+            <button class="chapitre-btn">Chapitre 3 — Fractions <span>▼</span></button>
             <ul class="sous-videos">
               <li><a href="#">Vidéo 1 — Comprendre les fractions</a></li>
               <li><a href="#">Vidéo 2 — Comparer des fractions</a></li>
@@ -167,6 +187,7 @@
   <footer>© 2025 — Cours de maths • Ressources pour les élèves de 4e et 6e</footer>
 
   <script>
+    // Changement d’onglet (4e / 6e)
     document.querySelectorAll('.tablink').forEach(button=>{
       button.addEventListener('click',()=>{
         const target=button.dataset.target;
@@ -176,6 +197,16 @@
         document.getElementById(target).classList.add('active');
       });
     });
+
+    // Ouverture / fermeture des sous-listes vidéos
+    document.querySelectorAll('.chapitre-btn').forEach(btn=>{
+      btn.addEventListener('click',()=>{
+        const sousListe=btn.nextElementSibling;
+        btn.classList.toggle('active');
+        sousListe.classList.toggle('open');
+      });
+    });
   </script>
 </body>
 </html>
+
