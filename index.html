@@ -16,10 +16,62 @@
       margin:0; font-family:"Segoe UI", Roboto, Arial, sans-serif;
       color:var(--texte); background:var(--rose-clair); -webkit-font-smoothing:antialiased;
     }
-    header{
+
+    /* ---- HEADER ANIMÉ ---- */
+    header {
       background:linear-gradient(135deg,var(--bleu),#1e40af);
-      color:white; text-align:center; padding:2.2rem 1rem; box-shadow:var(--ombre);
+      color:white;
+      text-align:center;
+      padding:2.5rem 1rem;
+      box-shadow:var(--ombre);
+      position:relative;
+      overflow:hidden;
     }
+    header h1 {
+      font-size:3rem;
+      font-weight:800;
+      margin:0;
+      color:white;
+      position:relative;
+      z-index:2;
+      letter-spacing:1px;
+      text-shadow:0 2px 8px rgba(0,0,0,0.25);
+      animation:pulseTitle 3s ease-in-out infinite alternate;
+    }
+    @keyframes pulseTitle {
+      from { transform:scale(1); }
+      to { transform:scale(1.04); }
+    }
+    header p {
+      font-size:1.1rem;
+      color:rgba(255,255,255,0.9);
+      margin-top:0.4rem;
+      font-weight:500;
+      position:relative;
+      z-index:2;
+    }
+    .math-symbol {
+      position:absolute;
+      color:rgba(255,255,255,0.25);
+      font-size:1.5rem;
+      font-weight:bold;
+      animation:floatSymbol 12s linear infinite;
+      user-select:none;
+      pointer-events:none;
+    }
+    @keyframes floatSymbol {
+      from {
+        transform:translateY(100vh) rotate(0deg);
+        opacity:0;
+      }
+      20% {opacity:1;}
+      to {
+        transform:translateY(-10vh) rotate(360deg);
+        opacity:0;
+      }
+    }
+
+    /* ---- NAVIGATION ---- */
     nav{
       display:flex; justify-content:center; gap:1rem;
       background:rgba(226,232,240,0.92); padding:0.6rem; position:sticky; top:0; z-index:10;
@@ -29,60 +81,99 @@
       cursor:pointer; font-weight:600; transition:var(--transition);
     }
     nav button.active, nav button:hover{ background:#1e40af; transform:translateY(-2px); }
+
+    /* ---- CONTENU ---- */
     main{ max-width:960px; margin:1.6rem auto; padding:0 1rem 3rem; }
-    section{ display:none; opacity:0; transform:translateY(15px); transition:opacity 0.8s ease, transform 0.8s ease;
-      background:linear-gradient(180deg,var(--rose-section) 0%, var(--rose-clair) 100%); border-radius:var(--radius);
-      padding:1.25rem; box-shadow:inset 0 0 20px rgba(0,0,0,0.03); margin-bottom:1.25rem;
+    section{
+      display:none; opacity:0; transform:translateY(15px);
+      transition:opacity 0.8s ease, transform 0.8s ease;
+      background:linear-gradient(180deg,var(--rose-section) 0%, var(--rose-clair) 100%);
+      border-radius:var(--radius);
+      padding:1.25rem;
+      box-shadow:inset 0 0 20px rgba(0,0,0,0.03);
+      margin-bottom:1.25rem;
     }
     section.active{ display:block; opacity:1; transform:translateY(0); }
-    .bloc{ background:var(--carte); border-radius:12px; padding:1.25rem; margin-bottom:1rem; box-shadow:var(--ombre); }
-    h2{ margin:0 0 0.6rem 0; font-size:1.15rem; display:flex; align-items:center; gap:0.6rem; }
+    .bloc{
+      background:var(--carte);
+      border-radius:12px;
+      padding:1.25rem;
+      margin-bottom:1rem;
+      box-shadow:var(--ombre);
+    }
+    h2{
+      margin:0 0 0.6rem 0;
+      font-size:1.15rem;
+      display:flex;
+      align-items:center;
+      gap:0.6rem;
+    }
     ul{ margin:0; padding-left:1.1rem; }
     li{ margin:0.45rem 0; }
     a{ color:var(--bleu); text-decoration:none; font-weight:600; }
     a:hover{text-decoration:underline}
-    footer{ text-align:center; padding:1.25rem; background:rgba(226,232,240,0.9); color:#475569; margin-top:1rem; }
-    @media (max-width:640px){ main{padding:0 0.6rem;} nav{flex-wrap:wrap;} nav button{width:48%} }
+    footer{
+      text-align:center;
+      padding:1.25rem;
+      background:rgba(226,232,240,0.9);
+      color:#475569;
+      margin-top:1rem;
+    }
+    @media (max-width:640px){
+      main{padding:0 0.6rem;}
+      nav{flex-wrap:wrap;}
+      nav button{width:48%}
+    }
 
     /* ---- Sous-onglets vidéos ---- */
     .subtabs {
-      display: flex;
-      gap: 0.5rem;
-      margin-bottom: 0.8rem;
-      flex-wrap: wrap;
+      display:flex;
+      gap:0.5rem;
+      margin-bottom:0.8rem;
+      flex-wrap:wrap;
     }
     .subtab {
-      background: var(--jaune);
-      color: #fff;
-      border: none;
-      border-radius: 999px;
-      padding: 0.45rem 0.9rem;
-      cursor: pointer;
-      font-weight: 600;
-      transition: var(--transition);
+      background:var(--jaune);
+      color:#fff;
+      border:none;
+      border-radius:999px;
+      padding:0.45rem 0.9rem;
+      cursor:pointer;
+      font-weight:600;
+      transition:var(--transition);
     }
     .subtab:hover,
     .subtab.active {
-      background: #b45309;
-      transform: translateY(-2px);
+      background:#b45309;
+      transform:translateY(-2px);
     }
     .subtab-content {
-      display: none;
-      animation: fadeIn 0.6s ease;
+      display:none;
+      animation:fadeIn 0.6s ease;
     }
     .subtab-content.active {
-      display: block;
+      display:block;
     }
     @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
+      from {opacity:0; transform:translateY(10px);}
+      to {opacity:1; transform:translateY(0);}
     }
   </style>
 </head>
+
 <body>
   <header>
     <h1>Cours de maths</h1>
     <p>Ressources interactives pour les classes de 4e et 6e</p>
+
+    <!-- Symboles mathématiques animés -->
+    <span class="math-symbol" style="left:5%; animation-delay:0s;">π</span>
+    <span class="math-symbol" style="left:20%; animation-delay:2s;">√</span>
+    <span class="math-symbol" style="left:35%; animation-delay:4s;">∞</span>
+    <span class="math-symbol" style="left:50%; animation-delay:1s;">Σ</span>
+    <span class="math-symbol" style="left:65%; animation-delay:3s;">Δ</span>
+    <span class="math-symbol" style="left:80%; animation-delay:5s;">θ</span>
+    <span class="math-symbol" style="left:90%; animation-delay:6s;">≈</span>
   </header>
 
   <nav aria-label="Choisir une classe">
@@ -96,22 +187,9 @@
       <div class="bloc">
         <h2>📘 Cours</h2>
         <ul>
-          <li><a href="#">Chapitre 1 — Nombres relatifs (PDF)</a></li>
-          <li><a href="#">Chapitre 2 — Théorème de Pythagore (PDF)</a></li>
-          <li><a href="#">Chapitre 3 — Proportionnalité (PDF)</a></li>
-          <li><a href="#">Chapitre 4 — Puissances & Notation scientifique (PDF)</a></li>
-          <li><a href="#">Chapitre 5 — Complément (PDF)</a></li>
-        </ul>
-      </div>
-
-      <div class="bloc">
-        <h2>🟢 Activités</h2>
-        <ul>
-          <li>Chapitre 1 — Nombres relatifs (fiche à venir)</li>
-          <li>Chapitre 2 — Pythagore (fiche à venir)</li>
-          <li>Chapitre 3 — Proportionnalité (fiche à venir)</li>
-          <li>Chapitre 4 — Puissances (fiche à venir)</li>
-          <li>Chapitre 5 — Complément (fiche à venir)</li>
+          <li><a href="https://drive.google.com/uc?export=download&id=1DildOn4eWYLFInbhn8_DpaeO72Tlt0gm" target="_blank">Chapitre 1 — Nombres relatifs (PDF)</a></li>
+          <li><a href="https://drive.google.com/uc?export=download&id=1lqivoBymp0cBgLHQmuVegMdIBbfe6Itf" target="_blank">Chapitre 2 — Théorème de Pythagore (PDF)</a></li>
+          <li><a href="https://drive.google.com/uc?export=download&id=1Afj680YIxU7Dg0aXiZ9-XWODyJTaY69x" target="_blank">Chapitre 3 — Proportionnalité (PDF)</a></li>
         </ul>
       </div>
 
@@ -120,8 +198,6 @@
         <ul>
           <li><a href="#">Exercices Chapitre 1 — Nombres relatifs</a></li>
           <li><a href="#">Exercices Chapitre 2 — Pythagore</a></li>
-          <li><a href="#">Exercices Chapitre 3 — Proportionnalité</a></li>
-          <li><a href="#">Exercices Chapitre 4 — Puissances</a></li>
         </ul>
       </div>
 
@@ -135,30 +211,22 @@
 
         <div class="subtab-content active" id="videos4e-ch1">
           <ul>
-            <li><a href="https://www.youtube.com/watch?v=u-bqCheDpHc" target="_blank">Vidéo 1 — Introduction aux relatifs</a></li>
-            <li><a href="https://www.youtube.com/watch?v=KklsZzj6S5w" target="_blank">Vidéo 2 — Exercices corrigés</a></li>
+            <li><a href="https://www.youtube.com/watch?v=u-bqCheDpHc" target="_blank">Vidéo 1 — Introduction</a></li>
+            <li><a href="#">Vidéo 2 — Exercices corrigés</a></li>
           </ul>
         </div>
         <div class="subtab-content" id="videos4e-ch2">
           <ul>
-            <li><a href="https://www.youtube.com/watch?v=6DQflpQmZwY" target="_blank">Vidéo 1 — Démonstration du théorème</a></li>
-            <li><a href="https://www.youtube.com/watch?v=nUtbglk1W5E" target="_blank">Vidéo 2 — Applications pratiques</a></li>
+            <li><a href="#">Vidéo 1 — Démonstration</a></li>
+            <li><a href="#">Vidéo 2 — Applications</a></li>
           </ul>
         </div>
         <div class="subtab-content" id="videos4e-ch3">
           <ul>
-            <li><a href="https://www.youtube.com/watch?v=_jMlmvJytL4" target="_blank">Vidéo 1 — Notion de proportion</a></li>
-            <li><a href="https://www.youtube.com/watch?v=gr1XgP4Ce28" target="_blank">Vidéo 2 — Exemples pratiques</a></li>
+            <li><a href="#">Vidéo 1 — Notion de proportion</a></li>
+            <li><a href="#">Vidéo 2 — Exemples pratiques</a></li>
           </ul>
         </div>
-      </div>
-
-      <div class="bloc">
-        <h2>📝 Contrôles</h2>
-        <ul>
-          <li><a href="#">Contrôle 1 — Nombres relatifs (PDF)</a></li>
-          <li><a href="#">Contrôle 2 — Pythagore (PDF)</a></li>
-        </ul>
       </div>
     </section>
 
@@ -167,8 +235,8 @@
       <div class="bloc">
         <h2>📘 Cours</h2>
         <ul>
-          <li><a href="#">Chapitre 1 — Nombres entiers (PDF)</a></li>
-          <li><a href="#">Chapitre 2 — Géométrie (PDF)</a></li>
+          <li><a href="https://drive.google.com/uc?export=download&id=1d1A5TERex3tDKJvuZCT3TlcYtgkgaLJs" target="_blank">Chapitre 1 — Nombres entiers (PDF)</a></li>
+          <li><a href="https://drive.google.com/uc?export=download&id=1qz7eIXffeyYvq2sPpVK3u1cZn2vAg_Nb" target="_blank">Chapitre 2 — Géométrie (PDF)</a></li>
         </ul>
       </div>
 
@@ -181,14 +249,14 @@
 
         <div class="subtab-content active" id="videos6e-ch1">
           <ul>
-            <li><a href="https://www.youtube.com/watch?v=O9DyZo2x5Lg" target="_blank">Vidéo 1 — Introduction aux entiers</a></li>
-            <li><a href="https://www.youtube.com/watch?v=vX7c4GrV8oY" target="_blank">Vidéo 2 — Exercices</a></li>
+            <li><a href="#">Vidéo 1 — Introduction</a></li>
+            <li><a href="#">Vidéo 2 — Exercices</a></li>
           </ul>
         </div>
         <div class="subtab-content" id="videos6e-ch2">
           <ul>
-            <li><a href="https://www.youtube.com/watch?v=cjqO8YI4Jt0" target="_blank">Vidéo 1 — Points et segments</a></li>
-            <li><a href="https://www.youtube.com/watch?v=MTZffjeXk24" target="_blank">Vidéo 2 — Figures de base</a></li>
+            <li><a href="#">Vidéo 1 — Points et segments</a></li>
+            <li><a href="#">Vidéo 2 — Figures de base</a></li>
           </ul>
         </div>
       </div>
@@ -227,4 +295,3 @@
   </script>
 </body>
 </html>
-
