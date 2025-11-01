@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Cours de maths</title>
+  <title>Cours de maths — avec Quiz par chapitre</title>
   <style>
     :root{
       --bleu:#2563eb; --vert:#16a34a; --jaune:#f59e0b; --rouge:#dc2626;
@@ -83,7 +83,6 @@
 
     .checkbox{ margin-right:8px; cursor:pointer; accent-color: var(--vert); }
 
-    /* Subtabs videos */
     .subtabs{ display:flex; gap:0.5rem; margin-bottom:0.8rem; flex-wrap:wrap; }
     .subtab{ background:var(--jaune); color:#fff; border:none; border-radius:999px; padding:0.45rem 0.9rem; cursor:pointer; font-weight:600; transition:var(--transition); }
     .subtab:hover, .subtab.active{ background:#b45309; transform:translateY(-2px); }
@@ -91,42 +90,43 @@
     .subtab-content.active{ display:block; }
     @keyframes fadeInSub{ from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:none;} }
 
-    /* ensure clickable areas above floating symbols */
     .bloc, .subtab-content { position: relative; z-index:2; }
 
-    /* --- Style pour le Quiz --- */
-    .quiz {
-      margin-top: 0.45rem;
+    /* Quiz section styles */
+    .chapter-quiz-buttons { display:flex; flex-wrap:wrap; gap:0.5rem; margin-bottom:0.75rem; }
+    .chapter-quiz-buttons button {
+      background: var(--bleu); color: #fff; border:0; padding:0.45rem 0.8rem; border-radius:999px; cursor:pointer; font-weight:700; transition:var(--transition);
     }
-    .quiz .question {
-      margin-bottom: 0.8rem;
-      padding: 0.6rem;
-      border-radius: 10px;
-      background: linear-gradient(90deg, rgba(255,255,255,0.98), rgba(250,250,250,0.98));
-      border: 1px solid rgba(0,0,0,0.03);
-    }
-    .quiz .question p.qtext { margin:0 0 0.6rem 0; font-weight:600; }
+    .chapter-quiz-buttons button:hover { transform:translateY(-3px); background:#1e40af; }
+
+    .quiz-panel { display:none; margin-top:0.8rem; border-radius:12px; padding:0.9rem; background:linear-gradient(180deg, rgba(255,255,255,0.98), rgba(250,250,250,0.98)); border:1px solid rgba(0,0,0,0.03); }
+    .quiz-panel.active { display:block; }
+
+    .quiz .q-row { margin-bottom:0.6rem; padding:0.6rem; border-radius:10px; border:1px solid rgba(0,0,0,0.03); background:transparent; }
+    .quiz .qtext { margin:0 0 0.5rem 0; font-weight:600; }
     .quiz .answers { display:flex; flex-wrap:wrap; gap:0.45rem; }
     .quiz label.answer {
-      display:inline-flex; align-items:center; gap:0.5rem;
-      padding:0.45rem 0.75rem; border-radius:12px; cursor:pointer;
-      user-select:none; border:1px solid rgba(0,0,0,0.06);
-      transition:var(--transition); background:transparent;
+      display:inline-flex; align-items:center; gap:0.6rem;
+      padding:0.35rem 0.7rem; border-radius:10px; cursor:pointer;
+      border:1px solid rgba(0,0,0,0.06); transition:var(--transition); background:transparent;
     }
     .quiz input[type="radio"] { accent-color: var(--bleu); }
-    .quiz button.action {
-      margin-top:0.6rem; padding:0.5rem 0.9rem; border-radius:999px; border:0;
-      cursor:pointer; font-weight:700; transition:var(--transition);
-    }
-    .quiz .submit { background:var(--bleu); color:white; }
-    .quiz .restart { background:#efefef; color:var(--texte); margin-left:0.5rem; }
-    .quiz .result-summary { margin-top:0.6rem; font-weight:800; }
 
-    /* highlight after submit */
+    .quiz .controls { margin-top:0.6rem; display:flex; align-items:center; gap:0.6rem; flex-wrap:wrap; }
+    .quiz .controls button { padding:0.5rem 0.9rem; border-radius:999px; border:0; cursor:pointer; font-weight:700; }
+    .quiz .controls .submit { background:var(--bleu); color:white; }
+    .quiz .controls .restart { background:#efefef; color:var(--texte); }
+
+    .quiz .summary { margin-left:0.6rem; font-weight:800; }
+
+    /* highlights */
     .correct { background: rgba(22,163,74,0.12); border-color: rgba(22,163,74,0.35); }
     .wrong { background: rgba(220,38,38,0.06); border-color: rgba(220,38,38,0.25); opacity:0.95; }
 
-    @media (max-width:640px){ main{padding:0 0.6rem;} nav{flex-wrap:wrap;} nav button{width:48%} }
+    @media (max-width:640px){
+      main{padding:0 0.6rem;} nav{flex-wrap:wrap;} nav button{width:48%}
+      .chapter-quiz-buttons { gap:0.4rem; }
+    }
   </style>
 </head>
 <body>
@@ -135,7 +135,6 @@
     <h1>📐 Cours de maths</h1>
     <p class="citation"></p>
 
-    <!-- floating symbols -->
     <span class="math-symbol" style="left:6%; animation-delay:0s;">π</span>
     <span class="math-symbol" style="left:18%; animation-delay:2s;">√</span>
     <span class="math-symbol" style="left:34%; animation-delay:4s;">Σ</span>
@@ -224,59 +223,535 @@
         </ul>
       </div>
 
-      <!-- Quiz 4e (version complète avec score et restart) -->
+      <!-- NEW: Quiz section for 4e -->
       <div class="bloc">
-        <h2>❓ Quiz interactif — 4e</h2>
-        <p>Teste tes connaissances — réponds à toutes les questions puis clique sur <strong>Valider</strong>.</p>
+        <h2>❓ Quiz par chapitre — 4e</h2>
+        <p>Choisis un chapitre ci-dessous pour lancer le quiz correspondant (10 questions par chapitre).</p>
 
-        <div class="quiz" data-classe="4e" id="quiz-4e">
-          <!-- Question 1 -->
-          <div class="question" data-qid="q1">
-            <p class="qtext">1) Quelle est la racine carrée de 49 ?</p>
-            <div class="answers">
-              <label class="answer"><input type="radio" name="q1" value="7"> 7</label>
-              <label class="answer"><input type="radio" name="q1" value="6"> 6</label>
-              <label class="answer"><input type="radio" name="q1" value="8"> 8</label>
-            </div>
-          </div>
-
-          <!-- Question 2 -->
-          <div class="question" data-qid="q2">
-            <p class="qtext">2) Le triangle rectangle vérifie le théorème de...</p>
-            <div class="answers">
-              <label class="answer"><input type="radio" name="q2" value="pythagore"> Pythagore</label>
-              <label class="answer"><input type="radio" name="q2" value="thales"> Thalès</label>
-              <label class="answer"><input type="radio" name="q2" value="euclide"> Euclide</label>
-            </div>
-          </div>
-
-          <!-- Question 3 -->
-          <div class="question" data-qid="q3">
-            <p class="qtext">3) Si 0,999... = ?</p>
-            <div class="answers">
-              <label class="answer"><input type="radio" name="q3" value="0.999"> 0.999...</label>
-              <label class="answer"><input type="radio" name="q3" value="1"> 1</label>
-              <label class="answer"><input type="radio" name="q3" value="infini"> Un nombre infini</label>
-            </div>
-          </div>
-
-          <!-- Question 4 -->
-          <div class="question" data-qid="q4">
-            <p class="qtext">4) Une notation scientifique sert à ...</p>
-            <div class="answers">
-              <label class="answer"><input type="radio" name="q4" value="ecrire"> écrire des très grands ou très petits nombres plus simplement</label>
-              <label class="answer"><input type="radio" name="q4" value="calculer"> calculer plus vite mentalement</label>
-              <label class="answer"><input type="radio" name="q4" value="arrondir"> arrondir les résultats</label>
-            </div>
-          </div>
-
-          <div>
-            <button class="action submit" type="button">Valider</button>
-            <button class="action restart" type="button">Recommencer</button>
-            <span class="result-summary" aria-live="polite"></span>
-          </div>
+        <div class="chapter-quiz-buttons" data-classe="4e">
+          <button data-target="quiz-4e-ch1">Quiz Chapitre 1 — Nombres relatifs</button>
+          <button data-target="quiz-4e-ch2">Quiz Chapitre 2 — Pythagore</button>
+          <button data-target="quiz-4e-ch3">Quiz Chapitre 3 — Proportionnalité</button>
+          <button data-target="quiz-4e-ch4">Quiz Chapitre 4 — Puissances & Notation scientifique</button>
+          <button data-target="quiz-4e-ch5">Quiz Chapitre 5 — Complément</button>
         </div>
-      </div>
+
+        <!-- QUIZ PANELS 4e: 5 chapters x 10 questions each -->
+        <div class="quiz-panels">
+
+          <!-- 4e - CH1: Nombres relatifs -->
+          <div id="quiz-4e-ch1" class="quiz-panel" data-quizid="quiz-4e-ch1">
+            <form class="quiz" id="quiz-4e-ch1-form">
+              <!-- 10 questions -->
+              <div class="q-row" data-qid="q1">
+                <p class="qtext">1) Quel est l'opposé de -7 ?</p>
+                <div class="answers">
+                  <label class="answer"><input type="radio" name="q-4e-ch1-1" value="7"> 7</label>
+                  <label class="answer"><input type="radio" name="q-4e-ch1-1" value="-7"> -7</label>
+                  <label class="answer"><input type="radio" name="q-4e-ch1-1" value="0"> 0</label>
+                </div>
+              </div>
+
+              <div class="q-row" data-qid="q2">
+                <p class="qtext">2) Quel nombre est plus petit : -3 ou -8 ?</p>
+                <div class="answers">
+                  <label class="answer"><input type="radio" name="q-4e-ch1-2" value="-8"> -8</label>
+                  <label class="answer"><input type="radio" name="q-4e-ch1-2" value="-3"> -3</label>
+                  <label class="answer"><input type="radio" name="q-4e-ch1-2" value="8"> 8</label>
+                </div>
+              </div>
+
+              <div class="q-row" data-qid="q3">
+                <p class="qtext">3) Calcule : (-5) + 12 = ?</p>
+                <div class="answers">
+                  <label class="answer"><input type="radio" name="q-4e-ch1-3" value="7"> 7</label>
+                  <label class="answer"><input type="radio" name="q-4e-ch1-3" value="-7"> -7</label>
+                  <label class="answer"><input type="radio" name="q-4e-ch1-3" value="17"> 17</label>
+                </div>
+              </div>
+
+              <div class="q-row" data-qid="q4">
+                <p class="qtext">4) Calcule : (-4) × (-3) = ?</p>
+                <div class="answers">
+                  <label class="answer"><input type="radio" name="q-4e-ch1-4" value="12"> 12</label>
+                  <label class="answer"><input type="radio" name="q-4e-ch1-4" value="-12"> -12</label>
+                  <label class="answer"><input type="radio" name="q-4e-ch1-4" value="1"> 1</label>
+                </div>
+              </div>
+
+              <div class="q-row" data-qid="q5">
+                <p class="qtext">5) Calcule : -15 ÷ 3 = ?</p>
+                <div class="answers">
+                  <label class="answer"><input type="radio" name="q-4e-ch1-5" value="-5"> -5</label>
+                  <label class="answer"><input type="radio" name="q-4e-ch1-5" value="5"> 5</label>
+                  <label class="answer"><input type="radio" name="q-4e-ch1-5" value="-45"> -45</label>
+                </div>
+              </div>
+
+              <div class="q-row" data-qid="q6">
+                <p class="qtext">6) Ordre croissant : -2, 0, -5, 3 --> lequel vient en premier ?</p>
+                <div class="answers">
+                  <label class="answer"><input type="radio" name="q-4e-ch1-6" value="-5"> -5</label>
+                  <label class="answer"><input type="radio" name="q-4e-ch1-6" value="-2"> -2</label>
+                  <label class="answer"><input type="radio" name="q-4e-ch1-6" value="3"> 3</label>
+                </div>
+              </div>
+
+              <div class="q-row" data-qid="q7">
+                <p class="qtext">7) Quel est le résultat de : (-6) - (-2) ?</p>
+                <div class="answers">
+                  <label class="answer"><input type="radio" name="q-4e-ch1-7" value="-4"> -4</label>
+                  <label class="answer"><input type="radio" name="q-4e-ch1-7" value="-8"> -8</label>
+                  <label class="answer"><input type="radio" name="q-4e-ch1-7" value="-3"> -3</label>
+                </div>
+              </div>
+
+              <div class="q-row" data-qid="q8">
+                <p class="qtext">8) Simplifie : -1 × 9 = ?</p>
+                <div class="answers">
+                  <label class="answer"><input type="radio" name="q-4e-ch1-8" value="-9"> -9</label>
+                  <label class="answer"><input type="radio" name="q-4e-ch1-8" value="9"> 9</label>
+                  <label class="answer"><input type="radio" name="q-4e-ch1-8" value="0"> 0</label>
+                </div>
+              </div>
+
+              <div class="q-row" data-qid="q9">
+                <p class="qtext">9) Quelle est la valeur absolue de -12 ?</p>
+                <div class="answers">
+                  <label class="answer"><input type="radio" name="q-4e-ch1-9" value="12"> 12</label>
+                  <label class="answer"><input type="radio" name="q-4e-ch1-9" value="-12"> -12</label>
+                  <label class="answer"><input type="radio" name="q-4e-ch1-9" value="0"> 0</label>
+                </div>
+              </div>
+
+              <div class="q-row" data-qid="q10">
+                <p class="qtext">10) Calcule : (-2)² = ?</p>
+                <div class="answers">
+                  <label class="answer"><input type="radio" name="q-4e-ch1-10" value="4"> 4</label>
+                  <label class="answer"><input type="radio" name="q-4e-ch1-10" value="-4"> -4</label>
+                  <label class="answer"><input type="radio" name="q-4e-ch1-10" value="2"> 2</label>
+                </div>
+              </div>
+
+              <div class="controls">
+                <button type="button" class="submit">Valider</button>
+                <button type="button" class="restart">Recommencer</button>
+                <span class="summary" aria-live="polite"></span>
+              </div>
+            </form>
+          </div>
+
+          <!-- 4e - CH2: Pythagore -->
+          <div id="quiz-4e-ch2" class="quiz-panel" data-quizid="quiz-4e-ch2">
+            <form class="quiz" id="quiz-4e-ch2-form">
+              <!-- 10 questions tailored to Pythagore -->
+              <div class="q-row" data-qid="q1">
+                <p class="qtext">1) Dans un triangle rectangle, comment s'appelle le côté opposé à l'angle droit ?</p>
+                <div class="answers">
+                  <label class="answer"><input type="radio" name="q-4e-ch2-1" value="hypotenuse"> Hypoténuse</label>
+                  <label class="answer"><input type="radio" name="q-4e-ch2-1" value="adjacent"> Côté adjacent</label>
+                  <label class="answer"><input type="radio" name="q-4e-ch2-1" value="opp"> Côté opposé</label>
+                </div>
+              </div>
+
+              <div class="q-row" data-qid="q2">
+                <p class="qtext">2) Dans le triangle rectangle, si les côtés adjacents mesurent 3 et 4, la longueur de l'hypoténuse est :</p>
+                <div class="answers">
+                  <label class="answer"><input type="radio" name="q-4e-ch2-2" value="5"> 5</label>
+                  <label class="answer"><input type="radio" name="q-4e-ch2-2" value="6"> 6</label>
+                  <label class="answer"><input type="radio" name="q-4e-ch2-2" value="7"> 7</label>
+                </div>
+              </div>
+
+              <div class="q-row" data-qid="q3">
+                <p class="qtext">3) Le théorème de Pythagore s'écrit : « dans un triangle rectangle, ... »</p>
+                <div class="answers">
+                  <label class="answer"><input type="radio" name="q-4e-ch2-3" value="a2b2c2"> a² + b² = c²</label>
+                  <label class="answer"><input type="radio" name="q-4e-ch2-3" value="a2b2c"> a² + b² = c</label>
+                  <label class="answer"><input type="radio" name="q-4e-ch2-3" value="ab=c"> ab = c</label>
+                </div>
+              </div>
+
+              <div class="q-row" data-qid="q4">
+                <p class="qtext">4) Si l'hypoténuse mesure 13 et un côté 5, l'autre côté vaut :</p>
+                <div class="answers">
+                  <label class="answer"><input type="radio" name="q-4e-ch2-4" value="12"> 12</label>
+                  <label class="answer"><input type="radio" name="q-4e-ch2-4" value="10"> 10</label>
+                  <label class="answer"><input type="radio" name="q-4e-ch2-4" value="8"> 8</label>
+                </div>
+              </div>
+
+              <div class="q-row" data-qid="q5">
+                <p class="qtext">5) Pythagore est utile pour calculer :</p>
+                <div class="answers">
+                  <label class="answer"><input type="radio" name="q-4e-ch2-5" value="distances"> Distances / longueurs</label>
+                  <label class="answer"><input type="radio" name="q-4e-ch2-5" value="aires"> Aires</label>
+                  <label class="answer"><input type="radio" name="q-4e-ch2-5" value="angles"> Angles</label>
+                </div>
+              </div>
+
+              <div class="q-row" data-qid="q6">
+                <p class="qtext">6) Pour vérifier qu'un triangle est rectangle, on peut vérifier :</p>
+                <div class="answers">
+                  <label class="answer"><input type="radio" name="q-4e-ch2-6" value="pythagore"> que a² + b² = c²</label>
+                  <label class="answer"><input type="radio" name="q-4e-ch2-6" value="proportion"> qu'il est proportionnel</label>
+                  <label class="answer"><input type="radio" name="q-4e-ch2-6" value="parallel"> que deux côtés sont parallèles</label>
+                </div>
+              </div>
+
+              <div class="q-row" data-qid="q7">
+                <p class="qtext">7) Si un triangle a des longueurs 6, 8 et 10, est-il rectangle ?</p>
+                <div class="answers">
+                  <label class="answer"><input type="radio" name="q-4e-ch2-7" value="oui"> Oui</label>
+                  <label class="answer"><input type="radio" name="q-4e-ch2-7" value="non"> Non</label>
+                  <label class="answer"><input type="radio" name="q-4e-ch2-7" value="impossible"> Impossible de savoir</label>
+                </div>
+              </div>
+
+              <div class="q-row" data-qid="q8">
+                <p class="qtext">8) Quel est le carré de 7 ?</p>
+                <div class="answers">
+                  <label class="answer"><input type="radio" name="q-4e-ch2-8" value="49"> 49</label>
+                  <label class="answer"><input type="radio" name="q-4e-ch2-8" value="14"> 14</label>
+                  <label class="answer"><input type="radio" name="q-4e-ch2-8" value="7"> 7</label>
+                </div>
+              </div>
+
+              <div class="q-row" data-qid="q9">
+                <p class="qtext">9) Un triangle dont les côtés 9, 40, 41 forme un triangle rectangle ?</p>
+                <div class="answers">
+                  <label class="answer"><input type="radio" name="q-4e-ch2-9" value="oui"> Oui</label>
+                  <label class="answer"><input type="radio" name="q-4e-ch2-9" value="non"> Non</label>
+                  <label class="answer"><input type="radio" name="q-4e-ch2-9" value="pt"> A vérifier</label>
+                </div>
+              </div>
+
+              <div class="q-row" data-qid="q10">
+                <p class="qtext">10) Si a² + b² = c², alors c est forcément :</p>
+                <div class="answers">
+                  <label class="answer"><input type="radio" name="q-4e-ch2-10" value="hyp"> l'hypoténuse</label>
+                  <label class="answer"><input type="radio" name="q-4e-ch2-10" value="adj"> un côté adjacent</label>
+                  <label class="answer"><input type="radio" name="q-4e-ch2-10" value="angle"> un angle</label>
+                </div>
+              </div>
+
+              <div class="controls">
+                <button type="button" class="submit">Valider</button>
+                <button type="button" class="restart">Recommencer</button>
+                <span class="summary" aria-live="polite"></span>
+              </div>
+            </form>
+          </div>
+
+          <!-- 4e - CH3: Proportionnalité -->
+          <div id="quiz-4e-ch3" class="quiz-panel" data-quizid="quiz-4e-ch3">
+            <form class="quiz" id="quiz-4e-ch3-form">
+              <!-- 10 proportionnalité questions -->
+              <div class="q-row" data-qid="q1">
+                <p class="qtext">1) Si 3 kg de pommes coûtent 6 €, combien coûte 1 kg ?</p>
+                <div class="answers">
+                  <label class="answer"><input type="radio" name="q-4e-ch3-1" value="2"> 2 €</label>
+                  <label class="answer"><input type="radio" name="q-4e-ch3-1" value="18"> 18 €</label>
+                  <label class="answer"><input type="radio" name="q-4e-ch3-1" value="3"> 3 €</label>
+                </div>
+              </div>
+
+              <div class="q-row" data-qid="q2">
+                <p class="qtext">2) 5 litres d'essence permettent de parcourir 70 km. Combien pour 10 litres ?</p>
+                <div class="answers">
+                  <label class="answer"><input type="radio" name="q-4e-ch3-2" value="140"> 140 km</label>
+                  <label class="answer"><input type="radio" name="q-4e-ch3-2" value="35"> 35 km</label>
+                  <label class="answer"><input type="radio" name="q-4e-ch3-2" value="70"> 70 km</label>
+                </div>
+              </div>
+
+              <div class="q-row" data-qid="q3">
+                <p class="qtext">3) Complète : si deux quantités sont proportionnelles, le rapport reste ...</p>
+                <div class="answers">
+                  <label class="answer"><input type="radio" name="q-4e-ch3-3" value="constant"> constant</label>
+                  <label class="answer"><input type="radio" name="q-4e-ch3-3" value="variable"> variable</label>
+                  <label class="answer"><input type="radio" name="q-4e-ch3-3" value="inconnu"> inconnu</label>
+                </div>
+              </div>
+
+              <div class="q-row" data-qid="q4">
+                <p class="qtext">4) Si 4 stylos coûtent 2 €, combien coûtent 10 stylos (même prix unitaire) ?</p>
+                <div class="answers">
+                  <label class="answer"><input type="radio" name="q-4e-ch3-4" value="5"> 5 €</label>
+                  <label class="answer"><input type="radio" name="q-4e-ch3-4" value="4"> 4 €</label>
+                  <label class="answer"><input type="radio" name="q-4e-ch3-4" value="20"> 20 €</label>
+                </div>
+              </div>
+
+              <div class="q-row" data-qid="q5">
+                <p class="qtext">5) Un tableau de proportionnalité associe ...</p>
+                <div class="answers">
+                  <label class="answer"><input type="radio" name="q-4e-ch3-5" value="deux"> deux grandeurs</label>
+                  <label class="answer"><input type="radio" name="q-4e-ch3-5" value="trois"> trois grandeurs</label>
+                  <label class="answer"><input type="radio" name="q-4e-ch3-5" value="aucune"> aucune</label>
+                </div>
+              </div>
+
+              <div class="q-row" data-qid="q6">
+                <p class="qtext">6) Pour vérifier une proportion on peut utiliser :</p>
+                <div class="answers">
+                  <label class="answer"><input type="radio" name="q-4e-ch3-6" value="produitcroise"> le produit en croix</label>
+                  <label class="answer"><input type="radio" name="q-4e-ch3-6" value="somme"> la somme</label>
+                  <label class="answer"><input type="radio" name="q-4e-ch3-6" value="difference"> la différence</label>
+                </div>
+              </div>
+
+              <div class="q-row" data-qid="q7">
+                <p class="qtext">7) Si 2 kg → 8 € ; 5 kg → ?</p>
+                <div class="answers">
+                  <label class="answer"><input type="radio" name="q-4e-ch3-7" value="20"> 20 €</label>
+                  <label class="answer"><input type="radio" name="q-4e-ch3-7" value="10"> 10 €</label>
+                  <label class="answer"><input type="radio" name="q-4e-ch3-7" value="12"> 12 €</label>
+                </div>
+              </div>
+
+              <div class="q-row" data-qid="q8">
+                <p class="qtext">8) Le taux d'une réduction passe de 10% à 20% : le prix est-il proportionnel ?</p>
+                <div class="answers">
+                  <label class="answer"><input type="radio" name="q-4e-ch3-8" value="non"> Non</label>
+                  <label class="answer"><input type="radio" name="q-4e-ch3-8" value="oui"> Oui</label>
+                  <label class="answer"><input type="radio" name="q-4e-ch3-8" value="parfois"> Parfois</label>
+                </div>
+              </div>
+
+              <div class="q-row" data-qid="q9">
+                <p class="qtext">9) Si x est proportionnel à y et x double, y :</p>
+                <div class="answers">
+                  <label class="answer"><input type="radio" name="q-4e-ch3-9" value="double"> double</label>
+                  <label class="answer"><input type="radio" name="q-4e-ch3-9" value="diminue"> diminue</label>
+                  <label class="answer"><input type="radio" name="q-4e-ch3-9" value="reste"> reste constant</label>
+                </div>
+              </div>
+
+              <div class="q-row" data-qid="q10">
+                <p class="qtext">10) Une recette pour 4 personnes demande 200 g ; pour 10 personnes on applique :</p>
+                <div class="answers">
+                  <label class="answer"><input type="radio" name="q-4e-ch3-10" value="500"> 500 g</label>
+                  <label class="answer"><input type="radio" name="q-4e-ch3-10" value="200"> 200 g</label>
+                  <label class="answer"><input type="radio" name="q-4e-ch3-10" value="50"> 50 g</label>
+                </div>
+              </div>
+
+              <div class="controls">
+                <button type="button" class="submit">Valider</button>
+                <button type="button" class="restart">Recommencer</button>
+                <span class="summary" aria-live="polite"></span>
+              </div>
+            </form>
+          </div>
+
+          <!-- 4e - CH4: Puissances & Notation scientifique -->
+          <div id="quiz-4e-ch4" class="quiz-panel" data-quizid="quiz-4e-ch4">
+            <form class="quiz" id="quiz-4e-ch4-form">
+              <!-- 10 questions -->
+              <div class="q-row" data-qid="q1">
+                <p class="qtext">1) Que vaut 10^3 ?</p>
+                <div class="answers">
+                  <label class="answer"><input type="radio" name="q-4e-ch4-1" value="1000"> 1000</label>
+                  <label class="answer"><input type="radio" name="q-4e-ch4-1" value="100"> 100</label>
+                  <label class="answer"><input type="radio" name="q-4e-ch4-1" value="10"> 10</label>
+                </div>
+              </div>
+
+              <div class="q-row" data-qid="q2">
+                <p class="qtext">2) 2^4 = ?</p>
+                <div class="answers">
+                  <label class="answer"><input type="radio" name="q-4e-ch4-2" value="16"> 16</label>
+                  <label class="answer"><input type="radio" name="q-4e-ch4-2" value="8"> 8</label>
+                  <label class="answer"><input type="radio" name="q-4e-ch4-2" value="4"> 4</label>
+                </div>
+              </div>
+
+              <div class="q-row" data-qid="q3">
+                <p class="qtext">3) Notation scientifique de 5 000 =</p>
+                <div class="answers">
+                  <label class="answer"><input type="radio" name="q-4e-ch4-3" value="5e3"> 5 × 10³</label>
+                  <label class="answer"><input type="radio" name="q-4e-ch4-3" value="5000"> 5000</label>
+                  <label class="answer"><input type="radio" name="q-4e-ch4-3" value="0.005"> 0.005</label>
+                </div>
+              </div>
+
+              <div class="q-row" data-qid="q4">
+                <p class="qtext">4) 10^-2 = ?</p>
+                <div class="answers">
+                  <label class="answer"><input type="radio" name="q-4e-ch4-4" value="0.01"> 0.01</label>
+                  <label class="answer"><input type="radio" name="q-4e-ch4-4" value="100"> 100</label>
+                  <label class="answer"><input type="radio" name="q-4e-ch4-4" value="-2"> -2</label>
+                </div>
+              </div>
+
+              <div class="q-row" data-qid="q5">
+                <p class="qtext">5) (3^2) × (3^3) = ?</p>
+                <div class="answers">
+                  <label class="answer"><input type="radio" name="q-4e-ch4-5" value="3^5"> 3^5</label>
+                  <label class="answer"><input type="radio" name="q-4e-ch4-5" value="3^6"> 3^6</label>
+                  <label class="answer"><input type="radio" name="q-4e-ch4-5" value="9"> 9</label>
+                </div>
+              </div>
+
+              <div class="q-row" data-qid="q6">
+                <p class="qtext">6) 1000 = 10^? </p>
+                <div class="answers">
+                  <label class="answer"><input type="radio" name="q-4e-ch4-6" value="3"> 3</label>
+                  <label class="answer"><input type="radio" name="q-4e-ch4-6" value="2"> 2</label>
+                  <label class="answer"><input type="radio" name="q-4e-ch4-6" value="4"> 4</label>
+                </div>
+              </div>
+
+              <div class="q-row" data-qid="q7">
+                <p class="qtext">7) Notation scientifique : 0.0002 =</p>
+                <div class="answers">
+                  <label class="answer"><input type="radio" name="q-4e-ch4-7" value="2e-4"> 2 × 10⁻⁴</label>
+                  <label class="answer"><input type="radio" name="q-4e-ch4-7" value="2e4"> 2 × 10⁴</label>
+                  <label class="answer"><input type="radio" name="q-4e-ch4-7" value="0.2"> 0.2</label>
+                </div>
+              </div>
+
+              <div class="q-row" data-qid="q8">
+                <p class="qtext">8) Simplifie : (10^2) / (10^3) = ?</p>
+                <div class="answers">
+                  <label class="answer"><input type="radio" name="q-4e-ch4-8" value="10^-1"> 10⁻¹</label>
+                  <label class="answer"><input type="radio" name="q-4e-ch4-8" value="10^5"> 10⁵</label>
+                  <label class="answer"><input type="radio" name="q-4e-ch4-8" value="1"> 1</label>
+                </div>
+              </div>
+
+              <div class="q-row" data-qid="q9">
+                <p class="qtext">9) 5 × 10^2 = ?</p>
+                <div class="answers">
+                  <label class="answer"><input type="radio" name="q-4e-ch4-9" value="500"> 500</label>
+                  <label class="answer"><input type="radio" name="q-4e-ch4-9" value="50"> 50</label>
+                  <label class="answer"><input type="radio" name="q-4e-ch4-9" value="5"> 5</label>
+                </div>
+              </div>
+
+              <div class="q-row" data-qid="q10">
+                <p class="qtext">10) (2^3)^2 = ?</p>
+                <div class="answers">
+                  <label class="answer"><input type="radio" name="q-4e-ch4-10" value="2^6"> 2^6</label>
+                  <label class="answer"><input type="radio" name="q-4e-ch4-10" value="2^5"> 2^5</label>
+                  <label class="answer"><input type="radio" name="q-4e-ch4-10" value="2^9"> 2^9</label>
+                </div>
+              </div>
+
+              <div class="controls">
+                <button type="button" class="submit">Valider</button>
+                <button type="button" class="restart">Recommencer</button>
+                <span class="summary" aria-live="polite"></span>
+              </div>
+            </form>
+          </div>
+
+          <!-- 4e - CH5: Complément (divers, logique, unités) -->
+          <div id="quiz-4e-ch5" class="quiz-panel" data-quizid="quiz-4e-ch5">
+            <form class="quiz" id="quiz-4e-ch5-form">
+              <!-- 10 mixed questions -->
+              <div class="q-row" data-qid="q1">
+                <p class="qtext">1) Convertir 2 km en mètres = ?</p>
+                <div class="answers">
+                  <label class="answer"><input type="radio" name="q-4e-ch5-1" value="2000"> 2000 m</label>
+                  <label class="answer"><input type="radio" name="q-4e-ch5-1" value="20"> 20 m</label>
+                  <label class="answer"><input type="radio" name="q-4e-ch5-1" value="200"> 200 m</label>
+                </div>
+              </div>
+
+              <div class="q-row" data-qid="q2">
+                <p class="qtext">2) Si un nombre est divisible par 3, la somme de ses chiffres est :</p>
+                <div class="answers">
+                  <label class="answer"><input type="radio" name="q-4e-ch5-2" value="multiple3"> multiple de 3</label>
+                  <label class="answer"><input type="radio" name="q-4e-ch5-2" value="pair"> pair</label>
+                  <label class="answer"><input type="radio" name="q-4e-ch5-2" value="impair"> impair</label>
+                </div>
+              </div>
+
+              <div class="q-row" data-qid="q3">
+                <p class="qtext">3) 0,25 = ?/100</p>
+                <div class="answers">
+                  <label class="answer"><input type="radio" name="q-4e-ch5-3" value="25"> 25/100</label>
+                  <label class="answer"><input type="radio" name="q-4e-ch5-3" value="2.5"> 2.5/100</label>
+                  <label class="answer"><input type="radio" name="q-4e-ch5-3" value="250"> 250/100</label>
+                </div>
+              </div>
+
+              <div class="q-row" data-qid="q4">
+                <p class="qtext">4) 7 × 0 = ?</p>
+                <div class="answers">
+                  <label class="answer"><input type="radio" name="q-4e-ch5-4" value="0"> 0</label>
+                  <label class="answer"><input type="radio" name="q-4e-ch5-4" value="7"> 7</label>
+                  <label class="answer"><input type="radio" name="q-4e-ch5-4" value="-7"> -7</label>
+                </div>
+              </div>
+
+              <div class="q-row" data-qid="q5">
+                <p class="qtext">5) Simplifie : 3/9 = ?</p>
+                <div class="answers">
+                  <label class="answer"><input type="radio" name="q-4e-ch5-5" value="1/3"> 1/3</label>
+                  <label class="answer"><input type="radio" name="q-4e-ch5-5" value="3"> 3</label>
+                  <label class="answer"><input type="radio" name="q-4e-ch5-5" value="1/9"> 1/9</label>
+                </div>
+              </div>
+
+              <div class="q-row" data-qid="q6">
+                <p class="qtext">6) Quel est le triple de 14 ?</p>
+                <div class="answers">
+                  <label class="answer"><input type="radio" name="q-4e-ch5-6" value="42"> 42</label>
+                  <label class="answer"><input type="radio" name="q-4e-ch5-6" value="28"> 28</label>
+                  <label class="answer"><input type="radio" name="q-4e-ch5-6" value="56"> 56</label>
+                </div>
+              </div>
+
+              <div class="q-row" data-qid="q7">
+                <p class="qtext">7) Le nombre 1 est-il premier ?</p>
+                <div class="answers">
+                  <label class="answer"><input type="radio" name="q-4e-ch5-7" value="non"> Non</label>
+                  <label class="answer"><input type="radio" name="q-4e-ch5-7" value="oui"> Oui</label>
+                  <label class="answer"><input type="radio" name="q-4e-ch5-7" value="parfois"> Parfois</label>
+                </div>
+              </div>
+
+              <div class="q-row" data-qid="q8">
+                <p class="qtext">8) 15 % de 200 = ?</p>
+                <div class="answers">
+                  <label class="answer"><input type="radio" name="q-4e-ch5-8" value="30"> 30</label>
+                  <label class="answer"><input type="radio" name="q-4e-ch5-8" value="15"> 15</label>
+                  <label class="answer"><input type="radio" name="q-4e-ch5-8" value="300"> 300</label>
+                </div>
+              </div>
+
+              <div class="q-row" data-qid="q9">
+                <p class="qtext">9) Un carré a côté 5. Son aire = ?</p>
+                <div class="answers">
+                  <label class="answer"><input type="radio" name="q-4e-ch5-9" value="25"> 25</label>
+                  <label class="answer"><input type="radio" name="q-4e-ch5-9" value="10"> 10</label>
+                  <label class="answer"><input type="radio" name="q-4e-ch5-9" value="20"> 20</label>
+                </div>
+              </div>
+
+              <div class="q-row" data-qid="q10">
+                <p class="qtext">10) Quel est le PGCD de 8 et 12 ?</p>
+                <div class="answers">
+                  <label class="answer"><input type="radio" name="q-4e-ch5-10" value="4"> 4</label>
+                  <label class="answer"><input type="radio" name="q-4e-ch5-10" value="2"> 2</label>
+                  <label class="answer"><input type="radio" name="q-4e-ch5-10" value="8"> 8</label>
+                </div>
+              </div>
+
+              <div class="controls">
+                <button type="button" class="submit">Valider</button>
+                <button type="button" class="restart">Recommencer</button>
+                <span class="summary" aria-live="polite"></span>
+              </div>
+            </form>
+          </div>
+
+        </div> <!-- /quiz-panels -->
+      </div> <!-- /bloc Quiz 4e -->
+
     </section>
 
     <!-- SECTION 6e -->
@@ -345,66 +820,491 @@
         </ul>
       </div>
 
-      <!-- Quiz 6e (version complète avec score et restart) -->
+      <!-- NEW: Quiz section for 6e -->
       <div class="bloc">
-        <h2>❓ Quiz interactif — 6e</h2>
-        <p>Teste tes connaissances — réponds à toutes les questions puis clique sur <strong>Valider</strong>.</p>
+        <h2>❓ Quiz par chapitre — 6e</h2>
+        <p>Choisis un chapitre ci-dessous pour lancer le quiz correspondant (10 questions par chapitre).</p>
 
-        <div class="quiz" data-classe="6e" id="quiz-6e">
-          <!-- Q1 -->
-          <div class="question" data-qid="q1">
-            <p class="qtext">1) Combien font 8 + 7 ?</p>
-            <div class="answers">
-              <label class="answer"><input type="radio" name="6e-q1" value="15"> 15</label>
-              <label class="answer"><input type="radio" name="6e-q1" value="16"> 16</label>
-              <label class="answer"><input type="radio" name="6e-q1" value="14"> 14</label>
-            </div>
-          </div>
-
-          <!-- Q2 -->
-          <div class="question" data-qid="q2">
-            <p class="qtext">2) Une droite passe par combien de points distincts pour être déterminée ?</p>
-            <div class="answers">
-              <label class="answer"><input type="radio" name="6e-q2" value="2"> Deux points</label>
-              <label class="answer"><input type="radio" name="6e-q2" value="1"> Un seul point</label>
-              <label class="answer"><input type="radio" name="6e-q2" value="3"> Trois points</label>
-            </div>
-          </div>
-
-          <!-- Q3 -->
-          <div class="question" data-qid="q3">
-            <p class="qtext">3) La fraction 1/2 est égale à :</p>
-            <div class="answers">
-              <label class="answer"><input type="radio" name="6e-q3" value="0.5"> 0.5</label>
-              <label class="answer"><input type="radio" name="6e-q3" value="2"> 2</label>
-              <label class="answer"><input type="radio" name="6e-q3" value="1"> 1</label>
-            </div>
-          </div>
-
-          <!-- Q4 -->
-          <div class="question" data-qid="q4">
-            <p class="qtext">4) Un angle droit mesure :</p>
-            <div class="answers">
-              <label class="answer"><input type="radio" name="6e-q4" value="90"> 90°</label>
-              <label class="answer"><input type="radio" name="6e-q4" value="45"> 45°</label>
-              <label class="answer"><input type="radio" name="6e-q4" value="180"> 180°</label>
-            </div>
-          </div>
-
-          <div>
-            <button class="action submit" type="button">Valider</button>
-            <button class="action restart" type="button">Recommencer</button>
-            <span class="result-summary" aria-live="polite"></span>
-          </div>
+        <div class="chapter-quiz-buttons" data-classe="6e">
+          <button data-target="quiz-6e-ch1">Quiz Chapitre 1 — Nombres entiers</button>
+          <button data-target="quiz-6e-ch2">Quiz Chapitre 2 — Géométrie (points/segments)</button>
+          <button data-target="quiz-6e-ch3">Quiz Chapitre 3 — Les fractions</button>
+          <button data-target="quiz-6e-ch4">Quiz Chapitre 4 — Droites</button>
+          <button data-target="quiz-6e-ch5">Quiz Chapitre 5 — Notion d’angle</button>
         </div>
-      </div>
+
+        <div class="quiz-panels">
+          <!-- 6e - CH1: Nombres entiers -->
+          <div id="quiz-6e-ch1" class="quiz-panel" data-quizid="quiz-6e-ch1">
+            <form class="quiz" id="quiz-6e-ch1-form">
+              <!-- 10 questions -->
+              <div class="q-row"><p class="qtext">1) Quel est le successeur de 99 ?</p>
+                <div class="answers">
+                  <label class="answer"><input type="radio" name="q-6e-ch1-1" value="100"> 100</label>
+                  <label class="answer"><input type="radio" name="q-6e-ch1-1" value="99"> 99</label>
+                  <label class="answer"><input type="radio" name="q-6e-ch1-1" value="101"> 101</label>
+                </div>
+              </div>
+
+              <div class="q-row"><p class="qtext">2) Quel est le prédécesseur de 50 ?</p>
+                <div class="answers">
+                  <label class="answer"><input type="radio" name="q-6e-ch1-2" value="49"> 49</label>
+                  <label class="answer"><input type="radio" name="q-6e-ch1-2" value="51"> 51</label>
+                  <label class="answer"><input type="radio" name="q-6e-ch1-2" value="0"> 0</label>
+                </div>
+              </div>
+
+              <div class="q-row"><p class="qtext">3) 7 × 6 = ?</p>
+                <div class="answers">
+                  <label class="answer"><input type="radio" name="q-6e-ch1-3" value="42"> 42</label>
+                  <label class="answer"><input type="radio" name="q-6e-ch1-3" value="36"> 36</label>
+                  <label class="answer"><input type="radio" name="q-6e-ch1-3" value="13"> 13</label>
+                </div>
+              </div>
+
+              <div class="q-row"><p class="qtext">4) 100 ÷ 25 = ?</p>
+                <div class="answers">
+                  <label class="answer"><input type="radio" name="q-6e-ch1-4" value="4"> 4</label>
+                  <label class="answer"><input type="radio" name="q-6e-ch1-4" value="25"> 25</label>
+                  <label class="answer"><input type="radio" name="q-6e-ch1-4" value="0.25"> 0.25</label>
+                </div>
+              </div>
+
+              <div class="q-row"><p class="qtext">5) Est-ce que 17 est un nombre premier ?</p>
+                <div class="answers">
+                  <label class="answer"><input type="radio" name="q-6e-ch1-5" value="oui"> Oui</label>
+                  <label class="answer"><input type="radio" name="q-6e-ch1-5" value="non"> Non</label>
+                  <label class="answer"><input type="radio" name="q-6e-ch1-5" value="parfois"> Parfois</label>
+                </div>
+              </div>
+
+              <div class="q-row"><p class="qtext">6) 0 est-il un nombre entier ?</p>
+                <div class="answers">
+                  <label class="answer"><input type="radio" name="q-6e-ch1-6" value="oui"> Oui</label>
+                  <label class="answer"><input type="radio" name="q-6e-ch1-6" value="non"> Non</label>
+                  <label class="answer"><input type="radio" name="q-6e-ch1-6" value="parfois"> Parfois</label>
+                </div>
+              </div>
+
+              <div class="q-row"><p class="qtext">7) Quel est le double de 13 ?</p>
+                <div class="answers">
+                  <label class="answer"><input type="radio" name="q-6e-ch1-7" value="26"> 26</label>
+                  <label class="answer"><input type="radio" name="q-6e-ch1-7" value="13"> 13</label>
+                  <label class="answer"><input type="radio" name="q-6e-ch1-7" value="39"> 39</label>
+                </div>
+              </div>
+
+              <div class="q-row"><p class="qtext">8) 8 + (-3) = ?</p>
+                <div class="answers">
+                  <label class="answer"><input type="radio" name="q-6e-ch1-8" value="5"> 5</label>
+                  <label class="answer"><input type="radio" name="q-6e-ch1-8" value="11"> 11</label>
+                  <label class="answer"><input type="radio" name="q-6e-ch1-8" value="-5"> -5</label>
+                </div>
+              </div>
+
+              <div class="q-row"><p class="qtext">9) Quel est le reste de 10 ÷ 3 ?</p>
+                <div class="answers">
+                  <label class="answer"><input type="radio" name="q-6e-ch1-9" value="1"> 1</label>
+                  <label class="answer"><input type="radio" name="q-6e-ch1-9" value="0"> 0</label>
+                  <label class="answer"><input type="radio" name="q-6e-ch1-9" value="3"> 3</label>
+                </div>
+              </div>
+
+              <div class="q-row"><p class="qtext">10) Parmi ces nombres, lequel est pair ? 7, 9, 12</p>
+                <div class="answers">
+                  <label class="answer"><input type="radio" name="q-6e-ch1-10" value="12"> 12</label>
+                  <label class="answer"><input type="radio" name="q-6e-ch1-10" value="7"> 7</label>
+                  <label class="answer"><input type="radio" name="q-6e-ch1-10" value="9"> 9</label>
+                </div>
+              </div>
+
+              <div class="controls">
+                <button type="button" class="submit">Valider</button>
+                <button type="button" class="restart">Recommencer</button>
+                <span class="summary" aria-live="polite"></span>
+              </div>
+            </form>
+          </div>
+
+          <!-- 6e - CH2: Premiers éléments de géométrie -->
+          <div id="quiz-6e-ch2" class="quiz-panel" data-quizid="quiz-6e-ch2">
+            <form class="quiz" id="quiz-6e-ch2-form">
+              <!-- 10 geometry questions -->
+              <div class="q-row"><p class="qtext">1) Un segment est délimité par :</p>
+                <div class="answers">
+                  <label class="answer"><input type="radio" name="q-6e-ch2-1" value="2pts"> 2 points</label>
+                  <label class="answer"><input type="radio" name="q-6e-ch2-1" value="1pt"> 1 point</label>
+                  <label class="answer"><input type="radio" name="q-6e-ch2-1" value="3pts"> 3 points</label>
+                </div>
+              </div>
+
+              <div class="q-row"><p class="qtext">2) Un point n'a ...</p>
+                <div class="answers">
+                  <label class="answer"><input type="radio" name="q-6e-ch2-2" value="aucune"> aucune dimension</label>
+                  <label class="answer"><input type="radio" name="q-6e-ch2-2" value="longueur"> une longueur</label>
+                  <label class="answer"><input type="radio" name="q-6e-ch2-2" value="aire"> une aire</label>
+                </div>
+              </div>
+
+              <div class="q-row"><p class="qtext">3) Deux droites parallèles se coupent-elles ?</p>
+                <div class="answers">
+                  <label class="answer"><input type="radio" name="q-6e-ch2-3" value="non"> Non</label>
+                  <label class="answer"><input type="radio" name="q-6e-ch2-3" value="oui"> Oui</label>
+                  <label class="answer"><input type="radio" name="q-6e-ch2-3" value="parfois"> Parfois</label>
+                </div>
+              </div>
+
+              <div class="q-row"><p class="qtext">4) Le milieu d'un segment est :</p>
+                <div class="answers">
+                  <label class="answer"><input type="radio" name="q-6e-ch2-4" value="centre"> le point équidistant des deux extrémités</label>
+                  <label class="answer"><input type="radio" name="q-6e-ch2-4" value="extremite"> une extrémité</label>
+                  <label class="answer"><input type="radio" name="q-6e-ch2-4" value="segment"> un segment</label>
+                </div>
+              </div>
+
+              <div class="q-row"><p class="qtext">5) Un angle plat mesure :</p>
+                <div class="answers">
+                  <label class="answer"><input type="radio" name="q-6e-ch2-5" value="180"> 180°</label>
+                  <label class="answer"><input type="radio" name="q-6e-ch2-5" value="90"> 90°</label>
+                  <label class="answer"><input type="radio" name="q-6e-ch2-5" value="360"> 360°</label>
+                </div>
+              </div>
+
+              <div class="q-row"><p class="qtext">6) Un polygone est une figure composée de :</p>
+                <div class="answers">
+                  <label class="answer"><input type="radio" name="q-6e-ch2-6" value="segments"> segments</label>
+                  <label class="answer"><input type="radio" name="q-6e-ch2-6" value="cercles"> cercles</label>
+                  <label class="answer"><input type="radio" name="q-6e-ch2-6" value="points"> points uniquement</label>
+                </div>
+              </div>
+
+              <div class="q-row"><p class="qtext">7) Un triangle a combien de côtés ?</p>
+                <div class="answers">
+                  <label class="answer"><input type="radio" name="q-6e-ch2-7" value="3"> 3</label>
+                  <label class="answer"><input type="radio" name="q-6e-ch2-7" value="4"> 4</label>
+                  <label class="answer"><input type="radio" name="q-6e-ch2-7" value="2"> 2</label>
+                </div>
+              </div>
+
+              <div class="q-row"><p class="qtext">8) Un quadrilatère a :</p>
+                <div class="answers">
+                  <label class="answer"><input type="radio" name="q-6e-ch2-8" value="4"> 4 côtés</label>
+                  <label class="answer"><input type="radio" name="q-6e-ch2-8" value="3"> 3 côtés</label>
+                  <label class="answer"><input type="radio" name="q-6e-ch2-8" value="5"> 5 côtés</label>
+                </div>
+              </div>
+
+              <div class="q-row"><p class="qtext">9) Deux segments se coupent-ils toujours ?</p>
+                <div class="answers">
+                  <label class="answer"><input type="radio" name="q-6e-ch2-9" value="non"> Non</label>
+                  <label class="answer"><input type="radio" name="q-6e-ch2-9" value="oui"> Oui</label>
+                  <label class="answer"><input type="radio" name="q-6e-ch2-9" value="parfois"> Parfois</label>
+                </div>
+              </div>
+
+              <div class="q-row"><p class="qtext">10) Le point d'intersection de deux droites est :</p>
+                <div class="answers">
+                  <label class="answer"><input type="radio" name="q-6e-ch2-10" value="un point"> un point</label>
+                  <label class="answer"><input type="radio" name="q-6e-ch2-10" value="un segment"> un segment</label>
+                  <label class="answer"><input type="radio" name="q-6e-ch2-10" value="une droite"> une droite</label>
+                </div>
+              </div>
+
+              <div class="controls">
+                <button type="button" class="submit">Valider</button>
+                <button type="button" class="restart">Recommencer</button>
+                <span class="summary" aria-live="polite"></span>
+              </div>
+            </form>
+          </div>
+
+          <!-- 6e - CH3: Les fractions -->
+          <div id="quiz-6e-ch3" class="quiz-panel" data-quizid="quiz-6e-ch3">
+            <form class="quiz" id="quiz-6e-ch3-form">
+              <!-- 10 fractions questions -->
+              <div class="q-row"><p class="qtext">1) 1/2 = ? en décimal</p>
+                <div class="answers">
+                  <label class="answer"><input type="radio" name="q-6e-ch3-1" value="0.5"> 0.5</label>
+                  <label class="answer"><input type="radio" name="q-6e-ch3-1" value="2"> 2</label>
+                  <label class="answer"><input type="radio" name="q-6e-ch3-1" value="1"> 1</label>
+                </div>
+              </div>
+
+              <div class="q-row"><p class="qtext">2) Simplifie : 4/8 = ?</p>
+                <div class="answers">
+                  <label class="answer"><input type="radio" name="q-6e-ch3-2" value="1/2"> 1/2</label>
+                  <label class="answer"><input type="radio" name="q-6e-ch3-2" value="2/4"> 2/4</label>
+                  <label class="answer"><input type="radio" name="q-6e-ch3-2" value="4/8"> 4/8</label>
+                </div>
+              </div>
+
+              <div class="q-row"><p class="qtext">3) 3/4 + 1/4 = ?</p>
+                <div class="answers">
+                  <label class="answer"><input type="radio" name="q-6e-ch3-3" value="1"> 1</label>
+                  <label class="answer"><input type="radio" name="q-6e-ch3-3" value="3/8"> 3/8</label>
+                  <label class="answer"><input type="radio" name="q-6e-ch3-3" value="1/2"> 1/2</label>
+                </div>
+              </div>
+
+              <div class="q-row"><p class="qtext">4) 2/3 < ?</p>
+                <div class="answers">
+                  <label class="answer"><input type="radio" name="q-6e-ch3-4" value="1"> 1</label>
+                  <label class="answer"><input type="radio" name="q-6e-ch3-4" value="0.5"> 0.5</label>
+                  <label class="answer"><input type="radio" name="q-6e-ch3-4" value="2"> 2</label>
+                </div>
+              </div>
+
+              <div class="q-row"><p class="qtext">5) 5/10 = ?</p>
+                <div class="answers">
+                  <label class="answer"><input type="radio" name="q-6e-ch3-5" value="1/2"> 1/2</label>
+                  <label class="answer"><input type="radio" name="q-6e-ch3-5" value="5"> 5</label>
+                  <label class="answer"><input type="radio" name="q-6e-ch3-5" value="0.5"> 0.5</label>
+                </div>
+              </div>
+
+              <div class="q-row"><p class="qtext">6) 1/3 = ? en décimal (approx.)</p>
+                <div class="answers">
+                  <label class="answer"><input type="radio" name="q-6e-ch3-6" value="0.333"> 0.333</label>
+                  <label class="answer"><input type="radio" name="q-6e-ch3-6" value="0.25"> 0.25</label>
+                  <label class="answer"><input type="radio" name="q-6e-ch3-6" value="0.5"> 0.5</label>
+                </div>
+              </div>
+
+              <div class="q-row"><p class="qtext">7) Convertir 3/2 en nombre mixte</p>
+                <div class="answers">
+                  <label class="answer"><input type="radio" name="q-6e-ch3-7" value="1 1/2"> 1 1/2</label>
+                  <label class="answer"><input type="radio" name="q-6e-ch3-7" value="3/2"> 3/2</label>
+                  <label class="answer"><input type="radio" name="q-6e-ch3-7" value="2 1/3"> 2 1/3</label>
+                </div>
+              </div>
+
+              <div class="q-row"><p class="qtext">8) Comparer : 2/5 et 1/3 → lequel est le plus grand ?</p>
+                <div class="answers">
+                  <label class="answer"><input type="radio" name="q-6e-ch3-8" value="2/5"> 2/5</label>
+                  <label class="answer"><input type="radio" name="q-6e-ch3-8" value="1/3"> 1/3</label>
+                  <label class="answer"><input type="radio" name="q-6e-ch3-8" value="egal"> égal</label>
+                </div>
+              </div>
+
+              <div class="q-row"><p class="qtext">9) Multiplie : 2/3 × 3/4 = ?</p>
+                <div class="answers">
+                  <label class="answer"><input type="radio" name="q-6e-ch3-9" value="1/2"> 1/2</label>
+                  <label class="answer"><input type="radio" name="q-6e-ch3-9" value="6/12"> 6/12</label>
+                  <label class="answer"><input type="radio" name="q-6e-ch3-9" value="5/7"> 5/7</label>
+                </div>
+              </div>
+
+              <div class="q-row"><p class="qtext">10) Divise : (1/2) ÷ (1/4) = ?</p>
+                <div class="answers">
+                  <label class="answer"><input type="radio" name="q-6e-ch3-10" value="2"> 2</label>
+                  <label class="answer"><input type="radio" name="q-6e-ch3-10" value="1/2"> 1/2</label>
+                  <label class="answer"><input type="radio" name="q-6e-ch3-10" value="4"> 4</label>
+                </div>
+              </div>
+
+              <div class="controls">
+                <button type="button" class="submit">Valider</button>
+                <button type="button" class="restart">Recommencer</button>
+                <span class="summary" aria-live="polite"></span>
+              </div>
+            </form>
+          </div>
+
+          <!-- 6e - CH4: Droites -->
+          <div id="quiz-6e-ch4" class="quiz-panel" data-quizid="quiz-6e-ch4">
+            <form class="quiz" id="quiz-6e-ch4-form">
+              <!-- 10 droites questions -->
+              <div class="q-row"><p class="qtext">1) Deux droites sécantes se coupent en :</p>
+                <div class="answers">
+                  <label class="answer"><input type="radio" name="q-6e-ch4-1" value="un point"> un point</label>
+                  <label class="answer"><input type="radio" name="q-6e-ch4-1" value="une droite"> une droite</label>
+                  <label class="answer"><input type="radio" name="q-6e-ch4-1" value="un segment"> un segment</label>
+                </div>
+              </div>
+
+              <div class="q-row"><p class="qtext">2) Droites parallèles -> ont-elles des points en commun ?</p>
+                <div class="answers">
+                  <label class="answer"><input type="radio" name="q-6e-ch4-2" value="non"> Non</label>
+                  <label class="answer"><input type="radio" name="q-6e-ch4-2" value="oui"> Oui</label>
+                  <label class="answer"><input type="radio" name="q-6e-ch4-2" value="parfois"> Parfois</label>
+                </div>
+              </div>
+
+              <div class="q-row"><p class="qtext">3) Deux droites perpendiculaires ont un angle de :</p>
+                <div class="answers">
+                  <label class="answer"><input type="radio" name="q-6e-ch4-3" value="90"> 90°</label>
+                  <label class="answer"><input type="radio" name="q-6e-ch4-3" value="45"> 45°</label>
+                  <label class="answer"><input type="radio" name="q-6e-ch4-3" value="180"> 180°</label>
+                </div>
+              </div>
+
+              <div class="q-row"><p class="qtext">4) Une droite est infinie dans :</p>
+                <div class="answers">
+                  <label class="answer"><input type="radio" name="q-6e-ch4-4" value="2sens"> deux sens</label>
+                  <label class="answer"><input type="radio" name="q-6e-ch4-4" value="1sens"> un sens</label>
+                  <label class="answer"><input type="radio" name="q-6e-ch4-4" value="aucun"> aucun</label>
+                </div>
+              </div>
+
+              <div class="q-row"><p class="qtext">5) Si deux droites n'ont aucun point commun, elles sont :</p>
+                <div class="answers">
+                  <label class="answer"><input type="radio" name="q-6e-ch4-5" value="paralleles"> parallèles</label>
+                  <label class="answer"><input type="radio" name="q-6e-ch4-5" value="perp"> perpendiculaires</label>
+                  <label class="answer"><input type="radio" name="q-6e-ch4-5" value="secantes"> sécantes</label>
+                </div>
+              </div>
+
+              <div class="q-row"><p class="qtext">6) Une droite passant par deux points A et B est notée :</p>
+                <div class="answers">
+                  <label class="answer"><input type="radio" name="q-6e-ch4-6" value="AB"> (AB)</label>
+                  <label class="answer"><input type="radio" name="q-6e-ch4-6" value="a+b"> A+B</label>
+                  <label class="answer"><input type="radio" name="q-6e-ch4-6" value="A"> A</label>
+                </div>
+              </div>
+
+              <div class="q-row"><p class="qtext">7) Le prolongement d'un segment donne :</p>
+                <div class="answers">
+                  <label class="answer"><input type="radio" name="q-6e-ch4-7" value="droite"> une droite</label>
+                  <label class="answer"><input type="radio" name="q-6e-ch4-7" value="segment"> un segment</label>
+                  <label class="answer"><input type="radio" name="q-6e-ch4-7" value="point"> un point</label>
+                </div>
+              </div>
+
+              <div class="q-row"><p class="qtext">8) Quel instrument permet de tracer une droite parallèle ?</p>
+                <div class="answers">
+                  <label class="answer"><input type="radio" name="q-6e-ch4-8" value="règle"> règle + équerre/rapporteur</label>
+                  <label class="answer"><input type="radio" name="q-6e-ch4-8" value="compas"> compas</label>
+                  <label class="answer"><input type="radio" name="q-6e-ch4-8" value="crayon"> crayon seul</label>
+                </div>
+              </div>
+
+              <div class="q-row"><p class="qtext">9) Deux droites perpendiculaires se croisent en formant :</p>
+                <div class="answers">
+                  <label class="answer"><input type="radio" name="q-6e-ch4-9" value="angles90"> quatre angles de 90°</label>
+                  <label class="answer"><input type="radio" name="q-6e-ch4-9" value="angles45"> deux angles de 45°</label>
+                  <label class="answer"><input type="radio" name="q-6e-ch4-9" value="aucun"> aucun angle</label>
+                </div>
+              </div>
+
+              <div class="q-row"><p class="qtext">10) Si deux droites sont parallèles et une troisième est perpendiculaire à une d'elles, elle est :</p>
+                <div class="answers">
+                  <label class="answer"><input type="radio" name="q-6e-ch4-10" value="perp"> perpendiculaire à l'autre aussi</label>
+                  <label class="answer"><input type="radio" name="q-6e-ch4-10" value="parallel"> parallèle à l'autre</label>
+                  <label class="answer"><input type="radio" name="q-6e-ch4-10" value="varie"> Variable</label>
+                </div>
+              </div>
+
+              <div class="controls">
+                <button type="button" class="submit">Valider</button>
+                <button type="button" class="restart">Recommencer</button>
+                <span class="summary" aria-live="polite"></span>
+              </div>
+            </form>
+          </div>
+
+          <!-- 6e - CH5: Notion d'angle -->
+          <div id="quiz-6e-ch5" class="quiz-panel" data-quizid="quiz-6e-ch5">
+            <form class="quiz" id="quiz-6e-ch5-form">
+              <!-- 10 angle questions -->
+              <div class="q-row"><p class="qtext">1) Un angle droit mesure :</p>
+                <div class="answers">
+                  <label class="answer"><input type="radio" name="q-6e-ch5-1" value="90"> 90°</label>
+                  <label class="answer"><input type="radio" name="q-6e-ch5-1" value="45"> 45°</label>
+                  <label class="answer"><input type="radio" name="q-6e-ch5-1" value="180"> 180°</label>
+                </div>
+              </div>
+
+              <div class="q-row"><p class="qtext">2) Un angle aigu est :</p>
+                <div class="answers">
+                  <label class="answer"><input type="radio" name="q-6e-ch5-2" value="<90"> < 90°</label>
+                  <label class="answer"><input type="radio" name="q-6e-ch5-2" value="=90"> = 90°</label>
+                  <label class="answer"><input type="radio" name="q-6e-ch5-2" value=">90"> > 90°</label>
+                </div>
+              </div>
+
+              <div class="q-row"><p class="qtext">3) Un angle obtus mesure :</p>
+                <div class="answers">
+                  <label class="answer"><input type="radio" name="q-6e-ch5-3" value=">90"> > 90°</label>
+                  <label class="answer"><input type="radio" name="q-6e-ch5-3" value="<90"> < 90°</label>
+                  <label class="answer"><input type="radio" name="q-6e-ch5-3" value="=180"> = 180°</label>
+                </div>
+              </div>
+
+              <div class="q-row"><p class="qtext">4) Deux angles complémentaires mesurent :</p>
+                <div class="answers">
+                  <label class="answer"><input type="radio" name="q-6e-ch5-4" value="90"> 90° au total</label>
+                  <label class="answer"><input type="radio" name="q-6e-ch5-4" value="180"> 180° au total</label>
+                  <label class="answer"><input type="radio" name="q-6e-ch5-4" value="45"> 45° au total</label>
+                </div>
+              </div>
+
+              <div class="q-row"><p class="qtext">5) Deux angles supplémentaires mesurent :</p>
+                <div class="answers">
+                  <label class="answer"><input type="radio" name="q-6e-ch5-5" value="180"> 180° au total</label>
+                  <label class="answer"><input type="radio" name="q-6e-ch5-5" value="90"> 90° au total</label>
+                  <label class="answer"><input type="radio" name="q-6e-ch5-5" value="360"> 360° au total</label>
+                </div>
+              </div>
+
+              <div class="q-row"><p class="qtext">6) Si un angle mesure 30°, il est :</p>
+                <div class="answers">
+                  <label class="answer"><input type="radio" name="q-6e-ch5-6" value="aigu"> aigu</label>
+                  <label class="answer"><input type="radio" name="q-6e-ch5-6" value="obtus"> obtus</label>
+                  <label class="answer"><input type="radio" name="q-6e-ch5-6" value="droit"> droit</label>
+                </div>
+              </div>
+
+              <div class="q-row"><p class="qtext">7) Mesurer un angle se fait en :</p>
+                <div class="answers">
+                  <label class="answer"><input type="radio" name="q-6e-ch5-7" value="degres"> degrés</label>
+                  <label class="answer"><input type="radio" name="q-6e-ch5-7" value="metres"> mètres</label>
+                  <label class="answer"><input type="radio" name="q-6e-ch5-7" value="litres"> litres</label>
+                </div>
+              </div>
+
+              <div class="q-row"><p class="qtext">8) Un angle plat est de :</p>
+                <div class="answers">
+                  <label class="answer"><input type="radio" name="q-6e-ch5-8" value="180"> 180°</label>
+                  <label class="answer"><input type="radio" name="q-6e-ch5-8" value="90"> 90°</label>
+                  <label class="answer"><input type="radio" name="q-6e-ch5-8" value="360"> 360°</label>
+                </div>
+              </div>
+
+              <div class="q-row"><p class="qtext">9) L'angle nul mesure :</p>
+                <div class="answers">
+                  <label class="answer"><input type="radio" name="q-6e-ch5-9" value="0"> 0°</label>
+                  <label class="answer"><input type="radio" name="q-6e-ch5-9" value="90"> 90°</label>
+                  <label class="answer"><input type="radio" name="q-6e-ch5-9" value="180"> 180°</label>
+                </div>
+              </div>
+
+              <div class="q-row"><p class="qtext">10) Si deux angles mesurent 45° chacun, ensemble ils forment :</p>
+                <div class="answers">
+                  <label class="answer"><input type="radio" name="q-6e-ch5-10" value="90"> 90°</label>
+                  <label class="answer"><input type="radio" name="q-6e-ch5-10" value="180"> 180°</label>
+                  <label class="answer"><input type="radio" name="q-6e-ch5-10" value="45"> 45°</label>
+                </div>
+              </div>
+
+              <div class="controls">
+                <button type="button" class="submit">Valider</button>
+                <button type="button" class="restart">Recommencer</button>
+                <span class="summary" aria-live="polite"></span>
+              </div>
+            </form>
+          </div>
+
+        </div> <!-- /quiz-panels 6e -->
+
+      </div> <!-- /bloc Quiz 6e -->
+
     </section>
   </main>
 
   <footer>© 2025 — Cours de maths • Ressources pour les élèves de 4e et 6e</footer>
 
   <script>
-    // CITATIONS / ASTUCES
+    // CITATIONS
     const citations = [
       "« Les mathématiques sont la poésie des sciences. » — Albert Einstein",
       "Le zéro n’a pas toujours existé — il a été inventé en Inde au 5e siècle !",
@@ -417,10 +1317,9 @@
       "« La vie est comme une équation : elle ne fonctionne pas sans variables. » — Anonyme",
       "Il y a plus de façons d’ordonner un jeu de cartes que d’atomes dans l’univers observable."
     ];
-    document.querySelector(".citation").textContent =
-      citations[Math.floor(Math.random() * citations.length)];
+    document.querySelector(".citation").textContent = citations[Math.floor(Math.random() * citations.length)];
 
-    // Navigation entre 4e/6e
+    // NAV TABS
     document.querySelectorAll('.tablink').forEach(button => {
       button.addEventListener('click', () => {
         const target = button.dataset.target;
@@ -430,21 +1329,18 @@
         document.querySelectorAll('.tablink').forEach(b => b.classList.remove('active'));
         button.classList.add('active');
         document.getElementById(target).classList.add('active');
-        // focus for accessibility
         const sec = document.getElementById(target);
         if (sec) sec.focus();
       });
     });
 
-    // Sous-onglets vidéos (par bloc)
+    // SUBTABS VIDEOS
     document.querySelectorAll('.subtabs').forEach(group => {
       const buttons = group.querySelectorAll('.subtab');
       buttons.forEach(btn => {
         btn.addEventListener('click', () => {
-          // désactive groupe
           buttons.forEach(b => b.classList.remove('active'));
           btn.classList.add('active');
-          // active contenu correspondant dans le même bloc
           const bloc = btn.closest('.bloc');
           bloc.querySelectorAll('.subtab-content').forEach(c => c.classList.remove('active'));
           const targetId = btn.dataset.target;
@@ -454,7 +1350,7 @@
       });
     });
 
-    // Progression : sauvegarde case à cocher
+    // SAVE CHECKBOX PROGRESS
     document.querySelectorAll('.checkbox').forEach((checkbox, idx) => {
       const key = 'cours-progress-' + idx;
       const saved = localStorage.getItem(key);
@@ -464,133 +1360,262 @@
       });
     });
 
-    // --- QUIZ: configuration des bonnes réponses ---
-    // On définit les réponses correctes pour chaque quiz (clé: quizId -> questionName -> correctValue)
+    // CHAPTER BUTTONS -> TOGGLE QUIZ PANELS
+    document.querySelectorAll('.chapter-quiz-buttons').forEach(container => {
+      container.addEventListener('click', (e) => {
+        const btn = e.target.closest('button[data-target]');
+        if (!btn) return;
+        const targetId = btn.dataset.target;
+        // find panel container
+        const bloc = btn.closest('.bloc');
+        // hide other panels in the same bie
+        const panels = bloc.querySelectorAll('.quiz-panel');
+        panels.forEach(p => {
+          if (p.id === targetId) {
+            p.classList.toggle('active');
+            // scroll into view when opening
+            if (p.classList.contains('active')) p.scrollIntoView({behavior:'smooth', block:'center'});
+          } else {
+            p.classList.remove('active');
+          }
+        });
+      });
+    });
+
+    // QUIZ LOGIC: generalized evaluate / restart behavior
+    // We'll define correct answers mapping for all quizzes below.
     const QUIZ_ANSWERS = {
-      "quiz-4e": {
-        "q1": "7",
-        "q2": "pythagore",
-        "q3": "1",
-        "q4": "ecrire"
+      // 4e chapter 1: q-4e-ch1-1 ... -10
+      "quiz-4e-ch1": {
+        "q-4e-ch1-1":"7",
+        "q-4e-ch1-2":"-8",
+        "q-4e-ch1-3":"7",
+        "q-4e-ch1-4":"12",
+        "q-4e-ch1-5":"-5",
+        "q-4e-ch1-6":"-5",
+        "q-4e-ch1-7":"-4",
+        "q-4e-ch1-8":"-9",
+        "q-4e-ch1-9":"12",
+        "q-4e-ch1-10":"4"
       },
-      "quiz-6e": {
-        "6e-q1": "15",
-        "6e-q2": "2",
-        "6e-q3": "0.5",
-        "6e-q4": "90"
+      // 4e chapter 2: Pythagore
+      "quiz-4e-ch2": {
+        "q-4e-ch2-1":"hypotenuse",
+        "q-4e-ch2-2":"5",
+        "q-4e-ch2-3":"a2b2c2",
+        "q-4e-ch2-4":"12",
+        "q-4e-ch2-5":"distances",
+        "q-4e-ch2-6":"pythagore",
+        "q-4e-ch2-7":"oui",
+        "q-4e-ch2-8":"49",
+        "q-4e-ch2-9":"oui",
+        "q-4e-ch2-10":"hyp"
+      },
+      // 4e chapter 3: Proportionnalité
+      "quiz-4e-ch3": {
+        "q-4e-ch3-1":"2",
+        "q-4e-ch3-2":"140",
+        "q-4e-ch3-3":"constant",
+        "q-4e-ch3-4":"5",
+        "q-4e-ch3-5":"deux",
+        "q-4e-ch3-6":"produitcroise",
+        "q-4e-ch3-7":"20",
+        "q-4e-ch3-8":"non",
+        "q-4e-ch3-9":"double",
+        "q-4e-ch3-10":"500"
+      },
+      // 4e chapter 4: Puissances & notation scientifique
+      "quiz-4e-ch4": {
+        "q-4e-ch4-1":"1000",
+        "q-4e-ch4-2":"16",
+        "q-4e-ch4-3":"5e3",
+        "q-4e-ch4-4":"0.01",
+        "q-4e-ch4-5":"3^5",
+        "q-4e-ch4-6":"3",
+        "q-4e-ch4-7":"2e-4",
+        "q-4e-ch4-8":"10^-1",
+        "q-4e-ch4-9":"500",
+        "q-4e-ch4-10":"2^6"
+      },
+      // 4e chapter 5: Complément
+      "quiz-4e-ch5": {
+        "q-4e-ch5-1":"2000",
+        "q-4e-ch5-2":"multiple3",
+        "q-4e-ch5-3":"25",
+        "q-4e-ch5-4":"0",
+        "q-4e-ch5-5":"1/3",
+        "q-4e-ch5-6":"42",
+        "q-4e-ch5-7":"non",
+        "q-4e-ch5-8":"30",
+        "q-4e-ch5-9":"25",
+        "q-4e-ch5-10":"4"
+      },
+
+      // 6e chapter 1: nombres entiers
+      "quiz-6e-ch1": {
+        "q-6e-ch1-1":"100",
+        "q-6e-ch1-2":"49",
+        "q-6e-ch1-3":"42",
+        "q-6e-ch1-4":"4",
+        "q-6e-ch1-5":"oui",
+        "q-6e-ch1-6":"oui",
+        "q-6e-ch1-7":"26",
+        "q-6e-ch1-8":"5",
+        "q-6e-ch1-9":"1",
+        "q-6e-ch1-10":"12"
+      },
+
+      // 6e chapter 2: géométrie
+      "quiz-6e-ch2": {
+        "q-6e-ch2-1":"2pts",
+        "q-6e-ch2-2":"aucune",
+        "q-6e-ch2-3":"non",
+        "q-6e-ch2-4":"centre",
+        "q-6e-ch2-5":"180",
+        "q-6e-ch2-6":"segments",
+        "q-6e-ch2-7":"3",
+        "q-6e-ch2-8":"4",
+        "q-6e-ch2-9":"non",
+        "q-6e-ch2-10":"un point"
+      },
+
+      // 6e chapter 3: fractions
+      "quiz-6e-ch3": {
+        "q-6e-ch3-1":"0.5",
+        "q-6e-ch3-2":"1/2",
+        "q-6e-ch3-3":"1",
+        "q-6e-ch3-4":"1",
+        "q-6e-ch3-5":"1/2",
+        "q-6e-ch3-6":"0.333",
+        "q-6e-ch3-7":"1 1/2",
+        "q-6e-ch3-8":"2/5",
+        "q-6e-ch3-9":"1/2",
+        "q-6e-ch3-10":"2"
+      },
+
+      // 6e chapter 4: droites
+      "quiz-6e-ch4": {
+        "q-6e-ch4-1":"un point",
+        "q-6e-ch4-2":"non",
+        "q-6e-ch4-3":"90",
+        "q-6e-ch4-4":"2sens",
+        "q-6e-ch4-5":"paralleles",
+        "q-6e-ch4-6":"AB",
+        "q-6e-ch4-7":"droite",
+        "q-6e-ch4-8":"règle",
+        "q-6e-ch4-9":"angles90",
+        "q-6e-ch4-10":"perp"
+      },
+
+      // 6e chapter 5: angles
+      "quiz-6e-ch5": {
+        "q-6e-ch5-1":"90",
+        "q-6e-ch5-2":"<90",
+        "q-6e-ch5-3":">90",
+        "q-6e-ch5-4":"90",
+        "q-6e-ch5-5":"180",
+        "q-6e-ch5-6":"aigu",
+        "q-6e-ch5-7":"degres",
+        "q-6e-ch5-8":"180",
+        "q-6e-ch5-9":"0",
+        "q-6e-ch5-10":"90"
       }
     };
 
-    // --- Fonction utilitaire : évaluer un quiz ---
-    function evaluateQuiz(quizElem) {
-      const quizId = quizElem.id;
-      const answersKey = QUIZ_ANSWERS[quizId];
-      if (!answersKey) return null;
-
-      let total = 0, correctCount = 0;
-      // collect all questions from the quiz DOM
-      const questions = quizElem.querySelectorAll('.question');
-      questions.forEach(q => {
-        total++;
-        // find the input name inside this question
-        const input = q.querySelector('input[type="radio"]');
+    // generic evaluate function: given a form element and quizId key
+    function evaluateForm(formElem, quizKey) {
+      const answersMap = QUIZ_ANSWERS[quizKey];
+      if (!answersMap) return null;
+      const questionRows = formElem.querySelectorAll('.q-row');
+      let total = 0, correct = 0;
+      questionRows.forEach(row => {
+        // find the input name in this row
+        const input = row.querySelector('input[type="radio"]');
         if (!input) return;
         const name = input.name;
-        const selected = quizElem.querySelector('input[name="' + name + '"]:checked');
+        const selected = formElem.querySelector('input[name="' + name + '"]:checked');
         const userVal = selected ? selected.value : null;
-        const correctVal = answersKey[name] || answersKey[q.dataset.qid];
+        const correctVal = answersMap[name];
 
-        // mark UI
-        q.classList.remove('correct', 'wrong');
-        // mark each label accordingly
-        const labels = q.querySelectorAll('label.answer');
+        total++;
+        // remove previous classes
+        const labels = row.querySelectorAll('label.answer');
+        labels.forEach(lbl => lbl.classList.remove('correct','wrong'));
+        if (userVal !== null && userVal === correctVal) {
+          correct++;
+        }
+        // Highlight correct answer(s)
         labels.forEach(lbl => {
           const inp = lbl.querySelector('input[type="radio"]');
           if (!inp) return;
-          lbl.classList.remove('correct', 'wrong');
-          if (inp.value === correctVal) {
-            // correct answer highlight
-            lbl.classList.add('correct');
-          }
-          if (selected && inp.value === userVal && userVal !== correctVal) {
-            lbl.classList.add('wrong');
-          }
+          if (inp.value === correctVal) lbl.classList.add('correct');
+          if (userVal && inp.value === userVal && userVal !== correctVal) lbl.classList.add('wrong');
         });
-
-        if (userVal === correctVal) correctCount++;
       });
-
-      return { total, correctCount };
+      return { total, correct };
     }
 
-    // --- Attacher comportement aux boutons Valider / Recommencer de chaque quiz ---
-    document.querySelectorAll('.quiz').forEach(quizElem => {
-      const submitBtn = quizElem.querySelector('.submit');
-      const restartBtn = quizElem.querySelector('.restart');
-      const summaryEl = quizElem.querySelector('.result-summary');
+    // Attach submit/restart listeners to all quizzes (forms)
+    document.querySelectorAll('.quiz').forEach(form => {
+      const submit = form.querySelector('.submit');
+      const restart = form.querySelector('.restart');
+      const summary = form.querySelector('.summary');
+      // identify quizKey from parent panel's data-quizid or form id
+      const panel = form.closest('.quiz-panel');
+      const quizKey = panel ? panel.dataset.quizid : form.id;
 
-      // Valider
-      submitBtn.addEventListener('click', () => {
-        // evaluate
-        const result = evaluateQuiz(quizElem);
-        if (!result) return;
-        // disable inputs after submit
-        quizElem.querySelectorAll('input[type="radio"]').forEach(i => i.disabled = true);
-        submitBtn.disabled = true;
-        // show summary
-        summaryEl.textContent = `Résultat : ${result.correctCount} / ${result.total} bonnes réponses`;
-        // color summary
-        if (result.correctCount === result.total) {
-          summaryEl.style.color = 'var(--vert)';
-        } else if (result.correctCount >= Math.ceil(result.total/2)) {
-          summaryEl.style.color = '#b45309';
-        } else {
-          summaryEl.style.color = 'var(--rouge)';
-        }
-        // sauvegarde du meilleur score localement (optionnel)
-        try {
-          const key = 'best-' + quizElem.id;
-          const prev = parseInt(localStorage.getItem(key) || '0', 10);
-          if (result.correctCount > prev) {
-            localStorage.setItem(key, result.correctCount);
-          }
-        } catch(e) { /* ignore storage errors */ }
-      });
-
-      // Recommencer
-      restartBtn.addEventListener('click', () => {
-        // clear selections
-        quizElem.querySelectorAll('input[type="radio"]').forEach(i => {
-          i.checked = false;
-          i.disabled = false;
+      if (submit) {
+        submit.addEventListener('click', () => {
+          const result = evaluateForm(form, quizKey);
+          if (!result) return;
+          // disable inputs
+          form.querySelectorAll('input[type="radio"]').forEach(i => i.disabled = true);
+          submit.disabled = true;
+          // show summary
+          summary.textContent = `Résultat : ${result.correct} / ${result.total} bonnes réponses`;
+          if (result.correct === result.total) summary.style.color = 'var(--vert)';
+          else if (result.correct >= Math.ceil(result.total/2)) summary.style.color = '#b45309';
+          else summary.style.color = 'var(--rouge)';
+          // save best score
+          try {
+            const bestKey = 'best-' + quizKey;
+            const prev = parseInt(localStorage.getItem(bestKey) || '0', 10);
+            if (result.correct > prev) {
+              localStorage.setItem(bestKey, result.correct);
+            }
+          } catch(e) {}
         });
-        // remove highlights
-        quizElem.querySelectorAll('label.answer').forEach(lbl => lbl.classList.remove('correct','wrong'));
-        // reset buttons / summary
-        const s = quizElem.querySelector('.submit');
-        if (s) s.disabled = false;
-        if (summaryEl) {
-          summaryEl.textContent = '';
-          summaryEl.style.color = '';
+      }
+
+      if (restart) {
+        restart.addEventListener('click', () => {
+          // clear selections and classes
+          form.querySelectorAll('input[type="radio"]').forEach(i => { i.checked = false; i.disabled = false; });
+          form.querySelectorAll('label.answer').forEach(lbl => lbl.classList.remove('correct','wrong'));
+          if (submit) submit.disabled = false;
+          if (summary) { summary.textContent = ''; summary.style.color = ''; }
+        });
+      }
+    });
+
+    // On load show best scores (optional small hint in each panel summary if none already)
+    document.addEventListener('DOMContentLoaded', () => {
+      document.querySelectorAll('.quiz-panel').forEach(panel => {
+        const quizKey = panel.dataset.quizid;
+        const best = localStorage.getItem('best-' + quizKey);
+        const summary = panel.querySelector('.summary');
+        if (best && summary && !summary.textContent) {
+          summary.textContent = `Meilleur score enregistré : ${best}`;
+          summary.style.fontWeight = '600';
+          summary.style.color = 'rgba(0,0,0,0.6)';
         }
       });
     });
 
-    // Optionnel : afficher meilleur score à l'ouverture (petit indicateur)
-    document.addEventListener('DOMContentLoaded', () => {
-      document.querySelectorAll('.quiz').forEach(quizElem => {
-        const key = 'best-' + quizElem.id;
-        const best = localStorage.getItem(key);
-        if (best) {
-          const summary = quizElem.querySelector('.result-summary');
-          if (summary && !summary.textContent) {
-            summary.textContent = `Meilleur score enregistré : ${best}`;
-            summary.style.fontWeight = '600';
-            summary.style.color = 'rgba(0,0,0,0.6)';
-          }
-        }
-      });
-    });
+    // small helper to make 'règle' consistent string used in answers (typo safe)
+    // Replace "règle" label value to "règle" key used in mapping if needed
+    // (We included "règle" in mapping for 6e-ch4 keys, but label used "règle" string may be normalized)
+    // No changes needed here for current mapping.
 
   </script>
 </body>
