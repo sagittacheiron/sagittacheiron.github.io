@@ -15,11 +15,10 @@
     body{
       margin:0; font-family:"Segoe UI", Roboto, Arial, sans-serif;
       color:var(--texte); background:var(--rose-clair);
-      -webkit-font-smoothing:antialiased;
-      overflow-x:hidden;
+      -webkit-font-smoothing:antialiased; overflow-x:hidden;
     }
 
-    /* ---- HEADER animé ---- */
+    /* HEADER animé */
     header{
       background:linear-gradient(135deg,var(--bleu),#1e40af);
       color:white; text-align:center; padding:2.8rem 1rem;
@@ -27,22 +26,18 @@
     }
     header h1{
       font-size:2.6rem; font-weight:800; margin:0;
-      position:relative; z-index:2; text-shadow:0 2px 8px rgba(0,0,0,0.25);
-      animation:pulseTitle 3s ease-in-out infinite alternate;
-      display:inline-block;
+      position:relative; z-index:3; text-shadow:0 2px 8px rgba(0,0,0,0.25);
+      animation:pulseTitle 3s ease-in-out infinite alternate; display:inline-block;
     }
     @keyframes pulseTitle{ from{transform:scale(1);} to{transform:scale(1.04);} }
-    header p{
-      font-size:1rem; color:rgba(255,255,255,0.92); margin-top:0.4rem;
-      position:relative; z-index:2;
-    }
+    header p{ font-size:1rem; color:rgba(255,255,255,0.92); margin-top:0.4rem; position:relative; z-index:3; }
 
     /* symboles flottants */
     .math-symbol{
       position:absolute; color:rgba(255,255,255,0.18);
       font-size:1.8rem; font-weight:700;
       animation:floatSymbol 12s linear infinite;
-      user-select:none; pointer-events:none;
+      user-select:none; pointer-events:none; z-index:1;
     }
     @keyframes floatSymbol{
       0%{ transform: translateY(60vh) rotate(0deg); opacity:0; }
@@ -51,28 +46,26 @@
       100%{ transform: translateY(-20vh) rotate(360deg); opacity:0; }
     }
 
-    /* ---- NAV ---- */
+    /* NAV */
     nav{
       display:flex; justify-content:center; gap:1rem;
-      background:rgba(226,232,240,0.92);
-      padding:0.6rem; position:sticky; top:0; z-index:20;
+      background:rgba(226,232,240,0.92); padding:0.6rem; position:sticky; top:0; z-index:20;
       backdrop-filter: blur(3px);
     }
     nav button{
-      background:var(--bleu); color:#fff; border:0;
-      padding:0.55rem 1.1rem; border-radius:999px;
-      cursor:pointer; font-weight:600; transition:var(--transition);
+      background:var(--bleu); color:#fff; border:0; padding:0.55rem 1.1rem;
+      border-radius:999px; cursor:pointer; font-weight:600; transition:var(--transition);
     }
     nav button.active, nav button:hover{ background:#1e40af; transform:translateY(-2px); }
 
-    /* ---- MAIN / SECTIONS ---- */
+    /* MAIN / SECTIONS */
     main{ max-width:960px; margin:1.6rem auto; padding:0 1rem 3rem; }
     section{
       display:none; opacity:0; transform:translateY(15px);
       transition:opacity 0.6s ease, transform 0.6s ease;
       background:linear-gradient(180deg,var(--rose-section) 0%, var(--rose-clair) 100%);
-      border-radius:var(--radius); padding:1.25rem;
-      box-shadow:inset 0 0 20px rgba(0,0,0,0.03); margin-bottom:1.25rem;
+      border-radius:var(--radius); padding:1.25rem; box-shadow:inset 0 0 20px rgba(0,0,0,0.03);
+      margin-bottom:1.25rem;
     }
     section.active{ display:block; opacity:1; transform:translateY(0); }
 
@@ -80,11 +73,15 @@
     h2{ margin:0 0 0.6rem 0; font-size:1.15rem; display:flex; align-items:center; gap:0.6rem; }
     ul{ margin:0; padding-left:1.1rem; }
     li{ margin:0.45rem 0; }
+
+    /* ensure clickable area is above background symbols */
+    .bloc, .subtab-content { position: relative; z-index:2; }
+
     a{ color:var(--bleu); text-decoration:none; font-weight:600; }
     a:hover{text-decoration:underline;}
     footer{ text-align:center; padding:1.25rem; background:rgba(226,232,240,0.9); color:#475569; margin-top:1rem; }
 
-    /* ---- Sous-onglets vidéos ---- */
+    /* SOUS-ONGLETS VIDÉOS */
     .subtabs{ display:flex; gap:0.5rem; margin-bottom:0.8rem; flex-wrap:wrap; }
     .subtab{
       background:var(--jaune); color:#fff; border:none; border-radius:999px;
@@ -95,9 +92,7 @@
     .subtab-content.active{ display:block; }
     @keyframes fadeIn{ from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:none;} }
 
-    @media (max-width:640px){
-      main{padding:0 0.6rem;} nav{flex-wrap:wrap;} nav button{width:48%}
-    }
+    @media (max-width:640px){ main{padding:0 0.6rem;} nav{flex-wrap:wrap;} nav button{width:48%} }
   </style>
 </head>
 <body>
@@ -105,7 +100,7 @@
     <h1>📐 Cours de maths</h1>
     <p>Ressources interactives pour les classes de 4e et 6e</p>
 
-    <!-- symboles flottants -->
+    <!-- symboles flottants (pointer-events:none pour ne pas bloquer clics) -->
     <span class="math-symbol" style="left:6%; animation-delay:0s;">π</span>
     <span class="math-symbol" style="left:18%; animation-delay:2s;">√</span>
     <span class="math-symbol" style="left:34%; animation-delay:4s;">Σ</span>
@@ -125,11 +120,11 @@
       <div class="bloc">
         <h2>📘 Cours</h2>
         <ul>
-          <li><a href="https://drive.google.com/uc?export=download&id=1DildOn4eWYLFInbhn8_DpaeO72Tlt0gm" target="_blank">Chapitre 1 — Nombres relatifs (PDF)</a></li>
-          <li><a href="https://drive.google.com/uc?export=download&id=1lqivoBymp0cBgLHQmuVegMdIBbfe6Itf" target="_blank">Chapitre 2 — Théorème de Pythagore (PDF)</a></li>
-          <li><a href="https://drive.google.com/uc?export=download&id=1Afj680YIxU7Dg0aXiZ9-XWODyJTaY69x" target="_blank">Chapitre 3 — Proportionnalité (PDF)</a></li>
-          <li><a href="https://drive.google.com/uc?export=download&id=1Kl-psekWgG0jjKCsJlbaCV8teDQLvScL" target="_blank">Chapitre 4 — Puissances & Notation scientifique (PDF)</a></li>
-          <li><a href="https://drive.google.com/uc?export=download&id=1JMrROLExxW8h0JxFAqUGRry3-47vjXf1" target="_blank">Chapitre 5 — Complément (PDF)</a></li>
+          <li><a href="https://drive.google.com/uc?export=download&id=1DildOn4eWYLFInbhn8_DpaeO72Tlt0gm" target="_blank" rel="noopener noreferrer">Chapitre 1 — Nombres relatifs (PDF)</a></li>
+          <li><a href="https://drive.google.com/uc?export=download&id=1lqivoBymp0cBgLHQmuVegMdIBbfe6Itf" target="_blank" rel="noopener noreferrer">Chapitre 2 — Théorème de Pythagore (PDF)</a></li>
+          <li><a href="https://drive.google.com/uc?export=download&id=1Afj680YIxU7Dg0aXiZ9-XWODyJTaY69x" target="_blank" rel="noopener noreferrer">Chapitre 3 — Proportionnalité (PDF)</a></li>
+          <li><a href="https://drive.google.com/uc?export=download&id=1Kl-psekWgG0jjKCsJlbaCV8teDQLvScL" target="_blank" rel="noopener noreferrer">Chapitre 4 — Puissances & Notation scientifique (PDF)</a></li>
+          <li><a href="https://drive.google.com/uc?export=download&id=1JMrROLExxW8h0JxFAqUGRry3-47vjXf1" target="_blank" rel="noopener noreferrer">Chapitre 5 — Complément (PDF)</a></li>
         </ul>
       </div>
 
@@ -147,11 +142,11 @@
       <div class="bloc">
         <h2>🧩 Exercices</h2>
         <ul>
-          <li><a href="#" target="_blank">Exercices Chapitre 1 — Nombres relatifs</a></li>
-          <li><a href="#" target="_blank">Exercices Chapitre 2 — Théorème de Pythagore</a></li>
-          <li><a href="#" target="_blank">Exercices Chapitre 3 — Proportionnalité</a></li>
-          <li><a href="#" target="_blank">Exercices Chapitre 4 — Puissances</a></li>
-          <li><a href="#" target="_blank">Exercices Chapitre 5 — Complément</a></li>
+          <li><a href="#" target="_blank" rel="noopener noreferrer">Exercices Chapitre 1 — Nombres relatifs</a></li>
+          <li><a href="#" target="_blank" rel="noopener noreferrer">Exercices Chapitre 2 — Théorème de Pythagore</a></li>
+          <li><a href="#" target="_blank" rel="noopener noreferrer">Exercices Chapitre 3 — Proportionnalité</a></li>
+          <li><a href="#" target="_blank" rel="noopener noreferrer">Exercices Chapitre 4 — Puissances</a></li>
+          <li><a href="#" target="_blank" rel="noopener noreferrer">Exercices Chapitre 5 — Complément</a></li>
         </ul>
       </div>
 
@@ -166,22 +161,22 @@
 
         <div class="subtab-content active" id="videos4e-ch1">
           <ul>
-            <li><a href="https://www.youtube.com/watch?v=u-bqCheDpHc" target="_blank">Vidéo 1 — Introduction</a></li>
-            <li><a href="#" target="_blank">Vidéo 2 — Exercices corrigés</a></li>
+            <li><a href="https://www.youtube.com/watch?v=u-bqCheDpHc" target="_blank" rel="noopener noreferrer">Vidéo 1 — Introduction</a></li>
+            <li><a href="#" target="_blank" rel="noopener noreferrer">Vidéo 2 — Exercices corrigés</a></li>
           </ul>
         </div>
 
         <div class="subtab-content" id="videos4e-ch2">
           <ul>
-            <li><a href="#" target="_blank">Vidéo 1 — Démonstration</a></li>
-            <li><a href="#" target="_blank">Vidéo 2 — Applications</a></li>
+            <li><a href="#" target="_blank" rel="noopener noreferrer">Vidéo 1 — Démonstration</a></li>
+            <li><a href="#" target="_blank" rel="noopener noreferrer">Vidéo 2 — Applications</a></li>
           </ul>
         </div>
 
         <div class="subtab-content" id="videos4e-ch3">
           <ul>
-            <li><a href="#" target="_blank">Vidéo 1 — Notion de proportion</a></li>
-            <li><a href="#" target="_blank">Vidéo 2 — Exemples pratiques</a></li>
+            <li><a href="#" target="_blank" rel="noopener noreferrer">Vidéo 1 — Notion de proportion</a></li>
+            <li><a href="#" target="_blank" rel="noopener noreferrer">Vidéo 2 — Exemples pratiques</a></li>
           </ul>
         </div>
       </div>
@@ -189,9 +184,9 @@
       <div class="bloc">
         <h2>📝 Contrôles</h2>
         <ul>
-          <li><a href="https://drive.google.com/uc?export=download&id=1JfCpuUWJOT7s2lgqVAQBdMyik4_hxhB-" target="_blank">Contrôle 1 — Nombres relatifs (PDF)</a></li>
-          <li><a href="https://drive.google.com/uc?export=download&id=1DvZiJUKtoo1kXwP3jgBIWJ1zsjE33AZL" target="_blank">Contrôle 2 — Théorème de Pythagore (PDF)</a></li>
-          <li><a href="https://drive.google.com/uc?export=download&id=1rygNA6MbaPitbTFni0W7ACDbbblDW9h9" target="_blank">Contrôle 3 — Proportionnalité (PDF)</a></li>
+          <li><a href="https://drive.google.com/uc?export=download&id=1JfCpuUWJOT7s2lgqVAQBdMyik4_hxhB-" target="_blank" rel="noopener noreferrer">Contrôle 1 — Nombres relatifs (PDF)</a></li>
+          <li><a href="https://drive.google.com/uc?export=download&id=1DvZiJUKtoo1kXwP3jgBIWJ1zsjE33AZL" target="_blank" rel="noopener noreferrer">Contrôle 2 — Théorème de Pythagore (PDF)</a></li>
+          <li><a href="https://drive.google.com/uc?export=download&id=1rygNA6MbaPitbTFni0W7ACDbbblDW9h9" target="_blank" rel="noopener noreferrer">Contrôle 3 — Proportionnalité (PDF)</a></li>
         </ul>
       </div>
     </section>
@@ -201,11 +196,11 @@
       <div class="bloc">
         <h2>📘 Cours</h2>
         <ul>
-          <li><a href="https://drive.google.com/uc?export=download&id=1d1A5TERex3tDKJvuZCT3TlcYtgkgaLJs" target="_blank">Chapitre 1 — Nombres entiers (PDF)</a></li>
-          <li><a href="https://drive.google.com/uc?export=download&id=1qz7eIXffeyYvq2sPpVK3u1cZn2vAg_Nb" target="_blank">Chapitre 2 — Premiers éléments de géométrie (PDF)</a></li>
-          <li><a href="https://drive.google.com/uc?export=download&id=1TAPH-k6e0WWXuCTzOY3wNL0Qf7TQZZRA" target="_blank">Chapitre 3 — Les fractions (PDF)</a></li>
-          <li><a href="https://drive.google.com/uc?export=download&id=1z1S6Kl6J7L7cVIgMGXfv01Q_S1epuVrB" target="_blank">Chapitre 4 — Droites (PDF)</a></li>
-          <li><a href="https://drive.google.com/uc?export=download&id=1hC4aAPK2ltN-GlbZdkTiBLEqufuUjlX6" target="_blank">Chapitre 5 — Notion d’angle (PDF)</a></li>
+          <li><a href="https://drive.google.com/uc?export=download&id=1d1A5TERex3tDKJvuZCT3TlcYtgkgaLJs" target="_blank" rel="noopener noreferrer">Chapitre 1 — Nombres entiers (PDF)</a></li>
+          <li><a href="https://drive.google.com/uc?export=download&id=1qz7eIXffeyYvq2sPpVK3u1cZn2vAg_Nb" target="_blank" rel="noopener noreferrer">Chapitre 2 — Premiers éléments de géométrie (PDF)</a></li>
+          <li><a href="https://drive.google.com/uc?export=download&id=1TAPH-k6e0WWXuCTzOY3wNL0Qf7TQZZRA" target="_blank" rel="noopener noreferrer">Chapitre 3 — Les fractions (PDF)</a></li>
+          <li><a href="https://drive.google.com/uc?export=download&id=1z1S6Kl6J7L7cVIgMGXfv01Q_S1epuVrB" target="_blank" rel="noopener noreferrer">Chapitre 4 — Droites (PDF)</a></li>
+          <li><a href="https://drive.google.com/uc?export=download&id=1hC4aAPK2ltN-GlbZdkTiBLEqufuUjlX6" target="_blank" rel="noopener noreferrer">Chapitre 5 — Notion d’angle (PDF)</a></li>
         </ul>
       </div>
 
@@ -223,11 +218,11 @@
       <div class="bloc">
         <h2>🧩 Exercices</h2>
         <ul>
-          <li><a href="#" target="_blank">Exercices Chapitre 1 — Nombres entiers</a></li>
-          <li><a href="#" target="_blank">Exercices Chapitre 2 — Géométrie</a></li>
-          <li><a href="#" target="_blank">Exercices Chapitre 3 — Fractions</a></li>
-          <li><a href="#" target="_blank">Exercices Chapitre 4 — Droites</a></li>
-          <li><a href="#" target="_blank">Exercices Chapitre 5 — Angles</a></li>
+          <li><a href="#" target="_blank" rel="noopener noreferrer">Exercices Chapitre 1 — Nombres entiers</a></li>
+          <li><a href="#" target="_blank" rel="noopener noreferrer">Exercices Chapitre 2 — Géométrie</a></li>
+          <li><a href="#" target="_blank" rel="noopener noreferrer">Exercices Chapitre 3 — Fractions</a></li>
+          <li><a href="#" target="_blank" rel="noopener noreferrer">Exercices Chapitre 4 — Droites</a></li>
+          <li><a href="#" target="_blank" rel="noopener noreferrer">Exercices Chapitre 5 — Angles</a></li>
         </ul>
       </div>
 
@@ -242,22 +237,22 @@
 
         <div class="subtab-content active" id="videos6e-ch1">
           <ul>
-            <li><a href="#" target="_blank">Vidéo 1 — Introduction</a></li>
-            <li><a href="#" target="_blank">Vidéo 2 — Exercices</a></li>
+            <li><a href="#" target="_blank" rel="noopener noreferrer">Vidéo 1 — Introduction</a></li>
+            <li><a href="#" target="_blank" rel="noopener noreferrer">Vidéo 2 — Exercices</a></li>
           </ul>
         </div>
 
         <div class="subtab-content" id="videos6e-ch2">
           <ul>
-            <li><a href="#" target="_blank">Vidéo 1 — Points et segments</a></li>
-            <li><a href="#" target="_blank">Vidéo 2 — Figures de base</a></li>
+            <li><a href="#" target="_blank" rel="noopener noreferrer">Vidéo 1 — Points et segments</a></li>
+            <li><a href="#" target="_blank" rel="noopener noreferrer">Vidéo 2 — Figures de base</a></li>
           </ul>
         </div>
 
         <div class="subtab-content" id="videos6e-ch3">
           <ul>
-            <li><a href="#" target="_blank">Vidéo 1 — Introduction aux fractions</a></li>
-            <li><a href="#" target="_blank">Vidéo 2 — Exemples pratiques</a></li>
+            <li><a href="#" target="_blank" rel="noopener noreferrer">Vidéo 1 — Introduction aux fractions</a></li>
+            <li><a href="#" target="_blank" rel="noopener noreferrer">Vidéo 2 — Exemples pratiques</a></li>
           </ul>
         </div>
       </div>
@@ -265,9 +260,9 @@
       <div class="bloc">
         <h2>📝 Contrôles</h2>
         <ul>
-          <li><a href="https://drive.google.com/uc?export=download&id=1d-y45Eg0ieW64ac-6QEtXlCQxjey40Z_" target="_blank">Contrôle 1 — Nombres entiers (PDF)</a></li>
-          <li><a href="https://drive.google.com/uc?export=download&id=1OqzxiUVfIZQWwNH_8c79YfZiDFpNLvIi" target="_blank">Contrôle 2 — Géométrie (PDF)</a></li>
-          <li><a href="https://drive.google.com/uc?export=download&id=14__pQ2BFgdeqCUlgfprVfHmoEPJjRZAQ" target="_blank">Contrôle 3 — Fractions (PDF)</a></li>
+          <li><a href="https://drive.google.com/uc?export=download&id=1d-y45Eg0ieW64ac-6QEtXlCQxjey40Z_" target="_blank" rel="noopener noreferrer">Contrôle 1 — Nombres entiers (PDF)</a></li>
+          <li><a href="https://drive.google.com/uc?export=download&id=1OqzxiUVfIZQWwNH_8c79YfZiDFpNLvIi" target="_blank" rel="noopener noreferrer">Contrôle 2 — Géométrie (PDF)</a></li>
+          <li><a href="https://drive.google.com/uc?export=download&id=14__pQ2BFgdeqCUlgfprVfHmoEPJjRZAQ" target="_blank" rel="noopener noreferrer">Contrôle 3 — Fractions (PDF)</a></li>
         </ul>
       </div>
     </section>
@@ -296,16 +291,26 @@
       const buttons = group.querySelectorAll('.subtab');
       buttons.forEach(btn => {
         btn.addEventListener('click', () => {
-          // Désactive les boutons du groupe
           buttons.forEach(b => b.classList.remove('active'));
           btn.classList.add('active');
-          // Trouve le bloc parent et alterne les contenus
           const bloc = group.parentElement;
           bloc.querySelectorAll('.subtab-content').forEach(c => c.classList.remove('active'));
           const targetId = btn.dataset.target;
           const targetElem = bloc.querySelector('#' + targetId);
           if (targetElem) targetElem.classList.add('active');
         });
+      });
+    });
+
+    // Fallback : ouvrir les liens via window.open si le navigateur bloque la navigation normale
+    document.querySelectorAll('a[target="_blank"]').forEach(a => {
+      a.addEventListener('click', (e) => {
+        // if default prevented or already opened, skip
+        try {
+          window.open(a.href, '_blank', 'noopener');
+        } catch (err) {
+          // nothing — let the browser try normal behavior
+        }
       });
     });
   </script>
