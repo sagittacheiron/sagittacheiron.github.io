@@ -189,14 +189,87 @@
 </div>
 
 
-      <div class="bloc">
-        <h2>📝 Contrôles</h2>
-        <ul>
-          <li><input type="checkbox" class="checkbox"><a href="https://drive.google.com/uc?export=download&id=1JfCpuUWJOT7s2lgqVAQBdMyik4_hxhB-" target="_blank" rel="noopener noreferrer">Contrôle 1 — Nombres relatifs (PDF)</a></li>
-          <li><input type="checkbox" class="checkbox"><a href="https://drive.google.com/uc?export=download&id=1DvZiJUKtoo1kXwP3jgBIWJ1zsjE33AZL" target="_blank" rel="noopener noreferrer">Contrôle 2 — Théorème de Pythagore (PDF)</a></li>
-          <li><input type="checkbox" class="checkbox"><a href="https://drive.google.com/uc?export=download&id=1rygNA6MbaPitbTFni0W7ACDbbblDW9h9" target="_blank" rel="noopener noreferrer">Contrôle 3 — Proportionnalité (PDF)</a></li>
-        </ul>
+<!-- 📝 SECTION CONTROLES 4e -->
+<style>
+  .controles-list {
+    list-style: none;
+    padding-left: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+  }
+
+  .titre-controle {
+    font-weight: 600;
+    display: block;
+    margin-bottom: 0.25rem;
+  }
+
+  .buttons-controle {
+    display: flex;
+    gap: 0.6rem;
+    flex-wrap: wrap;
+  }
+
+  .btn-sujet, .btn-corrige {
+    display: inline-block;
+    padding: 0.45rem 1rem;
+    border-radius: 999px;
+    font-weight: 600;
+    text-decoration: none;
+    color: #fff;
+    transition: all 0.3s ease;
+    box-shadow: var(--ombre);
+  }
+
+  .btn-sujet {
+    background: var(--bleu);
+  }
+
+  .btn-corrige {
+    background: var(--vert);
+  }
+
+  .btn-sujet:hover {
+    background: #1e40af;
+    transform: translateY(-2px);
+  }
+
+  .btn-corrige:hover {
+    background: #15803d;
+    transform: translateY(-2px);
+  }
+</style>
+
+<div class="bloc">
+  <h2>📝 Contrôles</h2>
+  <ul class="controles-list">
+    <li>
+      <span class="titre-controle">Contrôle 1 — Nombres relatifs</span>
+      <div class="buttons-controle">
+        <a href="https://drive.google.com/uc?export=download&id=1JfCpuUWJOT7s2lgqVAQBdMyik4_hxhB-" target="_blank" rel="noopener noreferrer" class="btn-sujet">📄 Sujet</a>
+        <a href="Corrige_CC1_4e_clean.pdf" target="_blank" rel="noopener noreferrer" class="btn-corrige">✅ Corrigé</a>
       </div>
+    </li>
+
+    <li>
+      <span class="titre-controle">Contrôle 2 — Théorème de Pythagore</span>
+      <div class="buttons-controle">
+        <a href="https://drive.google.com/uc?export=download&id=1PLtnmRQhMi3PeaYISIVmBeQ2gslu6_lx" target="_blank" rel="noopener noreferrer" class="btn-sujet">📄 Sujet</a>
+        <a href="Corrige_CC2_4e_clean.pdf" target="_blank" rel="noopener noreferrer" class="btn-corrige">✅ Corrigé</a>
+      </div>
+    </li>
+
+    <li>
+      <span class="titre-controle">Contrôle 3 — Proportionnalité</span>
+      <div class="buttons-controle">
+        <a href="https://drive.google.com/uc?export=download&id=1Pp94QGPmn2mlsxA6n49FL-6vo4UoFMKz" target="_blank" rel="noopener noreferrer" class="btn-sujet">📄 Sujet</a>
+        <a href="Corrige_CC3_4e_clean.pdf" target="_blank" rel="noopener noreferrer" class="btn-corrige">✅ Corrigé</a>
+      </div>
+    </li>
+  </ul>
+</div>
+
 
       <!-- Quiz 4e -->
       <div class="bloc">
