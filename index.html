@@ -255,15 +255,84 @@
   }
 </style>
 
+<!-- 📝 SECTION CONTROLES 4e — Version harmonisée et téléchargeable -->
+<style>
+  .controles-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.2rem;
+  }
+
+  .controle-card {
+    background: var(--carte);
+    border-radius: var(--radius);
+    padding: 1rem 1.2rem;
+    box-shadow: var(--ombre);
+    text-align: center;
+    transition: all 0.3s ease;
+  }
+
+  .controle-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+  }
+
+  .controle-card h3 {
+    margin: 0;
+    color: var(--texte);
+    font-size: 1.1rem;
+  }
+
+  .controle-buttons {
+    margin-top: 0.8rem;
+    display: flex;
+    justify-content: center;
+    gap: 0.8rem;
+  }
+
+  .btn-sujet,
+  .btn-corrige {
+    display: inline-block;
+    padding: 0.45rem 1.1rem;
+    border-radius: 999px;
+    font-weight: 600;
+    text-decoration: none;
+    color: #fff;
+    box-shadow: var(--ombre);
+    transition: all 0.25s ease;
+    min-width: 120px;
+    text-align: center;
+  }
+
+  .btn-sujet {
+    background: var(--bleu);
+  }
+
+  .btn-corrige {
+    background: var(--vert);
+  }
+
+  .btn-sujet:hover {
+    background: #1e40af;
+    transform: translateY(-2px);
+  }
+
+  .btn-corrige:hover {
+    background: #15803d;
+    transform: translateY(-2px);
+  }
+</style>
+
 <div class="bloc">
   <h2>📝 Contrôles</h2>
   <div class="controles-grid">
+
     <!-- Contrôle 1 -->
     <div class="controle-card">
       <h3>Chapitre 1 — Nombres relatifs</h3>
       <div class="controle-buttons">
-        <a href="https://drive.google.com/uc?export=download&id=1JfCpuUWJOT7s2lgqVAQBdMyik4_hxhB-" target="_blank" class="btn-sujet">📄 Sujet</a>
-        <a href="https://drive.google.com/file/d/1L55INklEAsiBL-x3HrrzglHOOrs4dsm2/view?usp=sharing" target="_blank" class="btn-corrige">✅ Corrigé</a>
+        <a href="https://drive.google.com/uc?export=download&id=1JfCpuUWJOT7s2lgqVAQBdMyik4_hxhB-" download class="btn-sujet">📄 Sujet</a>
+        <a href="https://drive.google.com/uc?export=download&id=1L55INklEAsiBL-x3HrrzglHOOrs4dsm2" download class="btn-corrige">✅ Corrigé</a>
       </div>
     </div>
 
@@ -271,8 +340,8 @@
     <div class="controle-card">
       <h3>Chapitre 2 — Théorème de Pythagore</h3>
       <div class="controle-buttons">
-        <a href="https://drive.google.com/uc?export=download&id=1PLtnmRQhMi3PeaYISIVmBeQ2gslu6_lx" target="_blank" class="btn-sujet">📄 Sujet</a>
-        <a href="https://drive.google.com/file/d/1PLtnmRQhMi3PeaYISIVmBeQ2gslu6_lx/view?usp=sharing" target="_blank" class="btn-corrige">✅ Corrigé</a>
+        <a href="https://drive.google.com/uc?export=download&id=1PLtnmRQhMi3PeaYISIVmBeQ2gslu6_lx" download class="btn-sujet">📄 Sujet</a>
+        <a href="https://drive.google.com/uc?export=download&id=1PLtnmRQhMi3PeaYISIVmBeQ2gslu6_lx" download class="btn-corrige">✅ Corrigé</a>
       </div>
     </div>
 
@@ -280,13 +349,13 @@
     <div class="controle-card">
       <h3>Chapitre 3 — Proportionnalité</h3>
       <div class="controle-buttons">
-        <a href="https://drive.google.com/uc?export=download&id=1Pp94QGPmn2mlsxA6n49FL-6vo4UoFMKz" target="_blank" class="btn-sujet">📄 Sujet</a>
-        <a href="https://drive.google.com/file/d/1Pp94QGPmn2mlsxA6n49FL-6vo4UoFMKz/view?usp=sharing" target="_blank" class="btn-corrige">✅ Corrigé</a>
+        <a href="https://drive.google.com/uc?export=download&id=1Pp94QGPmn2mlsxA6n49FL-6vo4UoFMKz" download class="btn-sujet">📄 Sujet</a>
+        <a href="https://drive.google.com/uc?export=download&id=1Pp94QGPmn2mlsxA6n49FL-6vo4UoFMKz" download class="btn-corrige">✅ Corrigé</a>
       </div>
     </div>
+
   </div>
 </div>
-
 
 
       <!-- Quiz 4e -->
@@ -356,14 +425,104 @@
         </div>
       </div>
 
-      <div class="bloc">
-        <h2>📝 Contrôles</h2>
-        <ul>
-          <li><input type="checkbox" class="checkbox"><a href="https://drive.google.com/uc?export=download&id=1d-y45Eg0ieW64ac-6QEtXlCQxjey40Z_" target="_blank" rel="noopener noreferrer">Contrôle 1 — Nombres entiers (PDF)</a></li>
-          <li><input type="checkbox" class="checkbox"><a href="https://drive.google.com/uc?export=download&id=1OqzxiUVfIZQWwNH_8c79YfZiDFpNLvIi" target="_blank" rel="noopener noreferrer">Contrôle 2 — Géométrie (PDF)</a></li>
-          <li><input type="checkbox" class="checkbox"><a href="https://drive.google.com/uc?export=download&id=14__pQ2BFgdeqCUlgfprVfHmoEPJjRZAQ" target="_blank" rel="noopener noreferrer">Contrôle 3 — Fractions (PDF)</a></li>
-        </ul>
+<!-- 📝 SECTION CONTROLES 6e -->
+<style>
+  .controles-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1rem;
+  }
+
+  .controle-card {
+    background: var(--carte);
+    border-radius: var(--radius);
+    padding: 1rem;
+    box-shadow: var(--ombre);
+    text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .controle-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+  }
+
+  .controle-card h3 {
+    margin-top: 0;
+    font-size: 1.1rem;
+    color: var(--texte);
+  }
+
+  .controle-buttons {
+    margin-top: 0.7rem;
+    display: flex;
+    justify-content: center;
+    gap: 0.6rem;
+    flex-wrap: wrap;
+  }
+
+  .btn-sujet, .btn-corrige {
+    display: inline-block;
+    padding: 0.4rem 1rem;
+    border-radius: 999px;
+    font-weight: 600;
+    text-decoration: none;
+    color: #fff;
+    transition: all 0.3s ease;
+    box-shadow: var(--ombre);
+  }
+
+  .btn-sujet {
+    background: var(--bleu);
+  }
+
+  .btn-corrige {
+    background: var(--vert);
+  }
+
+  .btn-sujet:hover {
+    background: #1e40af;
+    transform: translateY(-2px);
+  }
+
+  .btn-corrige:hover {
+    background: #15803d;
+    transform: translateY(-2px);
+  }
+</style>
+
+<div class="bloc">
+  <h2>📝 Contrôles</h2>
+  <div class="controles-grid">
+    <!-- Contrôle 1 -->
+    <div class="controle-card">
+      <h3>Chapitre 1 — Nombres relatifs</h3>
+      <div class="controle-buttons">
+        <a href="https://drive.google.com/file/d/1d-y45Eg0ieW64ac-6QEtXlCQxjey40Z_/view?usp=drive_link" target="_blank" class="btn-sujet">📄 Sujet</a>
+        <a href="https://drive.google.com/file/d/1L55INklEAsiBL-x3HrrzglHOOrs4dsm2/view?usp=sharing" target="_blank" class="btn-corrige">✅ Corrigé</a>
       </div>
+    </div>
+
+    <!-- Contrôle 2 -->
+    <div class="controle-card">
+      <h3>Chapitre 2 — Théorème de Pythagore</h3>
+      <div class="controle-buttons">
+        <a href="https://drive.google.com/file/d/1OqzxiUVfIZQWwNH_8c79YfZiDFpNLvIi/view?usp=drive_link" target="_blank" class="btn-sujet">📄 Sujet</a>
+        <a href="https://drive.google.com/file/d/1PLtnmRQhMi3PeaYISIVmBeQ2gslu6_lx/view?usp=sharing" target="_blank" class="btn-corrige">✅ Corrigé</a>
+      </div>
+    </div>
+
+    <!-- Contrôle 3 -->
+    <div class="controle-card">
+      <h3>Chapitre 3 — Proportionnalité</h3>
+      <div class="controle-buttons">
+        <a href="https://drive.google.com/file/d/14__pQ2BFgdeqCUlgfprVfHmoEPJjRZAQ/view?usp=drive_link" target="_blank" class="btn-sujet">📄 Sujet</a>
+        <a href="https://drive.google.com/file/d/1Pp94QGPmn2mlsxA6n49FL-6vo4UoFMKz/view?usp=sharing" target="_blank" class="btn-corrige">✅ Corrigé</a>
+      </div>
+    </div>
+  </div>
+</div>
+
 
       <!-- Quiz 6e -->
       <div class="bloc">
