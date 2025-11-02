@@ -371,10 +371,10 @@
         <p>Choisis un chapitre ci-dessous pour lancer le quiz (10 questions par chapitre).</p>
         <div class="chapter-quiz-buttons" data-classe="4e">
           <button class="btn primary open-quiz" data-classe="4e" data-quiz="quiz-4e-ch1">🎯 Quiz Chapitre 1 — Nombres relatifs</button>
-          <button class="btn primary open-quiz" data-classe="4e" data-quiz="quiz-4e-ch1">🎯 Quiz Chapitre 2 — Pyhtagore</button>
-          <button class="btn primary open-quiz" data-classe="4e" data-quiz="quiz-4e-ch1">🎯 Quiz Chapitre 3 — Proportionalité</button>
-          <button class="btn primary open-quiz" data-classe="4e" data-quiz="quiz-4e-ch1">🎯 Quiz Chapitre 4 — Puissances</button>
-          <button class="btn primary open-quiz" data-classe="4e" data-quiz="quiz-4e-ch1">🎯 Quiz Chapitre 5 — Calcul littéral</button>
+          <button class="btn primary open-quiz" data-classe="4e" data-quiz="quiz-4e-ch2">🎯 Quiz Chapitre 2 — Pyhtagore</button>
+          <button class="btn primary open-quiz" data-classe="4e" data-quiz="quiz-4e-ch3">🎯 Quiz Chapitre 3 — Proportionalité</button>
+          <button class="btn primary open-quiz" data-classe="4e" data-quiz="quiz-4e-ch4">🎯 Quiz Chapitre 4 — Puissances</button>
+          <button class="btn primary open-quiz" data-classe="4e" data-quiz="quiz-4e-ch5">🎯 Quiz Chapitre 5 — Calcul littéral</button>
         </div>
       </div>
     </section>
@@ -557,10 +557,10 @@
         <p>Choisis un chapitre ci-dessous pour lancer le quiz (10 questions par chapitre).</p>
         <div class="chapter-quiz-buttons" data-classe="6e">
           <button class="btn primary open-quiz" data-classe="6e" data-quiz="quiz-6e-ch1">🎯 Quiz Chapitre 1 — Nombres entiers</button>
-          <button class="btn primary open-quiz" data-classe="4e" data-quiz="quiz-4e-ch1">🎯 Quiz Chapitre 2 — Géométrie</button>
-          <button class="btn primary open-quiz" data-classe="4e" data-quiz="quiz-4e-ch1">🎯 Quiz Chapitre 3 — Fractions</button>
-          <button class="btn primary open-quiz" data-classe="4e" data-quiz="quiz-4e-ch1">🎯 Quiz Chapitre 4 — Droites</button>
-          <button class="btn primary open-quiz" data-classe="4e" data-quiz="quiz-4e-ch1">🎯 Quiz Chapitre 5 — Angles</button>
+          <button class="btn primary open-quiz" data-classe="4e" data-quiz="quiz-6e-ch2">🎯 Quiz Chapitre 2 — Géométrie</button>
+          <button class="btn primary open-quiz" data-classe="4e" data-quiz="quiz-6e-ch3">🎯 Quiz Chapitre 3 — Fractions</button>
+          <button class="btn primary open-quiz" data-classe="4e" data-quiz="quiz-6e-ch4">🎯 Quiz Chapitre 4 — Droites</button>
+          <button class="btn primary open-quiz" data-classe="4e" data-quiz="quiz-6e-ch5">🎯 Quiz Chapitre 5 — Angles</button>
         </div>
       </div>
     </section>
@@ -727,23 +727,168 @@ document.querySelectorAll('.checkbox').forEach((checkbox, idx) => {
         { q: "Calcule : (-2)² = ?", choices:["4","-4","2"], answer:"4" }
       ]
     },
-    "quiz-6e-ch1": {
-      titre: "Chapitre 1 — Nombres entiers (6e)",
-      classe: "6e",
+
+    "quiz-4e-ch2": {
+      titre: "Chapitre 2 — Théorème de Pythagore (4e)",
+      classe: "4e",
       questions: [
-        { q: "Quel est le successeur de 99 ?", choices:["100","99","101"], answer:"100" },
-        { q: "Quel est le prédécesseur de 50 ?", choices:["49","51","0"], answer:"49" },
-        { q: "7 × 6 = ?", choices:["42","36","13"], answer:"42" },
-        { q: "100 ÷ 25 = ?", choices:["4","25","0.25"], answer:"4" },
-        { q: "Est-ce que 17 est un nombre premier ?", choices:["oui","non","parfois"], answer:"oui" },
-        { q: "0 est-il un nombre entier ?", choices:["oui","non","parfois"], answer:"oui" },
-        { q: "Quel est le double de 13 ?", choices:["26","13","39"], answer:"26" },
-        { q: "8 + (-3) = ?", choices:["5","11","-5"], answer:"5" },
-        { q: "Reste de 10 ÷ 3 ?", choices:["1","0","3"], answer:"1" },
-        { q: "Parmi ces nombres, lequel est pair ? 7, 9, 12", choices:["12","7","9"], answer:"12" }
+        { q: "Dans un triangle rectangle, quel côté est le plus long ?", choices:["hypoténuse","côté opposé","adjacent"], answer:"hypoténuse" },
+        { q: "Si un triangle n’est pas rectangle, peut-on appliquer le théorème de Pythagore ?", choices:["non","oui","seulement si isocèle"], answer:"non" },
+        { q: "Calcule : si AC = 5 et BC = 12, alors AB = ?", choices:["13","7","17"], answer:"13" },
+        { q: "Si l’hypoténuse vaut 10 et un côté vaut 6, l’autre vaut ?", choices:["8","4","12"], answer:"8" },
+        { q: "Dans l’égalité a² + b² = c², que représente c ?", choices:["hypoténuse","un côté","le triangle"], answer:"hypoténuse" },
+        { q: "Le théorème de Pythagore ne s’applique que dans :", choices:["un triangle rectangle","un carré","un trapèze"], answer:"un triangle rectangle" },
+        { q: "Si les côtés mesurent 3, 4 et 5, le triangle est :", choices:["rectangle","isocèle","équilatéral"], answer:"rectangle" },
+        { q: "Calcule : si c² = 100 et a = 6, b = ?", choices:["8","10","4"], answer:"8" },
+        { q: "Quelle est la réciproque du théorème ?", choices:["Si a²+b²=c² alors triangle rectangle","Si triangle rectangle alors a²+b²=c²","Aucune"], answer:"Si a²+b²=c² alors triangle rectangle" },
+        { q: "Le théorème de Pythagore est lié à :", choices:["la géométrie","l’arithmétique","les fonctions"], answer:"la géométrie" }
+      ]
+    },
+
+    "quiz-4e-ch3": {
+      titre: "Chapitre 3 — Proportionnalité (4e)",
+      classe: "4e",
+      questions: [
+        { q: "Dans un tableau de proportionnalité, le rapport entre les lignes est :", choices:["constant","variable","aléatoire"], answer:"constant" },
+        { q: "3 pommes coûtent 6€. Combien coûtent 5 pommes ?", choices:["10€","8€","9€"], answer:"10€" },
+        { q: "Si on double une grandeur, l’autre :", choices:["double","reste identique","diminue"], answer:"double" },
+        { q: "Comment appelle-t-on le rapport constant ?", choices:["coefficient de proportionnalité","produit en croix","taux d’évolution"], answer:"coefficient de proportionnalité" },
+        { q: "Dans un produit en croix, on multiplie :", choices:["les extrêmes et on divise par la moyenne","les milieux entre eux","rien"], answer:"les extrêmes et on divise par la moyenne" },
+        { q: "Un vélo roule 45 km en 3h. Sa vitesse moyenne ?", choices:["15 km/h","12 km/h","18 km/h"], answer:"15 km/h" },
+        { q: "Une recette : 2 œufs pour 100g de sucre. Pour 300g ?", choices:["6 œufs","3 œufs","4 œufs"], answer:"6 œufs" },
+        { q: "Si on multiplie les deux grandeurs par le même nombre :", choices:["proportionnalité conservée","proportionnalité rompue","erreur"], answer:"proportionnalité conservée" },
+        { q: "Graphiquement, les points proportionnels sont :", choices:["alignés sur une droite passant par l’origine","alignés mais pas à l’origine","pas alignés"], answer:"alignés sur une droite passant par l’origine" },
+        { q: "Le produit en croix permet de :", choices:["trouver une quatrième proportionnelle","calculer un volume","résoudre une équation"], answer:"trouver une quatrième proportionnelle" }
+      ]
+    },
+
+    "quiz-4e-ch4": {
+      titre: "Chapitre 4 — Puissances (4e)",
+      classe: "4e",
+      questions: [
+        { q: "Que vaut 10² ?", choices:["100","20","1000"], answer:"100" },
+        { q: "Que vaut (-2)³ ?", choices:["-8","8","4"], answer:"-8" },
+        { q: "a⁰ vaut :", choices:["1","0","a"], answer:"1" },
+        { q: "10⁻² vaut :", choices:["0,01","-2","100"], answer:"0,01" },
+        { q: "Le carré d’un nombre, c’est :", choices:["le nombre × lui-même","le nombre + lui-même","le double"], answer:"le nombre × lui-même" },
+        { q: "Simplifie : 10³ × 10² =", choices:["10⁵","10⁶","10"], answer:"10⁵" },
+        { q: "Simplifie : 2⁵ ÷ 2³ =", choices:["2²","2⁸","2⁶"], answer:"2²" },
+        { q: "(a²)³ =", choices:["a⁶","a⁵","a³"], answer:"a⁶" },
+        { q: "10⁻³ =", choices:["0,001","1000","0,1"], answer:"0,001" },
+        { q: "√(a²) =", choices:["a","a²","√a"], answer:"a" }
+      ]
+    },
+
+    "quiz-4e-ch5": {
+      titre: "Chapitre 5 — Statistiques (4e)",
+      classe: "4e",
+      questions: [
+        { q: "La moyenne de 10 et 20 est :", choices:["15","30","10"], answer:"15" },
+        { q: "La médiane sépare :", choices:["la série en deux parties égales","les valeurs extrêmes","les valeurs positives"], answer:"la série en deux parties égales" },
+        { q: "Le mode est :", choices:["la valeur la plus fréquente","la plus grande","la plus petite"], answer:"la valeur la plus fréquente" },
+        { q: "Somme des valeurs ÷ effectif =", choices:["moyenne","médiane","étendue"], answer:"moyenne" },
+        { q: "Étendue = ?", choices:["valeur max − valeur min","moyenne − médiane","somme ÷ effectif"], answer:"valeur max − valeur min" },
+        { q: "Si les valeurs sont : 2, 4, 6, 8 → médiane ?", choices:["5","4","6"], answer:"5" },
+        { q: "Effectif total = ?", choices:["somme des effectifs","moyenne des valeurs","nombre de classes"], answer:"somme des effectifs" },
+        { q: "Un diagramme en barres sert à :", choices:["comparer des effectifs","tracer des fonctions","calculer des volumes"], answer:"comparer des effectifs" },
+        { q: "La fréquence est :", choices:["effectif ÷ total","total ÷ effectif","valeur × effectif"], answer:"effectif ÷ total" },
+        { q: "Sur un diagramme circulaire, l’angle dépend :", choices:["de la fréquence","de la moyenne","de la médiane"], answer:"de la fréquence" }
       ]
     }
   };
+
+/* =========================
+   QUIZZES — CLASSE DE 6e
+   ========================= */
+const QUIZZES = {
+  ...QUIZZES, // conserve les quiz 4e déjà définis
+
+  "quiz-6e-ch1": {
+    titre: "Chapitre 1 — Nombres entiers (6e)",
+    classe: "6e",
+    questions: [
+      { q: "Quel est le successeur de 49 ?", choices: ["50", "48", "51"], answer: "50" },
+      { q: "Quel est le prédécesseur de 100 ?", choices: ["101", "99", "102"], answer: "99" },
+      { q: "Combien vaut 7 × 8 ?", choices: ["54", "56", "64"], answer: "56" },
+      { q: "Le double de 12 est :", choices: ["24", "14", "20"], answer: "24" },
+      { q: "Le triple de 15 est :", choices: ["45", "30", "60"], answer: "45" },
+      { q: "0 est-il un nombre entier ?", choices: ["oui", "non", "parfois"], answer: "oui" },
+      { q: "Le nombre pair suivant 16 est :", choices: ["18", "17", "19"], answer: "18" },
+      { q: "Dans 438, le chiffre des dizaines est :", choices: ["3", "8", "4"], answer: "3" },
+      { q: "7 + 9 =", choices: ["16", "18", "14"], answer: "16" },
+      { q: "Entre 99 et 101, quel nombre est impair ?", choices: ["99", "100", "101"], answer: "99" }
+    ]
+  },
+
+  "quiz-6e-ch2": {
+    titre: "Chapitre 2 — Premiers éléments de géométrie (6e)",
+    classe: "6e",
+    questions: [
+      { q: "Un segment est défini par :", choices: ["2 points", "1 point", "3 points"], answer: "2 points" },
+      { q: "Une droite passe par :", choices: ["2 points", "1 seul point", "aucun point"], answer: "2 points" },
+      { q: "Les droites perpendiculaires forment :", choices: ["un angle droit", "un angle aigu", "un angle obtus"], answer: "un angle droit" },
+      { q: "Le symbole de la perpendiculaire est :", choices: ["⊥", "∥", "="], answer: "⊥" },
+      { q: "Les droites parallèles :", choices: ["ne se coupent jamais", "se coupent une fois", "se coupent deux fois"], answer: "ne se coupent jamais" },
+      { q: "Un segment est :", choices: ["une portion de droite", "une droite entière", "un point"], answer: "une portion de droite" },
+      { q: "Le milieu d’un segment partage ce segment en :", choices: ["2 parties égales", "3 parties", "aucune partie"], answer: "2 parties égales" },
+      { q: "Les droites (AB) et (CD) sont parallèles → notation ?", choices: ["(AB) ∥ (CD)", "(AB) ⊥ (CD)", "(AB) = (CD)"], answer: "(AB) ∥ (CD)" },
+      { q: "Une figure est symétrique si :", choices: ["elle se superpose après pliage", "elle est identique", "elle est parallèle"], answer: "elle se superpose après pliage" },
+      { q: "Le compas permet de :", choices: ["tracer des cercles", "mesurer un angle", "dessiner des carrés"], answer: "tracer des cercles" }
+    ]
+  },
+
+  "quiz-6e-ch3": {
+    titre: "Chapitre 3 — Les fractions (6e)",
+    classe: "6e",
+    questions: [
+      { q: "Dans 3/5, le numérateur est :", choices: ["3", "5", "8"], answer: "3" },
+      { q: "Dans 3/5, le dénominateur est :", choices: ["3", "5", "8"], answer: "5" },
+      { q: "1/2 est égal à :", choices: ["0,5", "2", "1,2"], answer: "0,5" },
+      { q: "La fraction équivalente à 2/4 est :", choices: ["1/2", "2/8", "4/8"], answer: "1/2" },
+      { q: "3/6 simplifié donne :", choices: ["1/2", "3/12", "2/3"], answer: "1/2" },
+      { q: "Addition : 1/3 + 1/3 =", choices: ["2/3", "1/6", "1/2"], answer: "2/3" },
+      { q: "Multiplication : 2/3 × 3 =", choices: ["2", "1", "3/5"], answer: "2" },
+      { q: "Une fraction inférieure à 1 :", choices: ["a numérateur < dénominateur", "numérateur > dénominateur", "les deux égaux"], answer: "a numérateur < dénominateur" },
+      { q: "Écriture décimale de 3/4 :", choices: ["0,75", "0,25", "1,5"], answer: "0,75" },
+      { q: "2/3 de 90 =", choices: ["60", "45", "30"], answer: "60" }
+    ]
+  },
+
+  "quiz-6e-ch4": {
+    titre: "Chapitre 4 — Droites (6e)",
+    classe: "6e",
+    questions: [
+      { q: "Une droite a :", choices: ["aucune extrémité", "2 extrémités", "1 extrémité"], answer: "aucune extrémité" },
+      { q: "Un segment a :", choices: ["2 extrémités", "aucune extrémité", "1 extrémité"], answer: "2 extrémités" },
+      { q: "Deux droites perpendiculaires se coupent en :", choices: ["un angle droit", "un angle aigu", "un angle obtus"], answer: "un angle droit" },
+      { q: "Les droites parallèles ne :", choices: ["se coupent jamais", "se croisent une fois", "sont confondues"], answer: "se coupent jamais" },
+      { q: "La médiatrice d’un segment est :", choices: ["perpendiculaire et passe par le milieu", "parallèle au segment", "au hasard"], answer: "perpendiculaire et passe par le milieu" },
+      { q: "Une demi-droite a :", choices: ["une origine et pas de fin", "pas d’origine", "deux extrémités"], answer: "une origine et pas de fin" },
+      { q: "Les points d’une même droite sont :", choices: ["alignés", "perpendiculaires", "parallèles"], answer: "alignés" },
+      { q: "Le symbole de parallèle est :", choices: ["∥", "⊥", "="], answer: "∥" },
+      { q: "Deux droites sécantes :", choices: ["ont un point commun", "aucun point commun", "plusieurs points communs"], answer: "ont un point commun" },
+      { q: "L’instrument pour tracer une perpendiculaire :", choices: ["équerre", "compas", "rapporteur"], answer: "équerre" }
+    ]
+  },
+
+  "quiz-6e-ch5": {
+    titre: "Chapitre 5 — Notion d’angle (6e)",
+    classe: "6e",
+    questions: [
+      { q: "Un angle droit mesure :", choices: ["90°", "45°", "180°"], answer: "90°" },
+      { q: "Un angle plat mesure :", choices: ["180°", "90°", "45°"], answer: "180°" },
+      { q: "Un angle aigu mesure :", choices: ["moins de 90°", "plus de 90°", "180°"], answer: "moins de 90°" },
+      { q: "Un angle obtus mesure :", choices: ["entre 90° et 180°", "plus de 180°", "moins de 45°"], answer: "entre 90° et 180°" },
+      { q: "Instrument pour mesurer un angle :", choices: ["rapporteur", "équerre", "compas"], answer: "rapporteur" },
+      { q: "Deux droites perpendiculaires forment :", choices: ["un angle droit", "un angle plat", "un angle aigu"], answer: "un angle droit" },
+      { q: "Somme des angles d’un triangle :", choices: ["180°", "90°", "360°"], answer: "180°" },
+      { q: "Angle de 0° :", choices: ["nul", "droit", "plat"], answer: "nul" },
+      { q: "Le sommet d’un angle est :", choices: ["le point commun des deux côtés", "le milieu de l’angle", "un côté"], answer: "le point commun des deux côtés" },
+      { q: "Mesure d’un angle plat divisé par 2 :", choices: ["90°", "45°", "60°"], answer: "90°" }
+    ]
+  }
+};
+
 
   // DOM
   const backdrop = document.getElementById('quiz-backdrop');
