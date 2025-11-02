@@ -191,29 +191,43 @@
 
 <!-- 📝 SECTION CONTROLES 4e -->
 <style>
-  .controles-list {
-    list-style: none;
-    padding-left: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 0.8rem;
+  .controles-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1rem;
   }
 
-  .titre-controle {
-    font-weight: 600;
-    display: block;
-    margin-bottom: 0.25rem;
+  .controle-card {
+    background: var(--carte);
+    border-radius: var(--radius);
+    padding: 1rem;
+    box-shadow: var(--ombre);
+    text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
   }
 
-  .buttons-controle {
+  .controle-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+  }
+
+  .controle-card h3 {
+    margin-top: 0;
+    font-size: 1.1rem;
+    color: var(--texte);
+  }
+
+  .controle-buttons {
+    margin-top: 0.7rem;
     display: flex;
+    justify-content: center;
     gap: 0.6rem;
     flex-wrap: wrap;
   }
 
   .btn-sujet, .btn-corrige {
     display: inline-block;
-    padding: 0.45rem 1rem;
+    padding: 0.4rem 1rem;
     border-radius: 999px;
     font-weight: 600;
     text-decoration: none;
@@ -243,32 +257,36 @@
 
 <div class="bloc">
   <h2>📝 Contrôles</h2>
-  <ul class="controles-list">
-    <li>
-      <span class="titre-controle">Contrôle 1 — Nombres relatifs</span>
-      <div class="buttons-controle">
-        <a href="https://drive.google.com/uc?export=download&id=1JfCpuUWJOT7s2lgqVAQBdMyik4_hxhB-" target="_blank" rel="noopener noreferrer" class="btn-sujet">📄 Sujet</a>
-        <a href="Corrige_CC1_4e_clean.pdf" target="_blank" rel="noopener noreferrer" class="btn-corrige">✅ Corrigé</a>
+  <div class="controles-grid">
+    <!-- Contrôle 1 -->
+    <div class="controle-card">
+      <h3>Chapitre 1 — Nombres relatifs</h3>
+      <div class="controle-buttons">
+        <a href="https://drive.google.com/uc?export=download&id=1JfCpuUWJOT7s2lgqVAQBdMyik4_hxhB-" target="_blank" class="btn-sujet">📄 Sujet</a>
+        <a href="Corrige_CC1_4e_clean.pdf" target="_blank" class="btn-corrige">✅ Corrigé</a>
       </div>
-    </li>
+    </div>
 
-    <li>
-      <span class="titre-controle">Contrôle 2 — Théorème de Pythagore</span>
-      <div class="buttons-controle">
-        <a href="https://drive.google.com/uc?export=download&id=1PLtnmRQhMi3PeaYISIVmBeQ2gslu6_lx" target="_blank" rel="noopener noreferrer" class="btn-sujet">📄 Sujet</a>
-        <a href="Corrige_CC2_4e_clean.pdf" target="_blank" rel="noopener noreferrer" class="btn-corrige">✅ Corrigé</a>
+    <!-- Contrôle 2 -->
+    <div class="controle-card">
+      <h3>Chapitre 2 — Théorème de Pythagore</h3>
+      <div class="controle-buttons">
+        <a href="https://drive.google.com/uc?export=download&id=1PLtnmRQhMi3PeaYISIVmBeQ2gslu6_lx" target="_blank" class="btn-sujet">📄 Sujet</a>
+        <a href="Corrige_CC2_4e_clean.pdf" target="_blank" class="btn-corrige">✅ Corrigé</a>
       </div>
-    </li>
+    </div>
 
-    <li>
-      <span class="titre-controle">Contrôle 3 — Proportionnalité</span>
-      <div class="buttons-controle">
-        <a href="https://drive.google.com/uc?export=download&id=1Pp94QGPmn2mlsxA6n49FL-6vo4UoFMKz" target="_blank" rel="noopener noreferrer" class="btn-sujet">📄 Sujet</a>
-        <a href="Corrige_CC3_4e_clean.pdf" target="_blank" rel="noopener noreferrer" class="btn-corrige">✅ Corrigé</a>
+    <!-- Contrôle 3 -->
+    <div class="controle-card">
+      <h3>Chapitre 3 — Proportionnalité</h3>
+      <div class="controle-buttons">
+        <a href="https://drive.google.com/uc?export=download&id=1Pp94QGPmn2mlsxA6n49FL-6vo4UoFMKz" target="_blank" class="btn-sujet">📄 Sujet</a>
+        <a href="Corrige_CC3_4e_clean.pdf" target="_blank" class="btn-corrige">✅ Corrigé</a>
       </div>
-    </li>
-  </ul>
+    </div>
+  </div>
 </div>
+
 
 
       <!-- Quiz 4e -->
