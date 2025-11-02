@@ -711,6 +711,9 @@ document.querySelectorAll('.checkbox').forEach((checkbox, idx) => {
    ========================= */
 (function() {
   const QUIZZES = {
+    /* =========================
+       QUIZZES — CLASSE DE 4e
+       ========================= */
     "quiz-4e-ch1": {
       titre: "Chapitre 1 — Nombres relatifs (4e)",
       classe: "4e",
@@ -794,100 +797,97 @@ document.querySelectorAll('.checkbox').forEach((checkbox, idx) => {
         { q: "La fréquence est :", choices:["effectif ÷ total","total ÷ effectif","valeur × effectif"], answer:"effectif ÷ total" },
         { q: "Sur un diagramme circulaire, l’angle dépend :", choices:["de la fréquence","de la moyenne","de la médiane"], answer:"de la fréquence" }
       ]
+    },
+
+    /* =========================
+       QUIZZES — CLASSE DE 6e
+       ========================= */
+    "quiz-6e-ch1": {
+      titre: "Chapitre 1 — Nombres entiers (6e)",
+      classe: "6e",
+      questions: [
+        { q: "Quel est le successeur de 49 ?", choices:["50","48","51"], answer:"50" },
+        { q: "Quel est le prédécesseur de 100 ?", choices:["101","99","102"], answer:"99" },
+        { q: "Combien vaut 7 × 8 ?", choices:["54","56","64"], answer:"56" },
+        { q: "Le double de 12 est :", choices:["24","14","20"], answer:"24" },
+        { q: "Le triple de 15 est :", choices:["45","30","60"], answer:"45" },
+        { q: "0 est-il un nombre entier ?", choices:["oui","non","parfois"], answer:"oui" },
+        { q: "Le nombre pair suivant 16 est :", choices:["18","17","19"], answer:"18" },
+        { q: "Dans 438, le chiffre des dizaines est :", choices:["3","8","4"], answer:"3" },
+        { q: "7 + 9 =", choices:["16","18","14"], answer:"16" },
+        { q: "Entre 99 et 101, quel nombre est impair ?", choices:["99","100","101"], answer:"99" }
+      ]
+    },
+
+    "quiz-6e-ch2": {
+      titre: "Chapitre 2 — Premiers éléments de géométrie (6e)",
+      classe: "6e",
+      questions: [
+        { q: "Un segment est défini par :", choices:["2 points","1 point","3 points"], answer:"2 points" },
+        { q: "Une droite passe par :", choices:["2 points","1 seul point","aucun point"], answer:"2 points" },
+        { q: "Les droites perpendiculaires forment :", choices:["un angle droit","un angle aigu","un angle obtus"], answer:"un angle droit" },
+        { q: "Le symbole de la perpendiculaire est :", choices:["⊥","∥","="], answer:"⊥" },
+        { q: "Les droites parallèles :", choices:["ne se coupent jamais","se coupent une fois","se coupent deux fois"], answer:"ne se coupent jamais" },
+        { q: "Un segment est :", choices:["une portion de droite","une droite entière","un point"], answer:"une portion de droite" },
+        { q: "Le milieu d’un segment partage ce segment en :", choices:["2 parties égales","3 parties","aucune partie"], answer:"2 parties égales" },
+        { q: "Les droites (AB) et (CD) sont parallèles → notation ?", choices:["(AB) ∥ (CD)","(AB) ⊥ (CD)","(AB) = (CD)"], answer:"(AB) ∥ (CD)" },
+        { q: "Une figure est symétrique si :", choices:["elle se superpose après pliage","elle est identique","elle est parallèle"], answer:"elle se superpose après pliage" },
+        { q: "Le compas permet de :", choices:["tracer des cercles","mesurer un angle","dessiner des carrés"], answer:"tracer des cercles" }
+      ]
+    },
+
+    "quiz-6e-ch3": {
+      titre: "Chapitre 3 — Les fractions (6e)",
+      classe: "6e",
+      questions: [
+        { q: "Dans 3/5, le numérateur est :", choices:["3","5","8"], answer:"3" },
+        { q: "Dans 3/5, le dénominateur est :", choices:["3","5","8"], answer:"5" },
+        { q: "1/2 est égal à :", choices:["0,5","2","1,2"], answer:"0,5" },
+        { q: "La fraction équivalente à 2/4 est :", choices:["1/2","2/8","4/8"], answer:"1/2" },
+        { q: "3/6 simplifié donne :", choices:["1/2","3/12","2/3"], answer:"1/2" },
+        { q: "Addition : 1/3 + 1/3 =", choices:["2/3","1/6","1/2"], answer:"2/3" },
+        { q: "Multiplication : 2/3 × 3 =", choices:["2","1","3/5"], answer:"2" },
+        { q: "Une fraction inférieure à 1 :", choices:["a numérateur < dénominateur","numérateur > dénominateur","les deux égaux"], answer:"a numérateur < dénominateur" },
+        { q: "Écriture décimale de 3/4 :", choices:["0,75","0,25","1,5"], answer:"0,75" },
+        { q: "2/3 de 90 =", choices:["60","45","30"], answer:"60" }
+      ]
+    },
+
+    "quiz-6e-ch4": {
+      titre: "Chapitre 4 — Droites (6e)",
+      classe: "6e",
+      questions: [
+        { q: "Une droite a :", choices:["aucune extrémité","2 extrémités","1 extrémité"], answer:"aucune extrémité" },
+        { q: "Un segment a :", choices:["2 extrémités","aucune extrémité","1 extrémité"], answer:"2 extrémités" },
+        { q: "Deux droites perpendiculaires se coupent en :", choices:["un angle droit","un angle aigu","un angle obtus"], answer:"un angle droit" },
+        { q: "Les droites parallèles ne :", choices:["se coupent jamais","se croisent une fois","sont confondues"], answer:"se coupent jamais" },
+        { q: "La médiatrice d’un segment est :", choices:["perpendiculaire et passe par le milieu","parallèle au segment","au hasard"], answer:"perpendiculaire et passe par le milieu" },
+        { q: "Une demi-droite a :", choices:["une origine et pas de fin","pas d’origine","deux extrémités"], answer:"une origine et pas de fin" },
+        { q: "Les points d’une même droite sont :", choices:["alignés","perpendiculaires","parallèles"], answer:"alignés" },
+        { q: "Le symbole de parallèle est :", choices:["∥","⊥","="], answer:"∥" },
+        { q: "Deux droites sécantes :", choices:["ont un point commun","aucun point commun","plusieurs points communs"], answer:"ont un point commun" },
+        { q: "L’instrument pour tracer une perpendiculaire :", choices:["équerre","compas","rapporteur"], answer:"équerre" }
+      ]
+    },
+
+    "quiz-6e-ch5": {
+      titre: "Chapitre 5 — Notion d’angle (6e)",
+      classe: "6e",
+      questions: [
+        { q: "Un angle droit mesure :", choices:["90°","45°","180°"], answer:"90°" },
+        { q: "Un angle plat mesure :", choices:["180°","90°","45°"], answer:"180°" },
+        { q: "Un angle aigu mesure :", choices:["moins de 90°","plus de 90°","180°"], answer:"moins de 90°" },
+        { q: "Un angle obtus mesure :", choices:["entre 90° et 180°","plus de 180°","moins de 45°"], answer:"entre 90° et 180°" },
+        { q: "Instrument pour mesurer un angle :", choices:["rapporteur","équerre","compas"], answer:"rapporteur" },
+        { q: "Deux droites perpendiculaires forment :", choices:["un angle droit","un angle plat","un angle aigu"], answer:"un angle droit" },
+        { q: "Somme des angles d’un triangle :", choices:["180°","90°","360°"], answer:"180°" },
+        { q: "Angle de 0° :", choices:["nul","droit","plat"], answer:"nul" },
+        { q: "Le sommet d’un angle est :", choices:["le point commun des deux côtés","un des côtés","un segment"], answer:"le point commun des deux côtés" },
+        { q: "L’unité de mesure des angles :", choices:["le degré","le mètre","le litre"], answer:"le degré" }
+      ]
     }
   };
 
-/* =========================
-   QUIZZES — CLASSE DE 6e
-   ========================= */
-const QUIZZES = {
-  ...QUIZZES, // conserve les quiz 4e déjà définis
-
-  "quiz-6e-ch1": {
-    titre: "Chapitre 1 — Nombres entiers (6e)",
-    classe: "6e",
-    questions: [
-      { q: "Quel est le successeur de 49 ?", choices: ["50", "48", "51"], answer: "50" },
-      { q: "Quel est le prédécesseur de 100 ?", choices: ["101", "99", "102"], answer: "99" },
-      { q: "Combien vaut 7 × 8 ?", choices: ["54", "56", "64"], answer: "56" },
-      { q: "Le double de 12 est :", choices: ["24", "14", "20"], answer: "24" },
-      { q: "Le triple de 15 est :", choices: ["45", "30", "60"], answer: "45" },
-      { q: "0 est-il un nombre entier ?", choices: ["oui", "non", "parfois"], answer: "oui" },
-      { q: "Le nombre pair suivant 16 est :", choices: ["18", "17", "19"], answer: "18" },
-      { q: "Dans 438, le chiffre des dizaines est :", choices: ["3", "8", "4"], answer: "3" },
-      { q: "7 + 9 =", choices: ["16", "18", "14"], answer: "16" },
-      { q: "Entre 99 et 101, quel nombre est impair ?", choices: ["99", "100", "101"], answer: "99" }
-    ]
-  },
-
-  "quiz-6e-ch2": {
-    titre: "Chapitre 2 — Premiers éléments de géométrie (6e)",
-    classe: "6e",
-    questions: [
-      { q: "Un segment est défini par :", choices: ["2 points", "1 point", "3 points"], answer: "2 points" },
-      { q: "Une droite passe par :", choices: ["2 points", "1 seul point", "aucun point"], answer: "2 points" },
-      { q: "Les droites perpendiculaires forment :", choices: ["un angle droit", "un angle aigu", "un angle obtus"], answer: "un angle droit" },
-      { q: "Le symbole de la perpendiculaire est :", choices: ["⊥", "∥", "="], answer: "⊥" },
-      { q: "Les droites parallèles :", choices: ["ne se coupent jamais", "se coupent une fois", "se coupent deux fois"], answer: "ne se coupent jamais" },
-      { q: "Un segment est :", choices: ["une portion de droite", "une droite entière", "un point"], answer: "une portion de droite" },
-      { q: "Le milieu d’un segment partage ce segment en :", choices: ["2 parties égales", "3 parties", "aucune partie"], answer: "2 parties égales" },
-      { q: "Les droites (AB) et (CD) sont parallèles → notation ?", choices: ["(AB) ∥ (CD)", "(AB) ⊥ (CD)", "(AB) = (CD)"], answer: "(AB) ∥ (CD)" },
-      { q: "Une figure est symétrique si :", choices: ["elle se superpose après pliage", "elle est identique", "elle est parallèle"], answer: "elle se superpose après pliage" },
-      { q: "Le compas permet de :", choices: ["tracer des cercles", "mesurer un angle", "dessiner des carrés"], answer: "tracer des cercles" }
-    ]
-  },
-
-  "quiz-6e-ch3": {
-    titre: "Chapitre 3 — Les fractions (6e)",
-    classe: "6e",
-    questions: [
-      { q: "Dans 3/5, le numérateur est :", choices: ["3", "5", "8"], answer: "3" },
-      { q: "Dans 3/5, le dénominateur est :", choices: ["3", "5", "8"], answer: "5" },
-      { q: "1/2 est égal à :", choices: ["0,5", "2", "1,2"], answer: "0,5" },
-      { q: "La fraction équivalente à 2/4 est :", choices: ["1/2", "2/8", "4/8"], answer: "1/2" },
-      { q: "3/6 simplifié donne :", choices: ["1/2", "3/12", "2/3"], answer: "1/2" },
-      { q: "Addition : 1/3 + 1/3 =", choices: ["2/3", "1/6", "1/2"], answer: "2/3" },
-      { q: "Multiplication : 2/3 × 3 =", choices: ["2", "1", "3/5"], answer: "2" },
-      { q: "Une fraction inférieure à 1 :", choices: ["a numérateur < dénominateur", "numérateur > dénominateur", "les deux égaux"], answer: "a numérateur < dénominateur" },
-      { q: "Écriture décimale de 3/4 :", choices: ["0,75", "0,25", "1,5"], answer: "0,75" },
-      { q: "2/3 de 90 =", choices: ["60", "45", "30"], answer: "60" }
-    ]
-  },
-
-  "quiz-6e-ch4": {
-    titre: "Chapitre 4 — Droites (6e)",
-    classe: "6e",
-    questions: [
-      { q: "Une droite a :", choices: ["aucune extrémité", "2 extrémités", "1 extrémité"], answer: "aucune extrémité" },
-      { q: "Un segment a :", choices: ["2 extrémités", "aucune extrémité", "1 extrémité"], answer: "2 extrémités" },
-      { q: "Deux droites perpendiculaires se coupent en :", choices: ["un angle droit", "un angle aigu", "un angle obtus"], answer: "un angle droit" },
-      { q: "Les droites parallèles ne :", choices: ["se coupent jamais", "se croisent une fois", "sont confondues"], answer: "se coupent jamais" },
-      { q: "La médiatrice d’un segment est :", choices: ["perpendiculaire et passe par le milieu", "parallèle au segment", "au hasard"], answer: "perpendiculaire et passe par le milieu" },
-      { q: "Une demi-droite a :", choices: ["une origine et pas de fin", "pas d’origine", "deux extrémités"], answer: "une origine et pas de fin" },
-      { q: "Les points d’une même droite sont :", choices: ["alignés", "perpendiculaires", "parallèles"], answer: "alignés" },
-      { q: "Le symbole de parallèle est :", choices: ["∥", "⊥", "="], answer: "∥" },
-      { q: "Deux droites sécantes :", choices: ["ont un point commun", "aucun point commun", "plusieurs points communs"], answer: "ont un point commun" },
-      { q: "L’instrument pour tracer une perpendiculaire :", choices: ["équerre", "compas", "rapporteur"], answer: "équerre" }
-    ]
-  },
-
-  "quiz-6e-ch5": {
-    titre: "Chapitre 5 — Notion d’angle (6e)",
-    classe: "6e",
-    questions: [
-      { q: "Un angle droit mesure :", choices: ["90°", "45°", "180°"], answer: "90°" },
-      { q: "Un angle plat mesure :", choices: ["180°", "90°", "45°"], answer: "180°" },
-      { q: "Un angle aigu mesure :", choices: ["moins de 90°", "plus de 90°", "180°"], answer: "moins de 90°" },
-      { q: "Un angle obtus mesure :", choices: ["entre 90° et 180°", "plus de 180°", "moins de 45°"], answer: "entre 90° et 180°" },
-      { q: "Instrument pour mesurer un angle :", choices: ["rapporteur", "équerre", "compas"], answer: "rapporteur" },
-      { q: "Deux droites perpendiculaires forment :", choices: ["un angle droit", "un angle plat", "un angle aigu"], answer: "un angle droit" },
-      { q: "Somme des angles d’un triangle :", choices: ["180°", "90°", "360°"], answer: "180°" },
-      { q: "Angle de 0° :", choices: ["nul", "droit", "plat"], answer: "nul" },
-      { q: "Le sommet d’un angle est :", choices: ["le point commun des deux côtés", "le milieu de l’angle", "un côté"], answer: "le point commun des deux côtés" },
-      { q: "Mesure d’un angle plat divisé par 2 :", choices: ["90°", "45°", "60°"], answer: "90°" }
-    ]
-  }
-};
 
 
   // DOM
