@@ -2,204 +2,135 @@
 <html lang="fr">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Cours de maths — Quiz & suivi</title>
-  
-  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
-
   <style>
-    :root {
-      /* --- PALETTE "DOUCE & CLAIRE" --- */
-      --bg-page: #f1f5f9;       /* Gris-bleu très clair (Slate 100) - Reposant */
-      --card-bg: #ffffff;       /* Blanc pur pour les cartes */
-      
-      --primary: #4f46e5;       /* Indigo */
-      --primary-light: #e0e7ff; /* Indigo très pâle (pour les fonds de boutons) */
-      --accent: #db2777;        /* Rose */
-      --success: #10b981;       /* Vert */
-      
-      --text: #1e293b;          /* Gris foncé (Slate 800) - Très lisible */
-      --text-light: #64748b;    /* Gris moyen */
-      
-      --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-      --radius: 16px;
+    :root{
+      --bleu:#2563eb; --vert:#16a34a; --jaune:#f59e0b; --rouge:#dc2626;
+      --texte:#1e293b; --rose-clair:#fde8f0; --rose-section:#fcd5e8;
+      --carte:rgba(255,255,255,0.94); --ombre:0 10px 30px rgba(0,0,0,0.06);
+      --radius:14px; --transition:all 0.35s ease;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0; font-family:"Segoe UI", Roboto, Arial, sans-serif;
+      color:var(--texte); background:var(--rose-clair);
+      -webkit-font-smoothing:antialiased; overflow-x:hidden; padding-bottom: 40px;
     }
 
-    * { box-sizing: border-box; }
+    /* Header */
+    header{
+      background:linear-gradient(135deg,var(--bleu),#1e40af);
+      color:white; text-align:center; padding:2.8rem 1rem 2rem;
+      box-shadow:var(--ombre); position:relative; overflow:hidden;
+    }
+    header h1{ font-size:2.6rem; font-weight:800; margin:0; z-index:3; display:inline-block; text-shadow:0 2px 8px rgba(0,0,0,0.25); animation:pulseTitle 3s ease-in-out infinite alternate; }
+    @keyframes pulseTitle{ from{transform:scale(1);} to{transform:scale(1.04);} }
+    header p.citation{ font-size:1rem; margin-top:0.4rem; color:rgba(255,255,255,0.95); opacity:0; animation:fadeIn 1.6s ease forwards; }
+    @keyframes fadeIn{ from{opacity:0;transform:translateY(8px);} to{opacity:1;transform:none;} }
 
-    body {
-      margin: 0; 
-      font-family: 'Outfit', sans-serif;
-      color: var(--text);
-      background-color: var(--bg-page); /* Fond uni doux */
-      /* Optionnel : Un dégradé très subtil et fixe pour ne pas faire "plat" */
-      background-image: linear-gradient(to bottom, #f1f5f9, #e2e8f0);
-      min-height: 100vh;
-      display: flex; flex-direction: column;
-    }
+    .math-symbol{ position:absolute; color:rgba(255,255,255,0.18); font-size:1.8rem; font-weight:700; animation:floatSymbol 12s linear infinite; user-select:none; pointer-events:none; z-index:1; }
+    @keyframes floatSymbol{ 0%{ transform:translateY(60vh) rotate(0deg); opacity:0; } 10%{ opacity:0.8; } 70%{ opacity:0.6; } 100%{ transform:translateY(-20vh) rotate(360deg); opacity:0; } }
 
-    /* --- HEADER (Blanc avec une ligne de séparation) --- */
-    header {
-      text-align: center; 
-      padding: 2rem 1rem 1.5rem;
-      background: var(--card-bg);
-      border-bottom: 1px solid #cbd5e1;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.03);
-      position: relative; z-index: 50;
-    }
-    header h1 { 
-      margin: 0; font-size: 2.5rem; font-weight: 800; 
-      color: var(--primary); /* Titre en couleur */
-    }
-    header .citation { 
-      color: var(--text-light); font-style: italic; margin-top: 8px; font-size: 1rem; 
-    }
-
-    /* --- NAV STICKY --- */
+    /* --- NOUVEAU : Conteneur de navigation et barre de progression (Sticky) --- */
     .nav-sticky-container {
-      position: sticky; top: 0; z-index: 100;
+      position:sticky; top:0; z-index:100;
       background: rgba(255, 255, 255, 0.95);
       backdrop-filter: blur(8px);
-      border-bottom: 1px solid #cbd5e1;
-      padding: 15px 0;
-      box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+      padding-bottom: 12px;
+      border-bottom: 1px solid rgba(0,0,0,0.05);
     }
 
-    nav { display: flex; justify-content: center; gap: 15px; margin-bottom: 15px; }
+    /* Nav */
+    nav{ display:flex; justify-content:center; gap:1rem; padding:0.8rem; }
+    nav button{ background:white; color:var(--bleu); border:2px solid var(--bleu); padding:0.55rem 1.1rem; border-radius:999px; cursor:pointer; font-weight:700; transition:var(--transition); }
+    nav button.active, nav button:hover{ background:var(--bleu); color:#fff; transform:translateY(-2px); box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3); }
+
+    /* Barre de progression */
+    .progress-wrapper {
+      max-width: 700px; margin: 0 auto; padding: 0 1.2rem;
+      display: flex; flex-direction: column; gap: 5px;
+    }
+    .progress-header {
+      display: flex; justify-content: space-between; align-items: center;
+      font-size: 0.9rem; font-weight: 700; color: var(--texte);
+    }
+    .progress-track {
+      width: 100%; height: 10px; background: #e2e8f0; border-radius: 99px; overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%; width: 0%; background: linear-gradient(90deg, var(--vert), #22c55e);
+      border-radius: 99px; transition: width 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+    }
+
+    /* Content */
+    main{ max-width:960px; margin:1.6rem auto; padding:0 1rem 3rem; }
+    section{ display:none; opacity:0; transform:translateY(15px); transition:opacity 0.6s ease, transform 0.6s ease; background:linear-gradient(180deg,var(--rose-section) 0%, var(--rose-clair) 100%); border-radius:var(--radius); padding:1.25rem; box-shadow:inset 0 0 20px rgba(0,0,0,0.03); margin-bottom:1.25rem; }
+    section.active{ display:block; opacity:1; transform:translateY(0); }
+
+    .bloc{ background:var(--carte); border-radius:12px; padding:1.25rem; margin-bottom:1rem; box-shadow:var(--ombre); }
+    h2{ margin:0 0 0.6rem 0; font-size:1.15rem; display:flex; align-items:center; gap:0.6rem; }
+    ul{ margin:0; padding-left:1.1rem; }
+    li{ margin:0.45rem 0; list-style-type:none; display:flex; align-items:center; gap:.5rem; }
+    a{ color:var(--bleu); text-decoration:none; font-weight:600; }
+    a:hover{text-decoration:underline}
+    footer{ text-align:center; padding:1.25rem; background:rgba(226,232,240,0.9); color:#475569; margin-top:1rem; }
+
+    .checkbox{ margin-right:8px; cursor:pointer; accent-color: var(--vert); width: 1.1em; height: 1.1em; }
+
+    .subtabs{ display:flex; gap:0.5rem; margin-bottom:0.8rem; flex-wrap:wrap; }
+    .subtab{ background:var(--jaune); color:#fff; border:none; border-radius:999px; padding:0.45rem 0.9rem; cursor:pointer; font-weight:600; transition:var(--transition); }
+    .subtab:hover, .subtab.active{ background:#b45309; transform:translateY(-2px); }
+    .subtab-content{ display:none; animation:fadeInSub 0.45s ease; }
+    .subtab-content.active{ display:block; }
+    @keyframes fadeInSub{ from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:none;} }
+    .bloc, .subtab-content { position: relative; z-index:2; }
+
+    .chapter-quiz-buttons { display:flex; flex-wrap:wrap; gap:0.5rem; margin-bottom:0.75rem; }
+    .chapter-quiz-buttons button { background: var(--bleu); color: #fff; border:0; padding:0.45rem 0.8rem; border-radius:999px; cursor:pointer; font-weight:700; transition:var(--transition); }
+    .chapter-quiz-buttons button:hover { transform:translateY(-3px); background:#1e40af; }
+
+    /* Modal pop-up */
+    .quiz-modal-backdrop { position: fixed; inset: 0; background: rgba(15,23,42,0.45); display: none; align-items: center; justify-content: center; z-index: 2000; }
+    .quiz-modal-backdrop.active { display:flex; }
+    .quiz-modal { width: min(920px, 96%); max-height: 92vh; overflow:auto; border-radius: 16px; padding: 18px; box-shadow: 0 20px 60px rgba(2,6,23,0.45); background: linear-gradient(180deg, rgba(255,255,255,0.98), rgba(254,243,250,0.98)); border: 1px solid rgba(0,0,0,0.05); position: relative; }
+    .quiz-modal header { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:8px; }
+    .quiz-modal h3 { margin:0; font-size:1.1rem; color:var(--texte); }
+    .quiz-modal .meta { font-size:0.9rem; color:rgba(0,0,0,0.6); }
+    .quiz-close { background:transparent; border:0; font-size:1.1rem; cursor:pointer; padding:6px 8px; border-radius:10px; color:var(--texte); }
+    .quiz-close:hover { background:rgba(0,0,0,0.04); }
+    .quiz-body { padding: 6px 0 10px 0; }
+    .quiz-question { display:flex; flex-direction:column; gap:8px; padding:12px; border-radius:10px; margin-bottom:10px; background: linear-gradient(90deg, rgba(255,255,255,0.95), rgba(250,250,250,0.95)); border:1px solid rgba(0,0,0,0.03); }
+    .quiz-qtext { font-weight:700; font-size:0.98rem; color:var(--texte); margin:0; }
+    .quiz-answers { display:flex; flex-direction:column; gap:8px; margin-top:6px; }
+    .quiz-answers button.answer { text-align:left; padding:10px 12px; border-radius:10px; border:1px solid rgba(0,0,0,0.06); background:transparent; cursor:pointer; font-weight:600; transition:all .20s ease; display:flex; gap:10px; align-items:center; }
+    .quiz-answers button.answer:hover { transform:translateY(-2px); box-shadow:0 6px 18px rgba(2,6,23,0.06); }
+    .quiz-answers button.correct { background: rgba(22,163,74,0.12); border-color: rgba(22,163,74,0.32); }
+    .quiz-answers button.wrong { background: rgba(220,38,38,0.06); border-color: rgba(220,38,38,0.24); opacity:0.98; }
+    .quiz-footer { display:flex; align-items:center; justify-content:space-between; gap:10px; margin-top:6px; flex-wrap:wrap; }
+    .quiz-footer .controls { display:flex; gap:8px; align-items:center; }
+    .btn { padding:8px 12px; border-radius:999px; border:0; cursor:pointer; font-weight:800; }
+    .btn.primary { background:var(--bleu); color:white; }
+    .btn.ghost { background:transparent; border:1px solid rgba(0,0,0,0.06); color:var(--texte); }
+    .quiz-progress { font-weight:700; color:var(--texte); }
+    .quiz-score { padding:10px; border-radius:10px; min-width:160px; text-align:center; background: linear-gradient(180deg, rgba(255,255,255,0.98), rgba(250,250,250,0.98)); border:1px solid rgba(0,0,0,0.04); }
     
-    nav button {
-      background: white; 
-      border: 2px solid #e2e8f0;
-      color: var(--text-light); padding: 8px 24px; border-radius: 99px;
-      font-weight: 700; font-family: inherit; cursor: pointer; transition: all 0.2s;
-    }
-    nav button:hover { 
-      border-color: var(--primary); color: var(--primary); 
-      transform: translateY(-2px);
-    }
-    nav button.active { 
-      background: var(--primary); border-color: var(--primary); 
-      color: white; box-shadow: 0 4px 12px rgba(79, 70, 229, 0.2); 
-    }
+    /* CSS unifié pour les cartes de contrôles */
+    .controles-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.2rem; }
+    .controle-card { background: var(--carte); border-radius: var(--radius); padding: 1rem 1.2rem; box-shadow: var(--ombre); text-align: center; transition: all 0.3s ease; }
+    .controle-card:hover { transform: translateY(-4px); box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1); }
+    .controle-card h3 { margin: 0; color: var(--texte); font-size: 1.1rem; }
+    .controle-buttons { margin-top: 0.8rem; display: flex; justify-content: center; gap: 0.8rem; }
+    .btn-sujet, .btn-corrige { display: inline-block; padding: 0.45rem 1.1rem; border-radius: 999px; font-weight: 600; text-decoration: none; color: #fff; box-shadow: var(--ombre); transition: all 0.25s ease; min-width: 120px; text-align: center; }
+    .btn-sujet { background: var(--bleu); }
+    .btn-corrige { background: var(--vert); }
+    .btn-sujet:hover { background: #1e40af; transform: translateY(-2px); }
+    .btn-corrige:hover { background: #15803d; transform: translateY(-2px); }
 
-    /* BARRE DE PROGRESSION */
-    .progress-wrapper { max-width: 700px; margin: 0 auto; padding: 0 20px; display: flex; flex-direction: column; gap: 6px; }
-    .progress-header { display: flex; justify-content: space-between; font-size: 0.85rem; font-weight: 800; color: var(--text); }
-    .progress-track { width: 100%; height: 10px; background: #e2e8f0; border-radius: 99px; overflow: hidden; } 
-    .progress-fill { height: 100%; width: 0%; background: linear-gradient(90deg, #10b981, #34d399); border-radius: 99px; transition: width 0.6s ease; }
-
-    /* CONTENT */
-    main { max-width: 960px; margin: 2rem auto; padding: 0 1rem; flex: 1; width: 100%; }
-    section { display: none; animation: slideUp 0.4s ease; }
-    section.active { display: block; }
-    @keyframes slideUp { from { opacity:0; transform:translateY(15px); } to { opacity:1; transform:translateY(0); } }
-
-    /* BLOCS DE CONTENU (Cartes Blanches) */
-    .bloc {
-      background: var(--card-bg); 
-      border-radius: var(--radius); 
-      padding: 1.5rem; margin-bottom: 1.5rem;
-      /* Ombre douce pour détacher du fond gris */
-      box-shadow: var(--shadow); 
-      border: 1px solid white; /* Petite astuce pour la netteté */
-      transition: transform 0.2s, box-shadow 0.2s;
+    @media (max-width:640px){
+      main{padding:0 0.6rem;} nav{flex-wrap:wrap;} nav button{width:48%}
     }
-    .bloc:hover { 
-      transform: translateY(-2px); 
-      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); 
-    }
-
-    h2 { margin-top: 0; color: var(--primary); display: flex; align-items: center; gap: 10px; font-size: 1.4rem; }
-    
-    ul { padding-left: 0; list-style: none; margin: 0; }
-    li { display: flex; align-items: center; gap: 12px; padding: 12px 0; border-bottom: 1px solid #f1f5f9; }
-    li:last-child { border-bottom: none; }
-
-    a { text-decoration: none; color: var(--text); font-weight: 600; transition: color 0.2s; }
-    a:hover { color: var(--primary); text-decoration: underline; }
-
-    /* CHECKBOX */
-    .checkbox {
-      appearance: none; width: 22px; height: 22px;
-      border: 2px solid #cbd5e1; border-radius: 6px;
-      cursor: pointer; position: relative; flex-shrink: 0;
-      background: white; transition: all 0.2s;
-    }
-    .checkbox:checked { background: var(--success); border-color: var(--success); }
-    .checkbox:checked::after {
-      content: '✔'; position: absolute; color: white;
-      font-size: 14px; top: 50%; left: 50%; transform: translate(-50%, -50%); font-weight: 900;
-    }
-
-    /* SUBTABS */
-    .subtabs { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 15px; }
-    .subtab {
-      background: #f1f5f9; border: none; padding: 6px 14px;
-      border-radius: 99px; font-weight: 700; color: var(--text-light);
-      cursor: pointer; transition: all 0.2s; font-size: 0.9rem;
-    }
-    .subtab:hover, .subtab.active { background: var(--accent); color: white; transform: translateY(-2px); }
-    .subtab-content { display: none; animation: fadeIn 0.3s; }
-    .subtab-content.active { display: block; }
-    @keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
-
-    /* BOUTONS QUIZ */
-    .chapter-quiz-buttons { display: flex; flex-wrap: wrap; gap: 10px; }
-    .chapter-quiz-buttons button {
-      background: linear-gradient(135deg, var(--primary), #6366f1);
-      color: white; border: none; padding: 10px 18px;
-      border-radius: 99px; font-weight: 700; cursor: pointer;
-      font-family: inherit; box-shadow: 0 4px 6px rgba(79, 70, 229, 0.2); transition: transform 0.2s;
-    }
-    .chapter-quiz-buttons button:hover { transform: scale(1.05); box-shadow: 0 6px 12px rgba(79, 70, 229, 0.3); }
-
-    /* CARTES CONTROLES */
-    .controles-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; }
-    .controle-card {
-      background: #f8fafc; /* Légèrement gris pour se différencier du fond blanc */
-      padding: 1rem; border-radius: 12px;
-      text-align: center; border: 1px solid #e2e8f0; transition: transform 0.2s;
-    }
-    .controle-card:hover { transform: translateY(-3px); border-color: var(--primary); background: white; }
-    .controle-card h3 { margin: 0 0 10px 0; font-size: 1.1rem; color: var(--text); }
-    .controle-buttons { display: flex; justify-content: center; gap: 8px; }
-    
-    .btn-dl { display: inline-block; padding: 5px 12px; border-radius: 99px; font-size: 0.85rem; font-weight: 700; text-decoration: none; color: white; transition: transform 0.2s; }
-    .btn-dl:hover { transform: scale(1.05); }
-    .btn-sujet { background: var(--primary); }
-    .btn-corrige { background: var(--success); }
-
-    footer { text-align: center; padding: 2rem; color: var(--text-light); font-weight: 600; margin-top: auto; }
-
-    /* MODAL QUIZ */
-    .quiz-backdrop { position: fixed; inset: 0; background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(4px); z-index: 2000; display: none; align-items: center; justify-content: center; }
-    .quiz-backdrop.active { display: flex; }
-    .quiz-modal {
-      background: white; width: 95%; max-width: 600px;
-      border-radius: 24px; padding: 25px;
-      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-      position: relative;
-    }
-    .quiz-header { display: flex; justify-content: space-between; margin-bottom: 20px; border-bottom: 2px solid #f1f5f9; padding-bottom: 10px; }
-    .quiz-header h3 { margin: 0; color: var(--primary); }
-    .quiz-close { background: none; border: none; font-size: 1.5rem; cursor: pointer; color: #94a3b8; }
-    
-    .quiz-question-box { font-size: 1.1rem; font-weight: 700; margin-bottom: 15px; background: #f1f5f9; color: var(--text); padding: 15px; border-radius: 12px; }
-    .quiz-answers { display: flex; flex-direction: column; gap: 8px; }
-    .answer-btn {
-      padding: 12px 15px; border: 2px solid #f1f5f9; border-radius: 10px;
-      background: white; text-align: left; font-weight: 600; font-size: 1rem;
-      cursor: pointer; transition: all 0.2s; font-family: inherit; color: var(--text);
-    }
-    .answer-btn:hover { border-color: #cbd5e1; background: #f8fafc; }
-    .answer-btn.correct { background: #dcfce7; border-color: #22c55e; color: #15803d; }
-    .answer-btn.wrong { background: #fee2e2; border-color: #ef4444; color: #991b1b; }
-
-    .quiz-footer { margin-top: 20px; display: flex; justify-content: space-between; align-items: center; }
-    .btn-next { background: var(--text); color: white; padding: 10px 20px; border-radius: 99px; border: none; font-weight: 700; cursor: pointer; }
-    
-    @media(max-width:600px) { header h1 { font-size: 2rem; } }
   </style>
 </head>
 <body>
@@ -207,59 +138,65 @@
   <header>
     <h1>📐 Cours de maths</h1>
     <p class="citation"></p>
+    <span class="math-symbol" style="left:6%; animation-delay:0s;">π</span>
+    <span class="math-symbol" style="left:18%; animation-delay:2s;">√</span>
+    <span class="math-symbol" style="left:34%; animation-delay:4s;">Σ</span>
+    <span class="math-symbol" style="left:50%; animation-delay:1s;">∞</span>
+    <span class="math-symbol" style="left:66%; animation-delay:3s;">x²</span>
+    <span class="math-symbol" style="left:82%; animation-delay:5s;">∫</span>
   </header>
 
   <div class="nav-sticky-container">
-    <nav>
+    <nav aria-label="Choisir une classe">
       <button class="tablink active" data-target="4e">Classe de 4e</button>
       <button class="tablink" data-target="6e">Classe de 6e</button>
     </nav>
+
     <div class="progress-wrapper">
       <div class="progress-header">
         <span id="progress-text">Progression : 0%</span>
         <span id="progress-rank">🌱 Débutant</span>
       </div>
       <div class="progress-track">
-        <div class="progress-fill" id="global-progress-bar"></div>
+        <div class="progress-fill" id="main-progress-bar"></div>
       </div>
     </div>
   </div>
 
   <main>
     <section id="4e" class="active">
-      
       <div class="bloc">
         <h2>📘 Cours</h2>
         <ul>
-          <li><input type="checkbox" class="checkbox"><a href="https://drive.google.com/uc?export=download&id=1DildOn4eWYLFInbhn8_DpaeO72Tlt0gm" target="_blank">Chapitre 1 — Nombres relatifs</a></li>
-          <li><input type="checkbox" class="checkbox"><a href="https://drive.google.com/uc?export=download&id=1lqivoBymp0cBgLHQmuVegMdIBbfe6Itf" target="_blank">Chapitre 2 — Théorème de Pythagore</a></li>
-          <li><input type="checkbox" class="checkbox"><a href="https://drive.google.com/uc?export=download&id=1Afj680YIxU7Dg0aXiZ9-XWODyJTaY69x" target="_blank">Chapitre 3 — Proportionnalité</a></li>
-          <li><input type="checkbox" class="checkbox"><a href="https://drive.google.com/uc?export=download&id=1Kl-psekWgG0jjKCsJlbaCV8teDQLvScL" target="_blank">Chapitre 4 — Puissances & Notation scientifique</a></li>
-          <li><input type="checkbox" class="checkbox"><a href="https://drive.google.com/uc?export=download&id=1JMrROLExxW8h0JxFAqUGRry3-47vjXf1" target="_blank">Chapitre 5 — Calcul littéral</a></li>
-          <li><input type="checkbox" class="checkbox"><a href="https://drive.google.com/file/d/1Jr4o1Tn5FZRC7c4sPq0tkB21rklJWWOa/view?usp=drive_link" target="_blank">Chapitre 6 — Les fractions</a></li>
+          <li><input type="checkbox" class="checkbox"><a href="https://drive.google.com/uc?export=download&id=1DildOn4eWYLFInbhn8_DpaeO72Tlt0gm" target="_blank" rel="noopener noreferrer">Chapitre 1 — Nombres relatifs </a></li>
+          <li><input type="checkbox" class="checkbox"><a href="https://drive.google.com/uc?export=download&id=1lqivoBymp0cBgLHQmuVegMdIBbfe6Itf" target="_blank" rel="noopener noreferrer">Chapitre 2 — Théorème de Pythagore </a></li>
+          <li><input type="checkbox" class="checkbox"><a href="https://drive.google.com/uc?export=download&id=1Afj680YIxU7Dg0aXiZ9-XWODyJTaY69x" target="_blank" rel="noopener noreferrer">Chapitre 3 — Proportionnalité </a></li>
+          <li><input type="checkbox" class="checkbox"><a href="https://drive.google.com/uc?export=download&id=1Kl-psekWgG0jjKCsJlbaCV8teDQLvScL" target="_blank" rel="noopener noreferrer">Chapitre 4 — Puissances & Notation scientifique </a></li>
+          <li><input type="checkbox" class="checkbox"><a href="https://drive.google.com/uc?export=download&id=1JMrROLExxW8h0JxFAqUGRry3-47vjXf1" target="_blank" rel="noopener noreferrer">Chapitre 5 — Calcul littéral </a></li>
+          <li><input type="checkbox" class="checkbox"><a href="https://drive.google.com/file/d/1Jr4o1Tn5FZRC7c4sPq0tkB21rklJWWOa/view?usp=drive_link" target="_blank" rel="noopener noreferrer">Chapitre 6 — Les fractions </a></li>
         </ul>
       </div>
 
       <div class="bloc">
         <h2>🟢 Activités</h2>
         <ul>
-          <li><input type="checkbox" class="checkbox"><a href="#" target="_blank">Chapitre 1 — Nombres relatifs</a></li>
-          <li><input type="checkbox" class="checkbox"><a href="https://drive.google.com/file/d/1uEBPOU3qg-XmKG1pz5befKLDtYkjWQTj/view?usp=drive_link" target="_blank">Chapitre 2 — Pythagore</a></li>
-          <li><input type="checkbox" class="checkbox"><a href="#" target="_blank">Chapitre 3 — Proportionnalité</a></li>
-          <li><input type="checkbox" class="checkbox"><a href="https://drive.google.com/file/d/1n8qWyHU6Q3I42mAKSVfMydOyV4IcS3R6/view?usp=drive_link" target="_blank">Chapitre 4 — Puissances</a></li>
-          <li><input type="checkbox" class="checkbox"><a href="https://drive.google.com/file/d/1fdhFbAfMtyk7YZT7YIQrHk0oNw6e0GUv/view?usp=drive_link" target="_blank">Chapitre 5 — Calcul littéral</a></li>
-          <li><input type="checkbox" class="checkbox"><a href="https://drive.google.com/file/d/1zAJ8VkqOCW_hXNJVB2ChGVYff7jEwhqG/view?usp=drive_link" target="_blank">Chapitre 6 — Les fractions</a></li>
+          <li><input type="checkbox" class="checkbox"><a href="#" target="_blank" rel="noopener noreferrer">Chapitre 1 — Nombres relatifs </a></li>
+          <li><input type="checkbox" class="checkbox"><a href="https://drive.google.com/file/d/1uEBPOU3qg-XmKG1pz5befKLDtYkjWQTj/view?usp=drive_link" target="_blank" rel="noopener noreferrer">Chapitre 2 — Pythagore </a></li>
+          <li><input type="checkbox" class="checkbox"><a href="#" target="_blank" rel="noopener noreferrer">Chapitre 3 — Proportionnalité </a></li>
+          <li><input type="checkbox" class="checkbox"><a href="https://drive.google.com/file/d/1n8qWyHU6Q3I42mAKSVfMydOyV4IcS3R6/view?usp=drive_link" target="_blank" rel="noopener noreferrer">Chapitre 4 — Puissances </a></li>
+          <li><input type="checkbox" class="checkbox"><a href="https://drive.google.com/file/d/1fdhFbAfMtyk7YZT7YIQrHk0oNw6e0GUv/view?usp=drive_link" target="_blank" rel="noopener noreferrer">Chapitre 5 — Calcul littéral </a></li>
+          <li><input type="checkbox" class="checkbox"><a href="https://drive.google.com/file/d/1zAJ8VkqOCW_hXNJVB2ChGVYff7jEwhqG/view?usp=drive_link" target="_blank" rel="noopener noreferrer">Chapitre 6 — Les fractions </a></li>
         </ul>
       </div>
 
       <div class="bloc">
         <h2>🧩 Exercices</h2>
         <ul>
-          <li><input type="checkbox" class="checkbox"><a href="https://drive.google.com/file/d/1rlova-W0Rs_B5CiI6n06a46_LsCmBgH6/view?usp=drive_link" target="_blank">Exercices Chapitre 1 — Nombres relatifs</a></li>
-          <li><input type="checkbox" class="checkbox"><a href="https://drive.google.com/file/d/1iBfaQSAmGxtFLfBo2t4cvASK35dEuwR-/view?usp=drive_link" target="_blank">Exercices Chapitre 2 — Théorème de Pythagore</a></li>
-          <li><input type="checkbox" class="checkbox"><a href="https://drive.google.com/file/d/1ANDw2RWwMRUPxJ6GMSHElkKliCAXvsXV/view?usp=drive_link" target="_blank">Exercices Chapitre 3 — Proportionnalité</a></li>
-          <li><input type="checkbox" class="checkbox"><a href="https://drive.google.com/file/d/14S7GwY0AwjtcbZogItfxBCj8LR31l1JI/view?usp=drive_link" target="_blank">Exercices Chapitre 4 — Puissances</a></li>
-          <li><input type="checkbox" class="checkbox"><a href="https://drive.google.com/file/d/1jLgI3RyhhmQhVBJn180ouADFM96gRnLa/view?usp=drive_link" target="_blank">Exercices Chapitre 5 — Calcul littéral</a></li>
+          <li><input type="checkbox" class="checkbox"><a href="https://drive.google.com/file/d/1rlova-W0Rs_B5CiI6n06a46_LsCmBgH6/view?usp=drive_link" target="_blank" rel="noopener noreferrer">Exercices Chapitre 1 — Nombres relatifs</a></li>
+          <li><input type="checkbox" class="checkbox"><a href="https://drive.google.com/file/d/1iBfaQSAmGxtFLfBo2t4cvASK35dEuwR-/view?usp=drive_link" target="_blank" rel="noopener noreferrer">Exercices Chapitre 2 — Théorème de Pythagore</a></li>
+          <li><input type="checkbox" class="checkbox"><a href="https://drive.google.com/file/d/1ANDw2RWwMRUPxJ6GMSHElkKliCAXvsXV/view?usp=drive_link" target="_blank" rel="noopener noreferrer">Exercices Chapitre 3 — Proportionnalité</a></li>
+          <li><input type="checkbox" class="checkbox"><a href="https://drive.google.com/file/d/14S7GwY0AwjtcbZogItfxBCj8LR31l1JI/view?usp=drive_link" target="_blank" rel="noopener noreferrer">Exercices Chapitre 4 — Puissances</a></li>
+          <li><input type="checkbox" class="checkbox"><a href="https://drive.google.com/file/d/1jLgI3RyhhmQhVBJn180ouADFM96gRnLa/view?usp=drive_link" target="_blank" rel="noopener noreferrer">Exercices Chapitre 5 — Calcul littéral</a></li>
         </ul>
       </div>
 
@@ -273,48 +210,52 @@
       <div class="bloc">
         <h2>🎬 Vidéos</h2>
         <div class="subtabs">
-          <button class="subtab active" data-target="videos4e-ch1">Chap 1</button>
-          <button class="subtab" data-target="videos4e-ch2">Chap 2</button>
-          <button class="subtab" data-target="videos4e-ch3">Chap 3</button>
-          <button class="subtab" data-target="videos4e-ch4">Chap 4</button>
-          <button class="subtab" data-target="videos4e-ch5">Chap 5</button>
-          <button class="subtab" data-target="videos4e-ch6">Chap 6</button>
+          <button class="subtab active" data-target="videos4e-ch1">Chapitre 1 — Nombres relatifs</button>
+          <button class="subtab" data-target="videos4e-ch2">Chapitre 2 — Théorème de Pythagore</button>
+          <button class="subtab" data-target="videos4e-ch3">Chapitre 3 — Proportionnalité</button>
+          <button class="subtab" data-target="videos4e-ch4">Chapitre 4 — Puissances de 10 </button>
+          <button class="subtab" data-target="videos4e-ch5">Chapitre 5 — Calcul littéral </button>
+          <button class="subtab" data-target="videos4e-ch6">Chapitre 6 — Fractions </button>
         </div>
 
         <div class="subtab-content active" id="videos4e-ch1">
           <ul>
-            <li><input type="checkbox" class="checkbox"><a href="https://www.youtube.com/watch?v=u-bqCheDpHc" target="_blank">Vidéo 1 — Calculs relatifs</a></li>
-            <li><input type="checkbox" class="checkbox"><a href="https://www.youtube.com/watch?v=--Em_GWSBNM" target="_blank">Vidéo 2 — Simplifications</a></li>
+            <li><input type="checkbox" class="checkbox"><a href="https://www.youtube.com/watch?v=u-bqCheDpHc" target="_blank" rel="noopener noreferrer">Vidéo 1 — Effectuer des calculs avec les nombres relatifs</a></li>
+            <li><input type="checkbox" class="checkbox"><a href="https://www.youtube.com/watch?v=--Em_GWSBNM" target="_blank" rel="noopener noreferrer">Vidéo 2 — Simplifications d'écritures dans les sommes algébriques</a></li>
           </ul>
         </div>
+
         <div class="subtab-content" id="videos4e-ch2">
           <ul>
-            <li><input type="checkbox" class="checkbox"><a href="https://www.youtube.com/watch?v=y2HlgP09Bog" target="_blank">Vidéo 1 — Racine carrée</a></li>
-            <li><input type="checkbox" class="checkbox"><a href="https://www.youtube.com/watch?v=M9sceJ8gzNc" target="_blank">Vidéo 2 — Appliquer Pythagore</a></li>
+            <li><input type="checkbox" class="checkbox"><a href="https://www.youtube.com/watch?v=y2HlgP09Bog" target="_blank" rel="noopener noreferrer">Vidéo 1 — Calculer une racine carrée</a></li>
+            <li><input type="checkbox" class="checkbox"><a href="https://www.youtube.com/watch?v=M9sceJ8gzNc" target="_blank" rel="noopener noreferrer">Vidéo 2 — Appliquer le théorème de Pythagore pour calculer une longueur</a></li>
           </ul>
         </div>
+
         <div class="subtab-content" id="videos4e-ch3">
           <ul>
-            <li><input type="checkbox" class="checkbox"><a href="https://www.youtube.com/watch?v=qkcuyOJEyHk" target="_blank">Vidéo 1 — Coeff. proportionnalité</a></li>
-            <li><input type="checkbox" class="checkbox"><a href="https://www.youtube.com/watch?v=NKdhdmVoY1g" target="_blank">Vidéo 2 — Produits en croix</a></li>
+            <li><input type="checkbox" class="checkbox"><a href="https://www.youtube.com/watch?v=qkcuyOJEyHk" target="_blank" rel="noopener noreferrer">Vidéo 1 — Proportionnalité – Méthode 4 : Coefficient de proportionnalité</a></li>
+            <li><input type="checkbox" class="checkbox"><a href="https://www.youtube.com/watch?v=NKdhdmVoY1g" target="_blank" rel="noopener noreferrer">Vidéo 2 — Appliquer les produits en croix</a></li>
           </ul>
         </div>
+
         <div class="subtab-content" id="videos4e-ch4">
           <ul>
-            <li><input type="checkbox" class="checkbox"><a href="https://www.youtube.com/watch?v=tzhNCpLRtCY" target="_blank">Vidéo 1 — Notation scientifique</a></li>
-            <li><input type="checkbox" class="checkbox"><a href="https://www.youtube.com/watch?v=ZTPwYAY5VVY" target="_blank">Vidéo 2 — Puissances de 10</a></li>
+            <li><input type="checkbox" class="checkbox"><a href="https://www.youtube.com/watch?v=tzhNCpLRtCY" target="_blank" rel="noopener noreferrer">Vidéo 1 — Puissances et notation scientifique</a></li>
+            <li><input type="checkbox" class="checkbox"><a href="https://www.youtube.com/watch?v=ZTPwYAY5VVY" target="_blank" rel="noopener noreferrer">Vidéo 2 — Écrire les grands nombres avec des puissances de 10</a></li>
           </ul>
         </div>
         <div class="subtab-content" id="videos4e-ch5">
           <ul>
-            <li><input type="checkbox" class="checkbox"><a href="#" target="_blank">Vidéo 1 — Intro Calcul Littéral</a></li>
+            <li><input type="checkbox" class="checkbox"><a href="https://www.youtube.com/watch?v=qkcuyOJEyHk" target="_blank" rel="noopener noreferrer">Vidéo 1 — Proportionnalité – Méthode 4 : Coefficient de proportionnalité</a></li>
+            <li><input type="checkbox" class="checkbox"><a href="https://www.youtube.com/watch?v=NKdhdmVoY1g" target="_blank" rel="noopener noreferrer">Vidéo 2 — Appliquer les produits en croix</a></li>
           </ul>
         </div>
         <div class="subtab-content" id="videos4e-ch6">
           <ul>
-            <li><input type="checkbox" class="checkbox"><a href="https://www.youtube.com/watch?v=XcsbENjMFZo" target="_blank">Vidéo 1 — Additions/Soustractions</a></li>
-            <li><input type="checkbox" class="checkbox"><a href="https://www.youtube.com/watch?v=wkimwCoejZ4" target="_blank">Vidéo 2 — Problèmes fractions</a></li>
-            <li><input type="checkbox" class="checkbox"><a href="https://www.youtube.com/watch?v=8vFfzMYi1mM" target="_blank">Vidéo 3 — Calculs mêlés</a></li>
+            <li><input type="checkbox" class="checkbox"><a href="https://www.youtube.com/watch?v=XcsbENjMFZo" target="_blank" rel="noopener noreferrer">Vidéo 1 — Effectuer des additions et soustractions de fractions</a></li>
+            <li><input type="checkbox" class="checkbox"><a href="https://www.youtube.com/watch?v=wkimwCoejZ4&list=PLVUDmbpupCarGS9399o4YIbb88_ytmvpc&index=19" target="_blank" rel="noopener noreferrer">Vidéo 2 — Résoudre un problème à l'aide de fractions</a></li>
+            <li><input type="checkbox" class="checkbox"><a href="https://www.youtube.com/watch?v=8vFfzMYi1mM&list=PLVUDmbpupCarGS9399o4YIbb88_ytmvpc&index=17" target="_blank" rel="noopener noreferrer">Vidéo 3 — Effectuer des calculs mêlés</a></li>
           </ul>
         </div>
       </div>
@@ -323,45 +264,38 @@
         <h2>📝 Contrôles</h2>
         <div class="controles-grid">
           <div class="controle-card">
-            <h3>Chap 1 — Relatifs</h3>
+            <h3>Chapitre 1 — Nombres relatifs</h3>
             <div class="controle-buttons">
-              <a href="https://drive.google.com/uc?export=download&id=1JfCpuUWJOT7s2lgqVAQBdMyik4_hxhB-" class="btn-dl btn-sujet">📄 Sujet</a>
-              <a href="https://drive.google.com/uc?export=download&id=1L55INklEAsiBL-x3HrrzglHOOrs4dsm2" class="btn-dl btn-corrige">✅ Corrigé</a>
+              <a href="https://drive.google.com/uc?export=download&id=1JfCpuUWJOT7s2lgqVAQBdMyik4_hxhB-" download class="btn-sujet">📄 Sujet</a>
+              <a href="https://drive.google.com/uc?export=download&id=1L55INklEAsiBL-x3HrrzglHOOrs4dsm2" download class="btn-corrige">✅ Corrigé</a>
             </div>
           </div>
           <div class="controle-card">
-            <h3>Chap 2 — Pythagore</h3>
+            <h3>Chapitre 2 — Théorème de Pythagore</h3>
             <div class="controle-buttons">
-              <a href="https://drive.google.com/file/d/1DvZiJUKtoo1kXwP3jgBIWJ1zsjE33AZL/view?usp=drive_link" class="btn-dl btn-sujet">📄 Sujet</a>
-              <a href="https://drive.google.com/uc?export=download&id=1PLtnmRQhMi3PeaYISIVmBeQ2gslu6_lx" class="btn-dl btn-corrige">✅ Corrigé</a>
+              <a href="https://drive.google.com/file/d/1DvZiJUKtoo1kXwP3jgBIWJ1zsjE33AZL/view?usp=drive_link" download class="btn-sujet">📄 Sujet</a>
+              <a href="https://drive.google.com/uc?export=download&id=1PLtnmRQhMi3PeaYISIVmBeQ2gslu6_lx" download class="btn-corrige">✅ Corrigé</a>
             </div>
           </div>
           <div class="controle-card">
-            <h3>Chap 3 — Proportionnalité</h3>
+            <h3>Chapitre 3 — Proportionnalité</h3>
             <div class="controle-buttons">
-              <a href="https://drive.google.com/file/d/1rygNA6MbaPitbTFni0W7ACDbbblDW9h9/view?usp=drive_link" class="btn-dl btn-sujet">📄 Sujet</a>
-              <a href="https://drive.google.com/uc?export=download&id=1Pp94QGPmn2mlsxA6n49FL-6vo4UoFMKz" class="btn-dl btn-corrige">✅ Corrigé</a>
+              <a href="https://drive.google.com/file/d/1rygNA6MbaPitbTFni0W7ACDbbblDW9h9/view?usp=drive_link" download class="btn-sujet">📄 Sujet</a>
+              <a href="https://drive.google.com/uc?export=download&id=1Pp94QGPmn2mlsxA6n49FL-6vo4UoFMKz" download class="btn-corrige">✅ Corrigé</a>
             </div>
           </div>
           <div class="controle-card">
-            <h3>Chap 4 — Puissances</h3>
+            <h3>Chapitre 4 — Puissances</h3>
             <div class="controle-buttons">
-              <a href="https://drive.google.com/file/d/1hKO85iJLAErZX945jdMTbGPC1m15H3IS/view?usp=drive_link" class="btn-dl btn-sujet">📄 Sujet</a>
-              <a href="https://drive.google.com/file/d/1EIkeBiuA-CYdmzuf32QUJvcGgUdHze5X/view?usp=drive_link" class="btn-dl btn-corrige">✅ Corrigé</a>
+              <a href="https://drive.google.com/file/d/1hKO85iJLAErZX945jdMTbGPC1m15H3IS/view?usp=drive_link" download class="btn-sujet">📄 Sujet</a>
+              <a href="https://drive.google.com/file/d/1EIkeBiuA-CYdmzuf32QUJvcGgUdHze5X/view?usp=drive_link" download class="btn-corrige">✅ Corrigé</a>
             </div>
           </div>
           <div class="controle-card">
-            <h3>Chap 5 — Calcul littéral</h3>
+            <h3>Chapitre 5 — Calcul littéral</h3>
             <div class="controle-buttons">
-              <a href="https://drive.google.com/uc?export=download&id=1PLtnmRQhMi3PeaYISIVmBeQ2gslu6_lx" class="btn-dl btn-sujet">📄 Sujet</a>
-              <a href="https://drive.google.com/uc?export=download&id=1PLtnmRQhMi3PeaYISIVmBeQ2gslu6_lx" class="btn-dl btn-corrige">✅ Corrigé</a>
-            </div>
-          </div>
-          <div class="controle-card">
-            <h3>Chap 6 — Fractions</h3>
-            <div class="controle-buttons">
-              <a href="#" class="btn-dl btn-sujet">📄 Sujet</a>
-              <a href="#" class="btn-dl btn-corrige">✅ Corrigé</a>
+              <a href="https://drive.google.com/uc?export=download&id=1PLtnmRQhMi3PeaYISIVmBeQ2gslu6_lx" download class="btn-sujet">📄 Sujet</a>
+              <a href="https://drive.google.com/uc?export=download&id=1PLtnmRQhMi3PeaYISIVmBeQ2gslu6_lx" download class="btn-corrige">✅ Corrigé</a>
             </div>
           </div>
         </div>
@@ -385,7 +319,7 @@
       </div>
 
       <div class="bloc competences">
-        <h2>🎯 Compétences</h2>
+        <h2>🎯 Compétences mathématiques</h2>
         <ul>
           <li><input type="checkbox" class="checkbox"><a href="#" target="_blank">Septembre-Octobre</a></li>
         </ul>
@@ -393,55 +327,57 @@
 
       <div class="bloc">
         <h2>❓ Quiz par chapitre — 4e</h2>
-        <p>Choisis un chapitre ci-dessous pour lancer le quiz.</p>
-        <div class="chapter-quiz-buttons">
-          <button class="open-quiz" data-quiz="quiz-4e-ch1">🎯 Chap 1 — Relatifs</button>
-          <button class="open-quiz" data-quiz="quiz-4e-ch2">📐 Chap 2 — Pythagore</button>
-          <button class="open-quiz" data-quiz="quiz-4e-ch3">⚖️ Chap 3 — Proportionnalité</button>
-          <button class="open-quiz" data-quiz="quiz-4e-ch4">⚡ Chap 4 — Puissances</button>
-          <button class="open-quiz" data-quiz="quiz-4e-ch5">🔣 Chap 5 — Calcul littéral</button>
-          <button class="open-quiz" data-quiz="quiz-4e-ch6">🍰 Chap 6 — Fractions</button>
+        <p>Choisis un chapitre ci-dessous pour lancer le quiz (10 questions par chapitre).</p>
+        <div class="chapter-quiz-buttons" data-classe="4e">
+          <button class="btn primary open-quiz" data-classe="4e" data-quiz="quiz-4e-ch1">🎯 Quiz Chapitre 1 — Nombres relatifs</button>
+          <button class="btn primary open-quiz" data-classe="4e" data-quiz="quiz-4e-ch2">🎯 Quiz Chapitre 2 — Pyhtagore</button>
+          <button class="btn primary open-quiz" data-classe="4e" data-quiz="quiz-4e-ch3">🎯 Quiz Chapitre 3 — Proportionalité</button>
+          <button class="btn primary open-quiz" data-classe="4e" data-quiz="quiz-4e-ch4">🎯 Quiz Chapitre 4 — Puissances</button>
+          <button class="btn primary open-quiz" data-classe="4e" data-quiz="quiz-4e-ch5">🎯 Quiz Chapitre 5 — Calcul littéral</button>
+          <button class="btn primary open-quiz" data-classe="4e" data-quiz="quiz-4e-ch6">🎯 Quiz Chapitre 6 — Les fractions</button>
         </div>
       </div>
     </section>
+     
 
-    <section id="6e">
+    <section id="6e" tabindex="-1">
       <div class="bloc">
         <h2>📘 Cours</h2>
         <ul>
-          <li><input type="checkbox" class="checkbox"><a href="https://drive.google.com/uc?export=download&id=1d1A5TERex3tDKJvuZCT3TlcYtgkgaLJs" target="_blank">Chapitre 1 — Nombres entiers</a></li>
-          <li><input type="checkbox" class="checkbox"><a href="https://drive.google.com/uc?export=download&id=1qz7eIXffeyYvq2sPpVK3u1cZn2vAg_Nb" target="_blank">Chapitre 2 — Géométrie</a></li>
-          <li><input type="checkbox" class="checkbox"><a href="https://drive.google.com/uc?export=download&id=1TAPH-k6e0WWXuCTzOY3wNL0Qf7TQZZRA" target="_blank">Chapitre 3 — Les fractions</a></li>
-          <li><input type="checkbox" class="checkbox"><a href="https://drive.google.com/uc?export=download&id=1z1S6Kl6J7L7cVIgMGXfv01Q_S1epuVrB" target="_blank">Chapitre 4 — Droites</a></li>
-          <li><input type="checkbox" class="checkbox"><a href="https://drive.google.com/uc?export=download&id=1hC4aAPK2ltN-GlbZdkTiBLEqufuUjlX6" target="_blank">Chapitre 5 — Notion d’angle</a></li>
-          <li><input type="checkbox" class="checkbox"><a href="https://drive.google.com/file/d/1Y3qKJPNiNxQ5b9MHeMiElFZZTQYzSdGU/view?usp=drive_link" target="_blank">Chapitre 6 — Triangle</a></li>
-          <li><input type="checkbox" class="checkbox"><a href="https://drive.google.com/file/d/14t70a3lLNWA0HeRHNaPfD9v-zR08QbLN/view?usp=drive_link" target="_blank">Chapitre 7 — Nombres décimaux</a></li>
+          <li><input type="checkbox" class="checkbox"><a href="https://drive.google.com/uc?export=download&id=1d1A5TERex3tDKJvuZCT3TlcYtgkgaLJs" target="_blank" rel="noopener noreferrer">Chapitre 1 — Nombres entiers </a></li>
+          <li><input type="checkbox" class="checkbox"><a href="https://drive.google.com/uc?export=download&id=1qz7eIXffeyYvq2sPpVK3u1cZn2vAg_Nb" target="_blank" rel="noopener noreferrer">Chapitre 2 — Premiers éléments de géométrie </a></li>
+          <li><input type="checkbox" class="checkbox"><a href="https://drive.google.com/uc?export=download&id=1TAPH-k6e0WWXuCTzOY3wNL0Qf7TQZZRA" target="_blank" rel="noopener noreferrer">Chapitre 3 — Les fractions </a></li>
+          <li><input type="checkbox" class="checkbox"><a href="https://drive.google.com/uc?export=download&id=1z1S6Kl6J7L7cVIgMGXfv01Q_S1epuVrB" target="_blank" rel="noopener noreferrer">Chapitre 4 — Droites </a></li>
+          <li><input type="checkbox" class="checkbox"><a href="https://drive.google.com/uc?export=download&id=1hC4aAPK2ltN-GlbZdkTiBLEqufuUjlX6" target="_blank" rel="noopener noreferrer">Chapitre 5 — Notion d’angle </a></li>
+          <li><input type="checkbox" class="checkbox"><a href="https://drive.google.com/file/d/1Y3qKJPNiNxQ5b9MHeMiElFZZTQYzSdGU/view?usp=drive_link" target="_blank" rel="noopener noreferrer">Chapitre 6 — Triangle </a></li>
+          <li><input type="checkbox" class="checkbox"><a href="https://drive.google.com/file/d/14t70a3lLNWA0HeRHNaPfD9v-zR08QbLN/view?usp=drive_link" target="_blank" rel="noopener noreferrer">Chapitre 7 — Nombres décimaux </a></li>
         </ul>
       </div>
 
       <div class="bloc">
         <h2>🟢 Activités</h2>
         <ul>
-          <li><input type="checkbox" class="checkbox"><a href="https://drive.google.com/file/d/1K6RMwN9AWp9qGwBK8aiq9VbjG1vqc-8N/view?usp=drive_link" target="_blank">Chapitre 1 — Nombres entiers</a></li>
-          <li><input type="checkbox" class="checkbox"><a href="https://drive.google.com/file/d/1K6RMwN9AWp9qGwBK8aiq9VbjG1vqc-8N/view?usp=drive_link" target="_blank">Chapitre 2 — Géométrie</a></li>
-          <li><input type="checkbox" class="checkbox"><a href="https://drive.google.com/file/d/1K6RMwN9AWp9qGwBK8aiq9VbjG1vqc-8N/view?usp=drive_link" target="_blank">Chapitre 3 — Fractions</a></li>
-          <li><input type="checkbox" class="checkbox"><a href="https://drive.google.com/file/d/1K6RMwN9AWp9qGwBK8aiq9VbjG1vqc-8N/view?usp=drive_link" target="_blank">Chapitre 4 — Droites</a></li>
-          <li><input type="checkbox" class="checkbox"><a href="https://drive.google.com/file/d/1K6RMwN9AWp9qGwBK8aiq9VbjG1vqc-8N/view?usp=drive_link" target="_blank">Chapitre 5 — Notion d’angle</a></li>
-          <li><input type="checkbox" class="checkbox"><a href="https://drive.google.com/file/d/1-TOTvjbVjllPOqbIwd-m_kdYOwwxZvHP/view?usp=drive_link" target="_blank">Chapitre 6 — Triangle</a></li>
-          <li><input type="checkbox" class="checkbox"><a href="https://drive.google.com/file/d/1inE67ODApoG7H0f4yYkVJr6nrq9bV_rD/view?usp=drive_link" target="_blank">Chapitre 7 — Nombre décimaux</a></li>
+          <li><input type="checkbox" class="checkbox"><a href="https://drive.google.com/file/d/1K6RMwN9AWp9qGwBK8aiq9VbjG1vqc-8N/view?usp=drive_link" target="_blank" rel="noopener noreferrer">Chapitre 1 — Nombres entiers</li>
+          <li><input type="checkbox" class="checkbox"><a href="https://drive.google.com/file/d/1K6RMwN9AWp9qGwBK8aiq9VbjG1vqc-8N/view?usp=drive_link" target="_blank" rel="noopener noreferrer">Chapitre 2 — Géométrie</li>
+          <li><input type="checkbox" class="checkbox"><a href="https://drive.google.com/file/d/1K6RMwN9AWp9qGwBK8aiq9VbjG1vqc-8N/view?usp=drive_link" target="_blank" rel="noopener noreferrer">Chapitre 3 — Fractions</li>
+          <li><input type="checkbox" class="checkbox"><a href="https://drive.google.com/file/d/1K6RMwN9AWp9qGwBK8aiq9VbjG1vqc-8N/view?usp=drive_link" target="_blank" rel="noopener noreferrer">Chapitre 4 — Droites</li>
+          <li><input type="checkbox" class="checkbox"><a href="https://drive.google.com/file/d/1K6RMwN9AWp9qGwBK8aiq9VbjG1vqc-8N/view?usp=drive_link" target="_blank" rel="noopener noreferrer">Chapitre 5 — Notion d’angle</li>
+          <li><input type="checkbox" class="checkbox"><a href="https://drive.google.com/file/d/1-TOTvjbVjllPOqbIwd-m_kdYOwwxZvHP/view?usp=drive_link" target="_blank" rel="noopener noreferrer">Chapitre 6 — Triangle</li>
+          <li><input type="checkbox" class="checkbox"><a href="https://drive.google.com/file/d/1inE67ODApoG7H0f4yYkVJr6nrq9bV_rD/view?usp=drive_link" target="_blank" rel="noopener noreferrer">Chapitre 7 — Nombre décimaux</li>
+          <li><input type="checkbox" class="checkbox"><a href="https://drive.google.com/file/d/1K6RMwN9AWp9qGwBK8aiq9VbjG1vqc-8N/view?usp=drive_link" target="_blank" rel="noopener noreferrer">Chapitre 8 — ...</li>
         </ul>
       </div>
 
       <div class="bloc">
         <h2>🧩 Exercices</h2>
         <ul>
-          <li><input type="checkbox" class="checkbox"><a href="https://drive.google.com/file/d/1DV-paKfVrmJNl6eK3PMmFfrdLG68LmNr/view?usp=drive_link" target="_blank">Exercices Chapitre 1</a></li>
-          <li><input type="checkbox" class="checkbox"><a href="#" target="_blank">Exercices Chapitre 2</a></li>
-          <li><input type="checkbox" class="checkbox"><a href="https://drive.google.com/file/d/1rIa8rvCBZv39uWPHTKV-Q5lFRaiLwk6s/view?usp=drive_link" target="_blank">Exercices Chapitre 3</a></li>
-          <li><input type="checkbox" class="checkbox"><a href="https://drive.google.com/file/d/1OvyyPJrpyypa0cDyuL3CzXwdW9sMoue4/view?usp=drive_link" target="_blank">Exercices Chapitre 4</a></li>
-          <li><input type="checkbox" class="checkbox"><a href="https://drive.google.com/file/d/18lRXPSvFajiFqb0tWQgIy9cMYMLG7pY4/view?usp=drive_link" target="_blank">Exercices Chapitre 5</a></li>
-          <li><input type="checkbox" class="checkbox"><a href="https://drive.google.com/file/d/18lRXPSvFajiFqb0tWQgIy9cMYMLG7pY4/view?usp=drive_link" target="_blank">Exercices Chapitre 6</a></li>
-          <li><input type="checkbox" class="checkbox"><a href="https://drive.google.com/file/d/18lRXPSvFajiFqb0tWQgIy9cMYMLG7pY4/view?usp=drive_link" target="_blank">Exercices Chapitre 7</a></li>
+          <li><input type="checkbox" class="checkbox"><a href="https://drive.google.com/file/d/1DV-paKfVrmJNl6eK3PMmFfrdLG68LmNr/view?usp=drive_link" target="_blank" rel="noopener noreferrer">Exercices Chapitre 1 — Nombres entiers</a></li>
+          <li><input type="checkbox" class="checkbox"><a href="#" target="_blank" rel="noopener noreferrer">Exercices Chapitre 2 — Géométrie</a></li>
+          <li><input type="checkbox" class="checkbox"><a href="https://drive.google.com/file/d/1rIa8rvCBZv39uWPHTKV-Q5lFRaiLwk6s/view?usp=drive_link" target="_blank" rel="noopener noreferrer">Exercices Chapitre 3 — Fractions</a></li>
+          <li><input type="checkbox" class="checkbox"><a href="https://drive.google.com/file/d/1OvyyPJrpyypa0cDyuL3CzXwdW9sMoue4/view?usp=drive_link" target="_blank" rel="noopener noreferrer">Exercices Chapitre 4 — Droites</a></li>
+          <li><input type="checkbox" class="checkbox"><a href="https://drive.google.com/file/d/18lRXPSvFajiFqb0tWQgIy9cMYMLG7pY4/view?usp=drive_link" target="_blank" rel="noopener noreferrer">Exercices Chapitre 5 — Angles</a></li>
+          <li><input type="checkbox" class="checkbox"><a href="https://drive.google.com/file/d/18lRXPSvFajiFqb0tWQgIy9cMYMLG7pY4/view?usp=drive_link" target="_blank" rel="noopener noreferrer">Exercices Chapitre 6 — Triangle</a></li>
+          <li><input type="checkbox" class="checkbox"><a href="https://drive.google.com/file/d/18lRXPSvFajiFqb0tWQgIy9cMYMLG7pY4/view?usp=drive_link" target="_blank" rel="noopener noreferrer">Exercices Chapitre 7 — Nombres décimaux</a></li>
         </ul>
       </div>
 
@@ -455,55 +391,64 @@
       <div class="bloc">
         <h2>🎬 Vidéos</h2>
         <div class="subtabs">
-          <button class="subtab active" data-target="videos6e-ch1">Chap 1</button>
-          <button class="subtab" data-target="videos6e-ch2">Chap 2</button>
-          <button class="subtab" data-target="videos6e-ch3">Chap 3</button>
-          <button class="subtab" data-target="videos6e-ch4">Chap 4</button>
-          <button class="subtab" data-target="videos6e-ch5">Chap 5</button>
-          <button class="subtab" data-target="videos6e-ch6">Chap 6</button>
-          <button class="subtab" data-target="videos6e-ch7">Chap 7</button>
+          <button class="subtab active" data-target="videos6e-ch1">Chapitre 1 — Nombres entiers</button>
+          <button class="subtab" data-target="videos6e-ch2">Chapitre 2 — Géométrie</button>
+          <button class="subtab" data-target="videos6e-ch3">Chapitre 3 — Fractions</button>
+          <button class="subtab" data-target="videos6e-ch4">Chapitre 4 — Droites</button>
+          <button class="subtab" data-target="videos6e-ch5">Chapitre 5 — Angles</button>
+          <button class="subtab" data-target="videos6e-ch6">Chapitre 6 — Triangles</button>
+          <button class="subtab" data-target="videos6e-ch7">Chapitre 7 — Nombres décimaux</button>
         </div>
 
         <div class="subtab-content active" id="videos6e-ch1">
           <ul>
-            <li><input type="checkbox" class="checkbox"><a href="https://www.youtube.com/watch?v=14XxGsJKniI" target="_blank">Vidéo 1 — Décomposer un nombre</a></li>
-            <li><input type="checkbox" class="checkbox"><a href="https://www.youtube.com/watch?v=icGHAYyXaE4" target="_blank">Vidéo 2 — Rangs des chiffres</a></li>
+            <li><input type="checkbox" class="checkbox"><a href="https://www.youtube.com/watch?v=14XxGsJKniI&list=PLVUDmbpupCaoCaqvyj8RGx07Ak0HSjOHi" target="_blank" rel="noopener noreferrer">Vidéo 1 — Décomposer un nombre entier suivant ses rangs</a></li>
+            <li><input type="checkbox" class="checkbox"><a href="https://www.youtube.com/watch?v=icGHAYyXaE4&list=PLVUDmbpupCaoCaqvyj8RGx07Ak0HSjOHi&index=3" target="_blank" rel="noopener noreferrer">Vidéo 2 — Reconnaître le rang des chiffres</a></li>
           </ul>
         </div>
+
         <div class="subtab-content" id="videos6e-ch2">
           <ul>
-            <li><input type="checkbox" class="checkbox"><a href="https://www.youtube.com/watch?v=4vPWOM6MbYU" target="_blank">Vidéo 1 — Droites et segments</a></li>
-            <li><input type="checkbox" class="checkbox"><a href="https://www.youtube.com/watch?v=aWJmz1oM_O0" target="_blank">Vidéo 2 — Le cercle</a></li>
+            <li><input type="checkbox" class="checkbox"><a href="https://www.youtube.com/watch?v=4vPWOM6MbYU" target="_blank" rel="noopener noreferrer">Vidéo 1 —  6e-droites,demi-droites,segments</a></li>
+            <li><input type="checkbox" class="checkbox"><a href="https://www.youtube.com/watch?v=aWJmz1oM_O0" target="_blank" rel="noopener noreferrer">Vidéo 2 — Connaître le vocabulaire du cercle</a></li>
           </ul>
         </div>
+
         <div class="subtab-content" id="videos6e-ch3">
           <ul>
-            <li><input type="checkbox" class="checkbox"><a href="https://www.youtube.com/watch?v=m0HUFgWbgsA" target="_blank">Vidéo 1 — Les fractions</a></li>
-            <li><input type="checkbox" class="checkbox"><a href="https://www.youtube.com/watch?v=NKdhdmVoY1g" target="_blank">Vidéo 2 — Représenter un partage</a></li>
+            <li><input type="checkbox" class="checkbox"><a href="https://www.youtube.com/watch?v=m0HUFgWbgsA&t=598s" target="_blank" rel="noopener noreferrer">Vidéo 1 — Les fractions</a></li>
+            <li><input type="checkbox" class="checkbox"><a href="https://www.youtube.com/watch?v=NKdhdmVoY1g" target="_blank" rel="noopener noreferrer">Vidéo 2 — Représenter un partage à l'aide d'une fraction</a></li>
+            <li><input type="checkbox" class="checkbox"><a href="https://www.youtube.com/watch?v=gnZqJftnNSE" target="_blank" rel="noopener noreferrer">Vidéo 3 — Fraction pour exprimer un quotient</a></li>
           </ul>
         </div>
+
         <div class="subtab-content" id="videos6e-ch4">
           <ul>
-            <li><input type="checkbox" class="checkbox"><a href="https://www.youtube.com/watch?v=lxKGqW4Ib4U" target="_blank">Vidéo 1 — Médiatrice</a></li>
-            <li><input type="checkbox" class="checkbox"><a href="https://www.youtube.com/watch?v=0CIm1i4HfEQ" target="_blank">Vidéo 2 — Les droites</a></li>
+            <li><input type="checkbox" class="checkbox"><a href="https://www.youtube.com/watch?v=lxKGqW4Ib4U" target="_blank" rel="noopener noreferrer">Vidéo 1 — Médiatrice d'un segment - Méthode de construction</a></li>
+            <li><input type="checkbox" class="checkbox"><a href="https://www.youtube.com/watch?v=0CIm1i4HfEQ&t=50s" target="_blank" rel="noopener noreferrer">Vidéo 2 — Les droites - Sixième</a></li>
           </ul>
         </div>
         <div class="subtab-content" id="videos6e-ch5">
           <ul>
-            <li><input type="checkbox" class="checkbox"><a href="https://www.youtube.com/watch?v=2VLzp0DzsrM" target="_blank">Vidéo 1 — Noter un angle</a></li>
-            <li><input type="checkbox" class="checkbox"><a href="https://www.youtube.com/watch?v=9BKbMshCMZc" target="_blank">Vidéo 2 — Nature des angles</a></li>
+            <li><input type="checkbox" class="checkbox"><a href="https://www.youtube.com/watch?v=2VLzp0DzsrM&list=PLVUDmbpupCaqHaIpFwd14iD6BMA-op0pZ" target="_blank" rel="noopener noreferrer">Vidéo 1 — Noter un angle</a></li>
+            <li><input type="checkbox" class="checkbox"><a href="https://www.youtube.com/watch?v=9BKbMshCMZc&list=PLVUDmbpupCaqHaIpFwd14iD6BMA-op0pZ&index=4" target="_blank" rel="noopener noreferrer">Vidéo 2 — Reconnaitre la NATURE des ANGLES</a></li>
+            <li><input type="checkbox" class="checkbox"><a href="https://www.youtube.com/watch?v=9BKbMshCMZc&list=PLVUDmbpupCaqHaIpFwd14iD6BMA-op0pZ&index=4" target="_blank" rel="noopener noreferrer">Vidéo 3 — Mesurer un angle</a></li>
           </ul>
         </div>
+
         <div class="subtab-content" id="videos6e-ch6">
           <ul>
-            <li><input type="checkbox" class="checkbox"><a href="https://www.youtube.com/watch?v=-7UGauYeTdk" target="_blank">Vidéo 1 — Construire un triangle</a></li>
-            <li><input type="checkbox" class="checkbox"><a href="https://www.youtube.com/watch?v=wHmGxm3G5ag" target="_blank">Vidéo 2 — Les triangles</a></li>
+            <li><input type="checkbox" class="checkbox"><a href="https://www.youtube.com/watch?v=-7UGauYeTdk&list=PLVUDmbpupCap0jVfo87xmwBhMXxxQ3abt" target="_blank" rel="noopener noreferrer">Vidéo 1 — Construire un triangle</a></li>
+            <li><input type="checkbox" class="checkbox"><a href="https://www.youtube.com/watch?v=wHmGxm3G5ag" target="_blank" rel="noopener noreferrer">Vidéo 2 — Les triangles</a></li>
+            <li><input type="checkbox" class="checkbox"><a href="https://www.youtube.com/watch?v=w7nh0EqzCsM" target="_blank" rel="noopener noreferrer">Vidéo 3 — Triangles particuliers</a></li>
           </ul>
         </div>
+
         <div class="subtab-content" id="videos6e-ch7">
           <ul>
-            <li><input type="checkbox" class="checkbox"><a href="https://www.youtube.com/watch?v=lzsYQYvEKss" target="_blank">Vidéo 1 — Nombres décimaux</a></li>
-            <li><input type="checkbox" class="checkbox"><a href="https://www.youtube.com/watch?v=70UhgN2FssQ" target="_blank">Vidéo 2 — Zéros inutiles</a></li>
+            <li><input type="checkbox" class="checkbox"><a href="https://www.youtube.com/watch?v=lzsYQYvEKss" target="_blank" rel="noopener noreferrer">Vidéo 1 — Numérotation et nombres décimaux</a></li>
+            <li><input type="checkbox" class="checkbox"><a href="https://www.youtube.com/watch?v=70UhgN2FssQ&list=PLBmEpUWxReGgHK0G3zxdmfg4FH31UHNYr" target="_blank" rel="noopener noreferrer">Vidéo 2 — Supprimer les zéros inutiles</a></li>
+            <li><input type="checkbox" class="checkbox"><a href="https://www.youtube.com/watch?v=uqBEfHwZTX8" target="_blank" rel="noopener noreferrer">Vidéo 3 — Décomposer un nombre en fractions égales</a></li>
           </ul>
         </div>
       </div>
@@ -512,52 +457,50 @@
         <h2>📝 Contrôles</h2>
         <div class="controles-grid">
           <div class="controle-card">
-            <h3>Chap 1 — Entiers</h3>
+            <h3>Chapitre 1 — Nombres entiers</h3>
             <div class="controle-buttons">
-              <a href="https://drive.google.com/file/d/1d-y45Eg0ieW64ac-6QEtXlCQxjey40Z_/view?usp=drive_link" class="btn-dl btn-sujet">📄 Sujet</a>
-              <a href="https://drive.google.com/file/d/1zFI_1ENImR302b-ZglO8zmKumgWMv5Ek/view?usp=drive_link" class="btn-dl btn-corrige">✅ Corrigé</a>
+              <a href="https://drive.google.com/file/d/1d-y45Eg0ieW64ac-6QEtXlCQxjey40Z_/view?usp=drive_link" target="_blank" class="btn-sujet">📄 Sujet</a>
+              <a href="https://drive.google.com/file/d/1zFI_1ENImR302b-ZglO8zmKumgWMv5Ek/view?usp=drive_link" target="_blank" class="btn-corrige">✅ Corrigé</a>
             </div>
           </div>
+
           <div class="controle-card">
-            <h3>Chap 2 — Géométrie</h3>
+            <h3>Chapitre 2 — Géométrie</h3>
             <div class="controle-buttons">
-              <a href="https://drive.google.com/file/d/1OqzxiUVfIZQWwNH_8c79YfZiDFpNLvIi/view?usp=drive_link" class="btn-dl btn-sujet">📄 Sujet</a>
-              <a href="https://drive.google.com/file/d/1Be0zzBKAZ4krbzbQhXGRc-rHuAQHILyI/view?usp=drive_link" class="btn-dl btn-corrige">✅ Corrigé</a>
+              <a href="https://drive.google.com/file/d/1OqzxiUVfIZQWwNH_8c79YfZiDFpNLvIi/view?usp=drive_link" target="_blank" class="btn-sujet">📄 Sujet</a>
+              <a href="https://drive.google.com/file/d/1Be0zzBKAZ4krbzbQhXGRc-rHuAQHILyI/view?usp=drive_link" target="_blank" class="btn-corrige">✅ Corrigé</a>
             </div>
           </div>
+
           <div class="controle-card">
-            <h3>Chap 3 — Fractions</h3>
+            <h3>Chapitre 3 — Fractions</h3>
             <div class="controle-buttons">
-              <a href="https://drive.google.com/file/d/14__pQ2BFgdeqCUlgfprVfHmoEPJjRZAQ/view?usp=drive_link" class="btn-dl btn-sujet">📄 Sujet</a>
-              <a href="https://drive.google.com/file/d/17oBFkreBlMnBcG9kNIY03uIMAYFGxWZ_/view?usp=drive_link" class="btn-dl btn-corrige">✅ Corrigé</a>
+              <a href="https://drive.google.com/file/d/14__pQ2BFgdeqCUlgfprVfHmoEPJjRZAQ/view?usp=drive_link" target="_blank" class="btn-sujet">📄 Sujet</a>
+              <a href="https://drive.google.com/file/d/17oBFkreBlMnBcG9kNIY03uIMAYFGxWZ_/view?usp=drive_link" target="_blank" class="btn-corrige">✅ Corrigé</a>
             </div>
           </div>
+
           <div class="controle-card">
-            <h3>Chap 4 — Droites</h3>
+            <h3>Chapitre 4 — Droites</h3>
             <div class="controle-buttons">
-              <a href="https://drive.google.com/file/d/1uyrz1gutms8jajvHYVczQ_kj41Ojy6v5/view?usp=drive_link" class="btn-dl btn-sujet">📄 Sujet</a>
-              <a href="https://drive.google.com/file/d/1UWPhERTii1zUQh55-q-d7yezQztWHgl1/view?usp=drive_link" class="btn-dl btn-corrige">✅ Corrigé</a>
+              <a href="https://drive.google.com/file/d/1uyrz1gutms8jajvHYVczQ_kj41Ojy6v5/view?usp=drive_link" target="_blank" class="btn-sujet">📄 Sujet</a>
+              <a href="https://drive.google.com/file/d/1UWPhERTii1zUQh55-q-d7yezQztWHgl1/view?usp=drive_link" target="_blank" class="btn-corrige">✅ Corrigé</a>
             </div>
           </div>
+
           <div class="controle-card">
-            <h3>Chap 5 — Angles</h3>
+            <h3>Chapitre 5 — Angles</h3>
             <div class="controle-buttons">
-              <a href="https://drive.google.com/file/d/1GEs_8AYmtzgQAQU8VqwGsFjMjWDbm7cH/view?usp=drive_link" class="btn-dl btn-sujet">📄 Sujet</a>
-              <a href="https://drive.google.com/file/d/1nrudtT19fcr7JN-YQD76Ck108wioVVlH/view?usp=drive_link" class="btn-dl btn-corrige">✅ Corrigé</a>
+              <a href="https://drive.google.com/file/d/1GEs_8AYmtzgQAQU8VqwGsFjMjWDbm7cH/view?usp=drive_link" target="_blank" class="btn-sujet">📄 Sujet</a>
+              <a href="https://drive.google.com/file/d/1nrudtT19fcr7JN-YQD76Ck108wioVVlH/view?usp=drive_link" target="_blank" class="btn-corrige">✅ Corrigé</a>
             </div>
           </div>
+
           <div class="controle-card">
-            <h3>Chap 6 — Triangles</h3>
+            <h3>Chapitre 6 — Triangles</h3>
             <div class="controle-buttons">
-              <a href="#" class="btn-dl btn-sujet">📄 Sujet</a>
-              <a href="#" class="btn-dl btn-corrige">✅ Corrigé</a>
-            </div>
-          </div>
-          <div class="controle-card">
-            <h3>Chap 7 — Décimaux</h3>
-            <div class="controle-buttons">
-              <a href="#" class="btn-dl btn-sujet">📄 Sujet</a>
-              <a href="#" class="btn-dl btn-corrige">✅ Corrigé</a>
+              <a href="#" download class="btn-sujet">📄 Sujet</a>
+              <a href="#" download class="btn-corrige">✅ Corrigé</a>
             </div>
           </div>
         </div>
@@ -568,13 +511,12 @@
         <ul>
           <li><input type="checkbox" class="checkbox"><a href="https://drive.google.com/file/d/1W8OX6Awqe2jMmevSSjMeTOzJNvAL-3zE/view?usp=drive_link" target="_blank">Fiche mémo géométrie</a></li>
           <li><input type="checkbox" class="checkbox"><a href="https://www.lumni.fr/college/sixieme/mathematiques" target="_blank">Lumni</a></li>
-          <li><input type="checkbox" class="checkbox"><a href="https://drive.google.com/file/d/18FefnQaa4HKvYCNyS0Sw20qq5k5_TZJh/view?usp=drive_link" target="_blank">Comment réviser un contrôle</a></li>
-          <li><input type="checkbox" class="checkbox"><a href="https://drive.google.com/file/d/1Ky-dnJXlFAytxb1Sa8-JqT1wGF5Vd5Wu/view?usp=drive_link" target="_blank">GeoGebra : Tracer un triangle</a></li>
-          <li><input type="checkbox" class="checkbox"><a href="https://drive.google.com/file/d/1-W2PmBU-CEfHcjgIB8vQYj2_LWajjrou/view?usp=drive_link" target="_blank">Simplifier les multiplications</a></li>
-          <li><input type="checkbox" class="checkbox"><a href="https://drive.google.com/file/d/1fKT6EfDlRAmPBXB2yk_BoQLQSXEwI4Mh/view?usp=drive_link" target="_blank">Correction contrôle surprise</a></li>
+          <li><input type="checkbox" class="checkbox"><a href="https://drive.google.com/file/d/18FefnQaa4HKvYCNyS0Sw20qq5k5_TZJh/view?usp=drive_link" target="_blank">Comment réviser un contrôle de mathématiques</a></li>
+          <li><input type="checkbox" class="checkbox"><a href="https://drive.google.com/file/d/1Ky-dnJXlFAytxb1Sa8-JqT1wGF5Vd5Wu/view?usp=drive_link" target="_blank">Comment tracer un triangle sur GeoGebra</a></li>
+          <li><input type="checkbox" class="checkbox"><a href="https://drive.google.com/file/d/1-W2PmBU-CEfHcjgIB8vQYj2_LWajjrou/view?usp=drive_link" target="_blank">Simplifier les multiplications - (Co-cours avec Mme LAMBOT)</a></li>
+          <li><input type="checkbox" class="checkbox"><a href="https://drive.google.com/file/d/1fKT6EfDlRAmPBXB2yk_BoQLQSXEwI4Mh/view?usp=drive_link" target="_blank">Correction contrôle surprise (18/11)</a></li>
         </ul>
       </div>
-
       <div class="bloc automatismes">
         <h2>⚙️ Automatismes</h2>
         <ul>
@@ -582,9 +524,8 @@
           <li><input type="checkbox" class="checkbox"><a href="#" target="_blank">Novembre-Décembre</a></li>
         </ul>
       </div>
-
       <div class="bloc competences">
-        <h2>🎯 Compétences</h2>
+        <h2>🎯 Compétences mathématiques</h2>
         <ul>
           <li><input type="checkbox" class="checkbox"><a href="#" target="_blank">Septembre-Octobre</a></li>
         </ul>
@@ -592,296 +533,604 @@
 
       <div class="bloc">
         <h2>❓ Quiz par chapitre — 6e</h2>
-        <p>Choisis un chapitre ci-dessous pour lancer le quiz.</p>
-        <div class="chapter-quiz-buttons">
-          <button class="open-quiz" data-quiz="quiz-6e-ch1">🎯 Chap 1 — Entiers</button>
-          <button class="open-quiz" data-quiz="quiz-6e-ch2">✏️ Chap 2 — Géométrie</button>
-          <button class="open-quiz" data-quiz="quiz-6e-ch3">🍕 Chap 3 — Fractions</button>
-          <button class="open-quiz" data-quiz="quiz-6e-ch4">📏 Chap 4 — Droites</button>
-          <button class="open-quiz" data-quiz="quiz-6e-ch5">📐 Chap 5 — Angles</button>
-          <button class="open-quiz" data-quiz="quiz-6e-ch6">🔺 Chap 6 — Triangles</button>
-          <button class="open-quiz" data-quiz="quiz-6e-ch7">🔢 Chap 7 — Décimaux</button>
+        <p>Choisis un chapitre ci-dessous pour lancer le quiz (10 questions par chapitre).</p>
+        <div class="chapter-quiz-buttons" data-classe="6e">
+          <button class="btn primary open-quiz" data-classe="6e" data-quiz="quiz-6e-ch1">🎯 Quiz Chapitre 1 — Nombres entiers</button>
+          <button class="btn primary open-quiz" data-classe="4e" data-quiz="quiz-6e-ch2">🎯 Quiz Chapitre 2 — Géométrie</button>
+          <button class="btn primary open-quiz" data-classe="4e" data-quiz="quiz-6e-ch3">🎯 Quiz Chapitre 3 — Fractions</button>
+          <button class="btn primary open-quiz" data-classe="4e" data-quiz="quiz-6e-ch4">🎯 Quiz Chapitre 4 — Droites</button>
+          <button class="btn primary open-quiz" data-classe="4e" data-quiz="quiz-6e-ch5">🎯 Quiz Chapitre 5 — Angles</button>
+          <button class="btn primary open-quiz" data-classe="4e" data-quiz="quiz-6e-ch6">🎯 Quiz Chapitre 6 — Triangle</button>
+          <button class="btn primary open-quiz" data-classe="4e" data-quiz="quiz-6e-ch7">🎯 Quiz Chapitre 7 — Nombres décimaux</button>
         </div>
       </div>
     </section>
+
   </main>
 
-  <footer>© 2025 — Cours de maths</footer>
+  <footer>© 2025 — Cours de maths • Ressources pour les élèves de 4e et 6e</footer>
 
-  <div class="quiz-backdrop" id="quiz-backdrop">
-    <div class="quiz-modal">
-      <div class="quiz-header">
-        <div style="display:flex;flex-direction:column;">
-          <h3 id="quiz-title">Titre du Quiz</h3>
-          <span id="quiz-meta" style="font-size:0.9rem;color:#64748b;">Question 1/10</span>
+  <div class="quiz-modal-backdrop" id="quiz-backdrop" aria-hidden="true">
+    <div class="quiz-modal" role="dialog" aria-modal="true" aria-labelledby="quiz-title" data-classe="">
+      <header>
+        <div>
+          <h3 id="quiz-title">Quiz</h3>
+          <div class="meta" id="quiz-meta">Chapitre —</div>
         </div>
-        <button class="quiz-close" id="quiz-close">✕</button>
-      </div>
-      <div id="quiz-body"></div>
+        <div style="display:flex;align-items:center;gap:8px;">
+          <button class="quiz-close btn ghost" id="quiz-close" title="Fermer">✕</button>
+        </div>
+      </header>
+
+      <div class="quiz-body" id="quiz-body"></div>
+
       <div class="quiz-footer">
-        <div id="quiz-score" style="font-weight:700;color:#475569;">Score : 0</div>
-        <button class="btn-next" id="quiz-next">Suivant ➜</button>
-        <button class="btn-next" id="quiz-restart" style="display:none;background:#64748b;">Recommencer</button>
+        <div class="controls">
+          <div id="quiz-progress" class="quiz-progress">Q 0 / 0</div>
+          <button class="btn primary" id="quiz-next">Suivant</button>
+          <button class="btn ghost" id="quiz-restart">Recommencer</button>
+        </div>
+        <div class="quiz-score" id="quiz-score">Score : 0 / 0</div>
       </div>
     </div>
   </div>
 
+
   <script>
-    /* --- CONFIG --- */
-    const WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbx4u7sxvKJX05ZuuL4W85Sbhq3YVeHXyLjuoNw3hgYFlxXfGZh1Cssb4BpNxVdPj4KWaQ/exec";
+/*
+  ================================================================
+  Script complet : navigation, sauvegarde, quiz pop-up + envoi GS
+  ================================================================
+*/
 
-    /* --- CITATIONS --- */
-    const citations = [
-      "« Les mathématiques sont la poésie des sciences. »",
-      "« La géométrie est l’art de bien raisonner sur des figures mal faites. »",
-      "« Les erreurs sont la preuve que vous essayez. »",
-      "« Un problème bien posé est un problème à moitié résolu. »",
-      "« Rien n’est trop difficile si on le découpe en petites étapes. »"
-    ];
-    document.querySelector(".citation").textContent = citations[Math.floor(Math.random() * citations.length)];
+const WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbx4u7sxvKJX05ZuuL4W85Sbhq3YVeHXyLjuoNw3hgYFlxXfGZh1Cssb4BpNxVdPj4KWaQ/exec"; 
 
-    /* --- PROGRESSION --- */
-    function updateProgressBar() {
-      const activeSection = document.querySelector('section.active');
-      const checkboxes = activeSection.querySelectorAll('.checkbox');
-      const total = checkboxes.length;
-      const checked = Array.from(checkboxes).filter(cb => cb.checked).length;
-      const percent = total === 0 ? 0 : Math.round((checked / total) * 100);
-      
-      document.getElementById('global-progress-bar').style.width = percent + "%";
-      document.getElementById('progress-text').textContent = `Progression : ${percent}%`;
-      
-      let emoji = "🌱 Débutant";
-      if(percent > 20) emoji = "🚲 En route";
-      if(percent > 50) emoji = "🚀 Expert";
-      if(percent > 80) emoji = "🏆 Maître";
-      if(percent === 100) emoji = "👑 Légende";
-      document.getElementById('progress-rank').textContent = emoji;
+const citations = [
+  "« Les mathématiques sont la poésie des sciences. » — Albert Einstein",
+  "Le zéro n’a pas toujours existé — il a été inventé en Inde au 5e siècle !",
+  "« Les mathématiques ne mentent pas, c’est souvent les gens qui mentent avec les maths. » — Henri Poincaré",
+  "0,999... = 1, et pourtant, c’est vrai !",
+  "« La géométrie est l’art de bien raisonner sur des figures mal faites. » — Henri Poincaré",
+  "Il existe des nombres infinis... mais certains infinis sont plus grands que d’autres.",
+  "« La logique vous mènera d’un point A à un point B. L’imagination vous mènera partout. » — Albert Einstein",
+  "Le nombre π ne se termine jamais, et pourtant on le retrouve partout !",
+  "« La vie est comme une équation : elle ne fonctionne pas sans variables. » — Anonyme",
+  "Il y a plus de façons d’ordonner un jeu de cartes que d’atomes dans l’univers observable.",
+  "« Les erreurs sont la preuve que vous essayez. » — Anonyme",
+  "Un carré parfait est un nombre qui a trouvé son équilibre.",
+  "« Les mathématiques ne sont pas une destination, mais un voyage logique. » — Anonyme",
+  "Les nombres premiers sont les atomes des mathématiques.",
+  "« Rien n’est trop difficile si on le découpe en petites étapes. » — Euclide",
+  "Un angle droit a toujours raison.",
+  "« Dans chaque problème se cache une solution élégante. » — Poincaré",
+  "Les chiffres sont la musique silencieuse de l’univers.",
+  "« Les mathématiques, c’est de la gymnastique pour l’esprit. » — Anonyme",
+  "Même 0 compte. Surtout en mathématiques.",
+  "« Ce qui est clair et précis est beau. » — René Descartes",
+  "Compter, mesurer, raisonner : trois clés pour comprendre le monde.",
+  "« Les mathématiques commencent par des curiosités et finissent par des merveilles. » — Blaise Pascal",
+  "Tout triangle a trois côtés, mais des milliers d’histoires.",
+  "« Les nombres sont les lettres avec lesquelles Dieu a écrit l’univers. » — Galilée",
+  "L’infini n’est pas un nombre... mais une idée vertigineuse.",
+  "« Celui qui ne fait jamais d’erreurs n’a jamais rien essayé de nouveau. » — Albert Einstein",
+  "Les mathématiques relient la logique à la beauté.",
+  "« Un problème bien posé est un problème à moitié résolu. » — Charles Kettering",
+  "Les mathématiques, c’est un peu de rigueur et beaucoup de curiosité."
+];
+
+document.querySelector(".citation").textContent = citations[Math.floor(Math.random() * citations.length)];
+
+/* --- FONCTION DE MISE A JOUR DE LA BARRE DE PROGRESSION --- */
+function updateProgressBar() {
+  const activeSection = document.querySelector('section.active');
+  if (!activeSection) return;
+  
+  // Sélectionne toutes les cases à cocher DANS la section active
+  const checkboxes = activeSection.querySelectorAll('.checkbox');
+  const total = checkboxes.length;
+  const checked = Array.from(checkboxes).filter(cb => cb.checked).length;
+  
+  const percentage = total === 0 ? 0 : Math.round((checked / total) * 100);
+  
+  // Mise à jour de la barre
+  const barFill = document.getElementById('main-progress-bar');
+  const textLabel = document.getElementById('progress-text');
+  const rankLabel = document.getElementById('progress-rank');
+  
+  if (barFill) barFill.style.width = percentage + "%";
+  if (textLabel) textLabel.textContent = `Progression ${activeSection.id} : ${percentage}%`;
+  
+  // Gamification : changer le rang
+  let rank = "🌱 Débutant";
+  if (percentage >= 20) rank = "🚶 En marche";
+  if (percentage >= 40) rank = "🏃 Ça avance !";
+  if (percentage >= 60) rank = "🧗 Expert";
+  if (percentage >= 80) rank = "🚀 Master";
+  if (percentage === 100) rank = "🏆 Légende";
+  
+  if (rankLabel) rankLabel.textContent = rank;
+}
+
+/* NAVIGATION 4e/6e */
+document.querySelectorAll('.tablink').forEach(button => {
+  button.addEventListener('click', () => {
+    const target = button.dataset.target;
+    const current = document.querySelector('section.active');
+    if (current && current.id === target) return;
+    if (current) current.classList.remove('active');
+    document.querySelectorAll('.tablink').forEach(b => b.classList.remove('active'));
+    button.classList.add('active');
+    document.getElementById(target).classList.add('active');
+    
+    // Mettre à jour la barre quand on change d'onglet
+    updateProgressBar();
+  });
+});
+
+/* Sous-onglets vidéos */
+document.querySelectorAll('.subtabs').forEach(group => {
+  const buttons = group.querySelectorAll('.subtab');
+  buttons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      buttons.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const bloc = btn.closest('.bloc');
+      bloc.querySelectorAll('.subtab-content').forEach(c => c.classList.remove('active'));
+      const targetId = btn.dataset.target;
+      const targetElem = bloc.querySelector('#' + targetId);
+      if (targetElem) targetElem.classList.add('active');
+    });
+  });
+});
+
+/* Progression : sauvegarde des cases cochées */
+document.querySelectorAll('.checkbox').forEach((checkbox, idx) => {
+  const key = 'cours-progress-' + idx;
+  const saved = localStorage.getItem(key);
+  if (saved === 'true') checkbox.checked = true;
+  
+  checkbox.addEventListener('change', () => {
+    localStorage.setItem(key, checkbox.checked);
+    // Mettre à jour la barre quand on coche une case
+    updateProgressBar();
+  });
+});
+
+// Initialisation au chargement de la page
+updateProgressBar();
+
+/* =========================
+   QUIZ POP-UP 
+   ========================= */
+(function() {
+  const QUIZZES = {
+    "quiz-4e-ch1": {
+      titre: "Chapitre 1 — Nombres relatifs (4e)",
+      classe: "4e",
+      questions: [
+        { q: "Quel est l'opposé de -7 ?", choices:["7","-7","0"], answer:"7" },
+        { q: "Quel nombre est plus petit : -3 ou -8 ?", choices:["-8","-3","8"], answer:"-8" },
+        { q: "Calcule : (-5) + 12 = ?", choices:["7","-7","17"], answer:"7" },
+        { q: "Calcule : (-4) × (-3) = ?", choices:["12","-12","1"], answer:"12" },
+        { q: "Calcule : -15 ÷ 3 = ?", choices:["-5","5","-45"], answer:"-5" },
+        { q: "Ordre croissant : -2, 0, -5, 3 → lequel vient en premier ?", choices:["-5","-2","3"], answer:"-5" },
+        { q: "Quel est le résultat de : (-6) - (-2) ?", choices:["-4","-8","-3"], answer:"-4" },
+        { q: "Simplifie : -1 × 9 = ?", choices:["-9","9","0"], answer:"-9" },
+        { q: "Valeur absolue de -12 ?", choices:["12","-12","0"], answer:"12" },
+        { q: "Calcule : (-2)² = ?", choices:["4","-4","2"], answer:"4" }
+      ]
+    },
+    "quiz-4e-ch2": {
+      titre: "Chapitre 2 — Théorème de Pythagore (4e)",
+      classe: "4e",
+      questions: [
+        { q: "Dans un triangle rectangle, quel côté est le plus long ?", choices:["hypoténuse","côté opposé","adjacent"], answer:"hypoténuse" },
+        { q: "Si un triangle n’est pas rectangle, peut-on appliquer le théorème de Pythagore ?", choices:["non","oui","seulement si isocèle"], answer:"non" },
+        { q: "Calcule : si AC = 5 et BC = 12, alors AB = ?", choices:["13","7","17"], answer:"13" },
+        { q: "Si l’hypoténuse vaut 10 et un côté vaut 6, l’autre vaut ?", choices:["8","4","12"], answer:"8" },
+        { q: "Dans l’égalité a² + b² = c², que représente c ?", choices:["hypoténuse","un côté","le triangle"], answer:"hypoténuse" },
+        { q: "Le théorème de Pythagore ne s’applique que dans :", choices:["un triangle rectangle","un carré","un trapèze"], answer:"un triangle rectangle" },
+        { q: "Si les côtés mesurent 3, 4 et 5, le triangle est :", choices:["rectangle","isocèle","équilatéral"], answer:"rectangle" },
+        { q: "Calcule : si c² = 100 et a = 6, b = ?", choices:["8","10","4"], answer:"8" },
+        { q: "Quelle est la réciproque du théorème ?", choices:["Si a²+b²=c² alors triangle rectangle","Si triangle rectangle alors a²+b²=c²","Aucune"], answer:"Si a²+b²=c² alors triangle rectangle" },
+        { q: "Le théorème de Pythagore est lié à :", choices:["la géométrie","l’arithmétique","les fonctions"], answer:"la géométrie" }
+      ]
+    },
+    "quiz-4e-ch3": {
+      titre: "Chapitre 3 — Proportionnalité (4e)",
+      classe: "4e",
+      questions: [
+        { q: "Dans un tableau de proportionnalité, le rapport entre les lignes est :", choices:["constant","variable","aléatoire"], answer:"constant" },
+        { q: "3 pommes coûtent 6€. Combien coûtent 5 pommes ?", choices:["10€","8€","9€"], answer:"10€" },
+        { q: "Si on double une grandeur, l’autre :", choices:["double","reste identique","diminue"], answer:"double" },
+        { q: "Comment appelle-t-on le rapport constant ?", choices:["coefficient de proportionnalité","produit en croix","taux d’évolution"], answer:"coefficient de proportionnalité" },
+        { q: "Dans un produit en croix, on multiplie :", choices:["les extrêmes et on divise par la moyenne","les milieux entre eux","rien"], answer:"les extrêmes et on divise par la moyenne" },
+        { q: "Un vélo roule 45 km en 3h. Sa vitesse moyenne ?", choices:["15 km/h","12 km/h","18 km/h"], answer:"15 km/h" },
+        { q: "Une recette : 2 œufs pour 100g de sucre. Pour 300g ?", choices:["6 œufs","3 œufs","4 œufs"], answer:"6 œufs" },
+        { q: "Si on multiplie les deux grandeurs par le même nombre :", choices:["proportionnalité conservée","proportionnalité rompue","erreur"], answer:"proportionnalité conservée" },
+        { q: "Graphiquement, les points proportionnels sont :", choices:["alignés sur une droite passant par l’origine","alignés mais pas à l’origine","pas alignés"], answer:"alignés sur une droite passant par l’origine" },
+        { q: "Le produit en croix permet de :", choices:["trouver une quatrième proportionnelle","calculer un volume","résoudre une équation"], answer:"trouver une quatrième proportionnelle" }
+      ]
+    },
+    "quiz-4e-ch4": {
+      titre: "Chapitre 4 — Puissances (4e)",
+      classe: "4e",
+      questions: [
+        { q: "Que vaut 10² ?", choices:["100","20","1000"], answer:"100" },
+        { q: "Que vaut (-2)³ ?", choices:["-8","8","4"], answer:"-8" },
+        { q: "a⁰ vaut :", choices:["1","0","a"], answer:"1" },
+        { q: "10⁻² vaut :", choices:["0,01","-2","100"], answer:"0,01" },
+        { q: "Le carré d’un nombre, c’est :", choices:["le nombre × lui-même","le nombre + lui-même","le double"], answer:"le nombre × lui-même" },
+        { q: "Simplifie : 10³ × 10² =", choices:["10⁵","10⁶","10"], answer:"10⁵" },
+        { q: "Simplifie : 2⁵ ÷ 2³ =", choices:["2²","2⁸","2⁶"], answer:"2²" },
+        { q: "(a²)³ =", choices:["a⁶","a⁵","a³"], answer:"a⁶" },
+        { q: "10⁻³ =", choices:["0,001","1000","0,1"], answer:"0,001" },
+        { q: "√(a²) =", choices:["a","a²","√a"], answer:"a" }
+      ]
+    },
+    "quiz-4e-ch5": {
+      titre: "Chapitre 5 — Calcul littéral (4e)",
+      classe: "4e",
+      questions: [
+        { q: "Dans 2x + 4, x est :", choices:["une variable","un signe de multiplication","une constante"], answer:"une variable" },
+        { q: "Simplifie : a × a =", choices:["a²","2a","a"], answer:"a²" },
+        { q: "Développe : 3(x + 2) =", choices:["3x + 6","3x + 2","x + 5"], answer:"3x + 6" },
+        { q: "Factorise : 5x + 10 =", choices:["5(x + 2)","5(x + 10)","5x"], answer:"5(x + 2)" },
+        { q: "Si x = 3, alors 2x + 1 =", choices:["7","6","4"], answer:"7" },
+        { q: "Simplifie : 2x + 3x =", choices:["5x","6x","5x²"], answer:"5x" },
+        { q: "L'expression 2(x + 4) est :", choices:["un produit","une somme","une différence"], answer:"un produit" },
+        { q: "Quelle égalité est vraie pour tout x ?", choices:["x + x = 2x","x × x = 2x","x + 2 = 2x"], answer:"x + x = 2x" },
+        { q: "Réduire l'expression : 4x - x =", choices:["3x","4","x"], answer:"3x" },
+        { q: "Opposé de (x - 3) est :", choices:["-x + 3","-x - 3","x + 3"], answer:"-x + 3" }
+      ]
+    },
+    "quiz-4e-ch6": {
+      titre: "Chapitre 6 — Les fractions (4e)",
+      classe: "4e",
+      questions: [
+        { q: "Calcule : 1/4 + 3/4 =", choices:["1","4/8","3/16"], answer:"1" },
+        { q: "Pour additionner deux fractions, il faut :", choices:["le même dénominateur","le même numérateur","rien de spécial"], answer:"le même dénominateur" },
+        { q: "Simplifie : 10/20 =", choices:["1/2","2/1","10/2"], answer:"1/2" },
+        { q: "Calcule : 2/3 × 4/5 =", choices:["8/15","6/8","10/12"], answer:"8/15" },
+        { q: "L'inverse de 2/3 est :", choices:["3/2","-2/3","2/3"], answer:"3/2" },
+        { q: "Quel est le dénominateur commun pour 1/2 et 1/5 ?", choices:["10","7","5"], answer:"10" },
+        { q: "3/7 × 7 =", choices:["3","21","1"], answer:"3" },
+        { q: "Dans a/b, b s'appelle :", choices:["dénominateur","numérateur","quotient"], answer:"dénominateur" },
+        { q: "5/3 est plus grand que 1 ?", choices:["Oui","Non","Égal"], answer:"Oui" },
+        { q: "Calcule : 3/4 - 1/4 =", choices:["2/4","1","4/4"], answer:"2/4" }
+      ]
+    },
+    "quiz-6e-ch1": {
+      titre: "Chapitre 1 — Nombres entiers (6e)",
+      classe: "6e",
+      questions: [
+        { q: "Quel est le successeur de 49 ?", choices:["50","48","51"], answer:"50" },
+        { q: "Quel est le prédécesseur de 100 ?", choices:["101","99","102"], answer:"99" },
+        { q: "Combien vaut 7 × 8 ?", choices:["54","56","64"], answer:"56" },
+        { q: "Le double de 12 est :", choices:["24","14","20"], answer:"24" },
+        { q: "Le triple de 15 est :", choices:["45","30","60"], answer:"45" },
+        { q: "0 est-il un nombre entier ?", choices:["oui","non","parfois"], answer:"oui" },
+        { q: "Le nombre pair suivant 16 est :", choices:["18","17","19"], answer:"18" },
+        { q: "Dans 438, le chiffre des dizaines est :", choices:["3","8","4"], answer:"3" },
+        { q: "7 + 9 =", choices:["16","18","14"], answer:"16" },
+        { q: "Entre 99 et 101, quel nombre est impair ?", choices:["99","100","101"], answer:"99" }
+      ]
+    },
+    "quiz-6e-ch2": {
+      titre: "Chapitre 2 — Premiers éléments de géométrie (6e)",
+      classe: "6e",
+      questions: [
+        { q: "Un segment est défini par :", choices:["2 points","1 point","3 points"], answer:"2 points" },
+        { q: "Une droite passe par :", choices:["2 points","1 seul point","aucun point"], answer:"2 points" },
+        { q: "Les droites perpendiculaires forment :", choices:["un angle droit","un angle aigu","un angle obtus"], answer:"un angle droit" },
+        { q: "Le symbole de la perpendiculaire est :", choices:["⊥","∥","="], answer:"⊥" },
+        { q: "Les droites parallèles :", choices:["ne se coupent jamais","se coupent une fois","se coupent deux fois"], answer:"ne se coupent jamais" },
+        { q: "Un segment est :", choices:["une portion de droite","une droite entière","un point"], answer:"une portion de droite" },
+        { q: "Le milieu d’un segment partage ce segment en :", choices:["2 parties égales","3 parties","aucune partie"], answer:"2 parties égales" },
+        { q: "Les droites (AB) et (CD) sont parallèles → notation ?", choices:["(AB) ∥ (CD)","(AB) ⊥ (CD)","(AB) = (CD)"], answer:"(AB) ∥ (CD)" },
+        { q: "Une figure est symétrique si :", choices:["elle se superpose après pliage","elle est identique","elle est parallèle"], answer:"elle se superpose après pliage" },
+        { q: "Le compas permet de :", choices:["tracer des cercles","mesurer un angle","dessiner des carrés"], answer:"tracer des cercles" }
+      ]
+    },
+    "quiz-6e-ch3": {
+      titre: "Chapitre 3 — Les fractions (6e)",
+      classe: "6e",
+      questions: [
+        { q: "Dans 3/5, le numérateur est :", choices:["3","5","8"], answer:"3" },
+        { q: "Dans 3/5, le dénominateur est :", choices:["3","5","8"], answer:"5" },
+        { q: "1/2 est égal à :", choices:["0,5","2","1,2"], answer:"0,5" },
+        { q: "La fraction équivalente à 2/4 est :", choices:["1/2","2/8","4/8"], answer:"1/2" },
+        { q: "3/6 simplifié donne :", choices:["1/2","3/12","2/3"], answer:"1/2" },
+        { q: "Addition : 1/3 + 1/3 =", choices:["2/3","1/6","1/2"], answer:"2/3" },
+        { q: "Multiplication : 2/3 × 3 =", choices:["2","1","3/5"], answer:"2" },
+        { q: "Une fraction inférieure à 1 :", choices:["a numérateur < dénominateur","numérateur > dénominateur","les deux égaux"], answer:"a numérateur < dénominateur" },
+        { q: "Écriture décimale de 3/4 :", choices:["0,75","0,25","1,5"], answer:"0,75" },
+        { q: "2/3 de 90 =", choices:["60","45","30"], answer:"60" }
+      ]
+    },
+    "quiz-6e-ch4": {
+      titre: "Chapitre 4 — Droites (6e)",
+      classe: "6e",
+      questions: [
+        { q: "Une droite a :", choices:["aucune extrémité","2 extrémités","1 extrémité"], answer:"aucune extrémité" },
+        { q: "Un segment a :", choices:["2 extrémités","aucune extrémité","1 extrémité"], answer:"2 extrémités" },
+        { q: "Deux droites perpendiculaires se coupent en :", choices:["un angle droit","un angle aigu","un angle obtus"], answer:"un angle droit" },
+        { q: "Les droites parallèles ne :", choices:["se coupent jamais","se croisent une fois","sont confondues"], answer:"se coupent jamais" },
+        { q: "La médiatrice d’un segment est :", choices:["perpendiculaire et passe par le milieu","parallèle au segment","au hasard"], answer:"perpendiculaire et passe par le milieu" },
+        { q: "Une demi-droite a :", choices:["une origine et pas de fin","pas d’origine","deux extrémités"], answer:"une origine et pas de fin" },
+        { q: "Les points d’une même droite sont :", choices:["alignés","perpendiculaires","parallèles"], answer:"alignés" },
+        { q: "Le symbole de parallèle est :", choices:["∥","⊥","="], answer:"∥" },
+        { q: "Deux droites sécantes :", choices:["ont un point commun","aucun point commun","plusieurs points communs"], answer:"ont un point commun" },
+        { q: "L’instrument pour tracer une perpendiculaire :", choices:["équerre","compas","rapporteur"], answer:"équerre" }
+      ]
+    },
+    "quiz-6e-ch5": {
+      titre: "Chapitre 5 — Notion d’angle (6e)",
+      classe: "6e",
+      questions: [
+        { q: "Un angle droit mesure :", choices:["90°","45°","180°"], answer:"90°" },
+        { q: "Un angle plat mesure :", choices:["180°","90°","45°"], answer:"180°" },
+        { q: "Un angle aigu mesure :", choices:["moins de 90°","plus de 90°","180°"], answer:"moins de 90°" },
+        { q: "Un angle obtus mesure :", choices:["entre 90° et 180°","plus de 180°","moins de 45°"], answer:"entre 90° et 180°" },
+        { q: "Instrument pour mesurer un angle :", choices:["rapporteur","équerre","compas"], answer:"rapporteur" },
+        { q: "Deux droites perpendiculaires forment :", choices:["un angle droit","un angle plat","un angle aigu"], answer:"un angle droit" },
+        { q: "Somme des angles d’un triangle :", choices:["180°","90°","360°"], answer:"180°" },
+        { q: "Angle de 0° :", choices:["nul","droit","plat"], answer:"nul" },
+        { q: "Le sommet d’un angle est :", choices:["le point commun des deux côtés","un des côtés","un segment"], answer:"le point commun des deux côtés" },
+        { q: "L’unité de mesure des angles :", choices:["le degré","le mètre","le litre"], answer:"le degré" }
+      ]
+    },
+    "quiz-6e-ch6": {
+      titre: "Chapitre 6 — Triangle (6e)",
+      classe: "6e",
+      questions: [
+        { q: "Un triangle équilatéral a :", choices:["3 côtés égaux","2 côtés égaux","aucun côté égal"], answer:"3 côtés égaux" },
+        { q: "Un triangle isocèle a :", choices:["2 côtés égaux","3 côtés égaux","un angle droit"], answer:"2 côtés égaux" },
+        { q: "Un triangle rectangle possède :", choices:["un angle droit","3 côtés égaux","un angle obtus"], answer:"un angle droit" },
+        { q: "Combien de sommets a un triangle ?", choices:["3","4","2"], answer:"3" },
+        { q: "La somme des angles d’un triangle fait :", choices:["180°","90°","360°"], answer:"180°" },
+        { q: "Pour tracer un triangle avec des longueurs précises, on utilise :", choices:["règle et compas","juste la règle","l'équerre seule"], answer:"règle et compas" },
+        { q: "Dans un triangle isocèle en A, le sommet principal est :", choices:["A","B","C"], answer:"A" },
+        { q: "Un triangle peut-il être rectangle et isocèle ?", choices:["Oui","Non","Jamais"], answer:"Oui" },
+        { q: "Le côté opposé au sommet A est :", choices:["[BC]","[AB]","[AC]"], answer:"[BC]" },
+        { q: "Un triangle quelconque a :", choices:["3 côtés de longueurs différentes","2 côtés égaux","un angle droit"], answer:"3 côtés de longueurs différentes" }
+      ]
+    },
+    "quiz-6e-ch7": {
+      titre: "Chapitre 7 — Nombres décimaux (6e)",
+      classe: "6e",
+      questions: [
+        { q: "Dans 12,45 le chiffre des dixièmes est :", choices:["4","5","2"], answer:"4" },
+        { q: "Une unité contient combien de dixièmes ?", choices:["10","100","0,1"], answer:"10" },
+        { q: "0,5 peut s'écrire en fraction :", choices:["1/2","1/5","5/100"], answer:"1/2" },
+        { q: "Quel nombre est le plus grand ?", choices:["4,2","4,15","4,09"], answer:"4,2" },
+        { q: "12,5 × 10 =", choices:["125","1,25","1250"], answer:"125" },
+        { q: "Le chiffre des centièmes dans 3,141 est :", choices:["4","1","3"], answer:"4" },
+        { q: "Écriture décimale de 3 + 1/10 :", choices:["3,1","3,01","0,31"], answer:"3,1" },
+        { q: "Multiplier par 100 revient à décaler la virgule de :", choices:["2 rangs vers la droite","1 rang","2 rangs vers la gauche"], answer:"2 rangs vers la droite" },
+        { q: "12,0 est égal à :", choices:["12","120","1,2"], answer:"12" },
+        { q: "Quel est l'entier le plus proche de 9,9 ?", choices:["10","9","11"], answer:"10" }
+      ]
+    }
+  };
+
+  // DOM
+  const backdrop = document.getElementById('quiz-backdrop');
+  const modal = backdrop.querySelector('.quiz-modal');
+  const titleEl = document.getElementById('quiz-title');
+  const metaEl = document.getElementById('quiz-meta');
+  const bodyEl = document.getElementById('quiz-body');
+  const progressEl = document.getElementById('quiz-progress');
+  const scoreEl = document.getElementById('quiz-score');
+  const nextBtn = document.getElementById('quiz-next');
+  const restartBtn = document.getElementById('quiz-restart');
+  const closeBtn = document.getElementById('quiz-close');
+
+  let activeQuiz = null, qIndex = 0, score = 0, answered = false;
+
+  // WebAudio improved sounds (only on click)
+  const AudioCtx = window.AudioContext || window.webkitAudioContext;
+  const audioCtx = AudioCtx ? new AudioCtx() : null;
+  function playTone(type) {
+    if (!audioCtx) return;
+    const now = audioCtx.currentTime;
+    const o = audioCtx.createOscillator();
+    const g = audioCtx.createGain();
+    const f = audioCtx.createBiquadFilter();
+    o.connect(f); f.connect(g); g.connect(audioCtx.destination);
+    g.gain.setValueAtTime(0.0001, now);
+    g.gain.exponentialRampToValueAtTime(0.2, now + 0.01);
+
+    if (type === "ok") {
+      o.type = "triangle";
+      o.frequency.setValueAtTime(880, now);
+      o.frequency.exponentialRampToValueAtTime(1320, now + 0.15);
+      f.type = "highpass";
+      f.frequency.setValueAtTime(800, now);
+      g.gain.exponentialRampToValueAtTime(0.0001, now + 0.45);
+      o.start(now); o.stop(now + 0.45);
+    }
+    if (type === "bad") {
+      o.type = "sawtooth";
+      o.frequency.setValueAtTime(220, now);
+      o.frequency.exponentialRampToValueAtTime(80, now + 0.32);
+      f.type = "lowpass";
+      f.frequency.setValueAtTime(400, now);
+      g.gain.exponentialRampToValueAtTime(0.0001, now + 0.38);
+      o.start(now); o.stop(now + 0.38);
+    }
+  }
+
+  // Envoi vers Google Sheet (si WEBHOOK_URL configurée)
+  async function envoyerScoreGoogle(prenom, classe, chapitre, scoreVal, total) {
+    if (!WEBHOOK_URL || WEBHOOK_URL === "WEBHOOK_URL_ICI") return;
+    const pourcentage = Math.round((scoreVal / total) * 100);
+    const payload = { prenom, classe, chapitre, score: scoreVal, total, pourcentage };
+    try {
+      await fetch(WEBHOOK_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      });
+      // ignore body; Apps Script renverra OK ou ALREADY
+    } catch (err) {
+      console.warn("Erreur envoy. Google Sheet:", err);
+    }
+  }
+
+  // Rendu question
+  function renderQuestion() {
+    bodyEl.innerHTML = '';
+    const quizObj = QUIZZES[activeQuiz];
+    const qObj = quizObj.questions[qIndex];
+    titleEl.textContent = quizObj.titre;
+    metaEl.textContent = `Question ${qIndex + 1} / ${quizObj.questions.length}`;
+    modal.dataset.classe = quizObj.classe;
+
+    const qBlock = document.createElement('div'); qBlock.className = 'quiz-question';
+    const qText = document.createElement('p'); qText.className = 'quiz-qtext'; qText.textContent = qObj.q;
+    qBlock.appendChild(qText);
+
+    const answersDiv = document.createElement('div'); answersDiv.className = 'quiz-answers';
+    qObj.choices.forEach(choice => {
+      const btn = document.createElement('button');
+      btn.className = 'answer';
+      btn.type = 'button';
+      btn.textContent = choice;
+      btn.dataset.value = choice;
+      btn.addEventListener('click', () => onAnswer(btn, qObj.answer));
+      answersDiv.appendChild(btn);
+    });
+
+    qBlock.appendChild(answersDiv);
+    bodyEl.appendChild(qBlock);
+
+    progressEl.textContent = `Q ${qIndex + 1} / ${quizObj.questions.length}`;
+    scoreEl.textContent = `Score : ${score} / ${quizObj.questions.length}`;
+    answered = false;
+    nextBtn.disabled = true;
+  }
+
+  // Réponse (clic) — joue son, applique classes
+  function onAnswer(btn, correctVal) {
+    if (answered) return;
+    answered = true;
+    const parent = btn.parentElement;
+    Array.from(parent.children).forEach(b => b.disabled = true);
+    const selected = btn.dataset.value;
+
+    // highlight correct
+    Array.from(parent.children).forEach(b => { if (b.dataset.value === correctVal) b.classList.add('correct'); });
+
+    if (selected === correctVal) {
+      btn.classList.add('correct');
+      score++;
+      playTone('ok');
+      btn.animate([{ transform:'scale(1)' }, { transform:'scale(1.03)' }, { transform:'scale(1)' }], { duration:220 });
+    } else {
+      btn.classList.add('wrong');
+      playTone('bad');
+      btn.animate([{ transform:'translateX(0)' }, { transform:'translateX(-6px)' }, { transform:'translateX(0)' }], { duration:200 });
     }
 
-    /* --- NAVIGATION --- */
-    document.querySelectorAll('.tablink').forEach(btn => {
-      btn.addEventListener('click', () => {
-        document.querySelectorAll('.tablink').forEach(b => b.classList.remove('active'));
-        document.querySelectorAll('section').forEach(s => s.classList.remove('active'));
-        btn.classList.add('active');
-        document.getElementById(btn.dataset.target).classList.add('active');
-        updateProgressBar();
-      });
-    });
+    nextBtn.disabled = false;
+    scoreEl.textContent = `Score : ${score} / ${QUIZZES[activeQuiz].questions.length}`;
+  }
 
-    /* --- SOUS-ONGLETS VIDEOS --- */
-    document.querySelectorAll('.subtabs').forEach(group => {
-      const buttons = group.querySelectorAll('.subtab');
-      buttons.forEach(btn => {
-        btn.addEventListener('click', () => {
-          buttons.forEach(b => b.classList.remove('active'));
-          btn.classList.add('active');
-          const bloc = btn.closest('.bloc');
-          bloc.querySelectorAll('.subtab-content').forEach(c => c.classList.remove('active'));
-          const target = bloc.querySelector('#' + btn.dataset.target);
-          if(target) target.classList.add('active');
-        });
-      });
-    });
-
-    /* --- CHECKBOXES --- */
-    document.querySelectorAll('.checkbox').forEach((cb, idx) => {
-      const key = 'prog-maths-' + idx;
-      if(localStorage.getItem(key) === 'true') cb.checked = true;
-      cb.addEventListener('change', () => {
-        localStorage.setItem(key, cb.checked);
-        updateProgressBar();
-        if(cb.checked) {
-          const rect = cb.getBoundingClientRect();
-          confetti({ particleCount: 15, spread: 40, origin: { x: rect.left/window.innerWidth, y: rect.top/window.innerHeight } });
-        }
-      });
-    });
-    updateProgressBar();
-
-    /* --- QUIZ DATA --- */
-    const QUIZZES = {
-      "quiz-4e-ch1": { titre: "4e - Nombres relatifs", classe: "4e", questions: [ { q: "Quel est l'opposé de -7 ?", choices:["7","-7","0"], answer:"7" }, { q: "Quel nombre est plus petit : -3 ou -8 ?", choices:["-8","-3","8"], answer:"-8" }, { q: "Calcule : (-5) + 12 = ?", choices:["7","-7","17"], answer:"7" }, { q: "Calcule : (-4) × (-3) = ?", choices:["12","-12","1"], answer:"12" }, { q: "Calcule : -15 ÷ 3 = ?", choices:["-5","5","-45"], answer:"-5" }, { q: "Ordre croissant : -2, 0, -5, 3 → lequel vient en premier ?", choices:["-5","-2","3"], answer:"-5" }, { q: "Quel est le résultat de : (-6) - (-2) ?", choices:["-4","-8","-3"], answer:"-4" }, { q: "Simplifie : -1 × 9 = ?", choices:["-9","9","0"], answer:"-9" }, { q: "Valeur absolue de -12 ?", choices:["12","-12","0"], answer:"12" }, { q: "Calcule : (-2)² = ?", choices:["4","-4","2"], answer:"4" } ] },
-      "quiz-4e-ch2": { titre: "4e - Pythagore", classe: "4e", questions: [ { q: "Dans un triangle rectangle, quel côté est le plus long ?", choices:["hypoténuse","côté opposé","adjacent"], answer:"hypoténuse" }, { q: "Si un triangle n’est pas rectangle, peut-on appliquer le théorème de Pythagore ?", choices:["non","oui","seulement si isocèle"], answer:"non" }, { q: "Calcule : si AC = 5 et BC = 12, alors AB = ?", choices:["13","7","17"], answer:"13" }, { q: "Si l’hypoténuse vaut 10 et un côté vaut 6, l’autre vaut ?", choices:["8","4","12"], answer:"8" }, { q: "Dans l’égalité a² + b² = c², que représente c ?", choices:["hypoténuse","un côté","le triangle"], answer:"hypoténuse" }, { q: "Le théorème de Pythagore ne s’applique que dans :", choices:["un triangle rectangle","un carré","un trapèze"], answer:"un triangle rectangle" }, { q: "Si les côtés mesurent 3, 4 et 5, le triangle est :", choices:["rectangle","isocèle","équilatéral"], answer:"rectangle" }, { q: "Calcule : si c² = 100 et a = 6, b = ?", choices:["8","10","4"], answer:"8" }, { q: "Quelle est la réciproque du théorème ?", choices:["Si a²+b²=c² alors triangle rectangle","Si triangle rectangle alors a²+b²=c²","Aucune"], answer:"Si a²+b²=c² alors triangle rectangle" }, { q: "Le théorème de Pythagore est lié à :", choices:["la géométrie","l’arithmétique","les fonctions"], answer:"la géométrie" } ] },
-      "quiz-4e-ch3": { titre: "4e - Proportionnalité", classe: "4e", questions: [ { q: "Dans un tableau de proportionnalité, le rapport entre les lignes est :", choices:["constant","variable","aléatoire"], answer:"constant" }, { q: "3 pommes coûtent 6€. Combien coûtent 5 pommes ?", choices:["10€","8€","9€"], answer:"10€" }, { q: "Si on double une grandeur, l’autre :", choices:["double","reste identique","diminue"], answer:"double" }, { q: "Comment appelle-t-on le rapport constant ?", choices:["coefficient de proportionnalité","produit en croix","taux d’évolution"], answer:"coefficient de proportionnalité" }, { q: "Dans un produit en croix, on multiplie :", choices:["les extrêmes et on divise par la moyenne","les milieux entre eux","rien"], answer:"les extrêmes et on divise par la moyenne" }, { q: "Un vélo roule 45 km en 3h. Sa vitesse moyenne ?", choices:["15 km/h","12 km/h","18 km/h"], answer:"15 km/h" }, { q: "Une recette : 2 œufs pour 100g de sucre. Pour 300g ?", choices:["6 œufs","3 œufs","4 œufs"], answer:"6 œufs" }, { q: "Si on multiplie les deux grandeurs par le même nombre :", choices:["proportionnalité conservée","proportionnalité rompue","erreur"], answer:"proportionnalité conservée" }, { q: "Graphiquement, les points proportionnels sont :", choices:["alignés sur une droite passant par l’origine","alignés mais pas à l’origine","pas alignés"], answer:"alignés sur une droite passant par l’origine" }, { q: "Le produit en croix permet de :", choices:["trouver une quatrième proportionnelle","calculer un volume","résoudre une équation"], answer:"trouver une quatrième proportionnelle" } ] },
-      "quiz-4e-ch4": { titre: "4e - Puissances", classe: "4e", questions: [ { q: "Que vaut 10² ?", choices:["100","20","1000"], answer:"100" }, { q: "Que vaut (-2)³ ?", choices:["-8","8","4"], answer:"-8" }, { q: "a⁰ vaut :", choices:["1","0","a"], answer:"1" }, { q: "10⁻² vaut :", choices:["0,01","-2","100"], answer:"0,01" }, { q: "Le carré d’un nombre, c’est :", choices:["le nombre × lui-même","le nombre + lui-même","le double"], answer:"le nombre × lui-même" }, { q: "Simplifie : 10³ × 10² =", choices:["10⁵","10⁶","10"], answer:"10⁵" }, { q: "Simplifie : 2⁵ ÷ 2³ =", choices:["2²","2⁸","2⁶"], answer:"2²" }, { q: "(a²)³ =", choices:["a⁶","a⁵","a³"], answer:"a⁶" }, { q: "10⁻³ =", choices:["0,001","1000","0,1"], answer:"0,001" }, { q: "√(a²) =", choices:["a","a²","√a"], answer:"a" } ] },
-      "quiz-4e-ch5": { titre: "4e - Calcul littéral", classe: "4e", questions: [ { q: "Dans 2x + 4, x est :", choices:["une variable","un signe de multiplication","une constante"], answer:"une variable" }, { q: "Simplifie : a × a =", choices:["a²","2a","a"], answer:"a²" }, { q: "Développe : 3(x + 2) =", choices:["3x + 6","3x + 2","x + 5"], answer:"3x + 6" }, { q: "Factorise : 5x + 10 =", choices:["5(x + 2)","5(x + 10)","5x"], answer:"5(x + 2)" }, { q: "Si x = 3, alors 2x + 1 =", choices:["7","6","4"], answer:"7" }, { q: "Simplifie : 2x + 3x =", choices:["5x","6x","5x²"], answer:"5x" }, { q: "L'expression 2(x + 4) est :", choices:["un produit","une somme","une différence"], answer:"un produit" }, { q: "Quelle égalité est vraie pour tout x ?", choices:["x + x = 2x","x × x = 2x","x + 2 = 2x"], answer:"x + x = 2x" }, { q: "Réduire l'expression : 4x - x =", choices:["3x","4","x"], answer:"3x" }, { q: "Opposé de (x - 3) est :", choices:["-x + 3","-x - 3","x + 3"], answer:"-x + 3" } ] },
-      "quiz-4e-ch6": { titre: "4e - Les fractions", classe: "4e", questions: [ { q: "Calcule : 1/4 + 3/4 =", choices:["1","4/8","3/16"], answer:"1" }, { q: "Pour additionner deux fractions, il faut :", choices:["le même dénominateur","le même numérateur","rien de spécial"], answer:"le même dénominateur" }, { q: "Simplifie : 10/20 =", choices:["1/2","2/1","10/2"], answer:"1/2" }, { q: "Calcule : 2/3 × 4/5 =", choices:["8/15","6/8","10/12"], answer:"8/15" }, { q: "L'inverse de 2/3 est :", choices:["3/2","-2/3","2/3"], answer:"3/2" }, { q: "Quel est le dénominateur commun pour 1/2 et 1/5 ?", choices:["10","7","5"], answer:"10" }, { q: "3/7 × 7 =", choices:["3","21","1"], answer:"3" }, { q: "Dans a/b, b s'appelle :", choices:["dénominateur","numérateur","quotient"], answer:"dénominateur" }, { q: "5/3 est plus grand que 1 ?", choices:["Oui","Non","Égal"], answer:"Oui" }, { q: "Calcule : 3/4 - 1/4 =", choices:["2/4","1","4/4"], answer:"2/4" } ] },
-      
-      "quiz-6e-ch1": { titre: "6e - Nombres entiers", classe: "6e", questions: [ { q: "Quel est le successeur de 49 ?", choices:["50","48","51"], answer:"50" }, { q: "Quel est le prédécesseur de 100 ?", choices:["101","99","102"], answer:"99" }, { q: "Combien vaut 7 × 8 ?", choices:["54","56","64"], answer:"56" }, { q: "Le double de 12 est :", choices:["24","14","20"], answer:"24" }, { q: "Le triple de 15 est :", choices:["45","30","60"], answer:"45" }, { q: "0 est-il un nombre entier ?", choices:["oui","non","parfois"], answer:"oui" }, { q: "Le nombre pair suivant 16 est :", choices:["18","17","19"], answer:"18" }, { q: "Dans 438, le chiffre des dizaines est :", choices:["3","8","4"], answer:"3" }, { q: "7 + 9 =", choices:["16","18","14"], answer:"16" }, { q: "Entre 99 et 101, quel nombre est impair ?", choices:["99","100","101"], answer:"99" } ] },
-      "quiz-6e-ch2": { titre: "6e - Géométrie", classe: "6e", questions: [ { q: "Un segment est défini par :", choices:["2 points","1 point","3 points"], answer:"2 points" }, { q: "Une droite passe par :", choices:["2 points","1 seul point","aucun point"], answer:"2 points" }, { q: "Les droites perpendiculaires forment :", choices:["un angle droit","un angle aigu","un angle obtus"], answer:"un angle droit" }, { q: "Le symbole de la perpendiculaire est :", choices:["⊥","∥","="], answer:"⊥" }, { q: "Les droites parallèles :", choices:["ne se coupent jamais","se coupent une fois","se coupent deux fois"], answer:"ne se coupent jamais" }, { q: "Un segment est :", choices:["une portion de droite","une droite entière","un point"], answer:"une portion de droite" }, { q: "Le milieu d’un segment partage ce segment en :", choices:["2 parties égales","3 parties","aucune partie"], answer:"2 parties égales" }, { q: "Les droites (AB) et (CD) sont parallèles → notation ?", choices:["(AB) ∥ (CD)","(AB) ⊥ (CD)","(AB) = (CD)"], answer:"(AB) ∥ (CD)" }, { q: "Une figure est symétrique si :", choices:["elle se superpose après pliage","elle est identique","elle est parallèle"], answer:"elle se superpose après pliage" }, { q: "Le compas permet de :", choices:["tracer des cercles","mesurer un angle","dessiner des carrés"], answer:"tracer des cercles" } ] },
-      "quiz-6e-ch3": { titre: "6e - Fractions", classe: "6e", questions: [ { q: "Dans 3/5, le numérateur est :", choices:["3","5","8"], answer:"3" }, { q: "Dans 3/5, le dénominateur est :", choices:["5","3","8"], answer:"5" }, { q: "1/2 est égal à :", choices:["0,5","2","1,2"], answer:"0,5" }, { q: "La fraction équivalente à 2/4 est :", choices:["1/2","2/8","4/8"], answer:"1/2" }, { q: "3/6 simplifié donne :", choices:["1/2","3/12","2/3"], answer:"1/2" }, { q: "Addition : 1/3 + 1/3 =", choices:["2/3","1/6","1/2"], answer:"2/3" }, { q: "Multiplication : 2/3 × 3 =", choices:["2","1","3/5"], answer:"2" }, { q: "Une fraction inférieure à 1 :", choices:["a numérateur < dénominateur","numérateur > dénominateur","les deux égaux"], answer:"a numérateur < dénominateur" }, { q: "Écriture décimale de 3/4 :", choices:["0,75","0,25","1,5"], answer:"0,75" }, { q: "2/3 de 90 =", choices:["60","45","30"], answer:"60" } ] },
-      "quiz-6e-ch4": { titre: "6e - Droites", classe: "6e", questions: [ { q: "Une droite a :", choices:["aucune extrémité","2 extrémités","1 extrémité"], answer:"aucune extrémité" }, { q: "Un segment a :", choices:["2 extrémités","aucune extrémité","1 extrémité"], answer:"2 extrémités" }, { q: "Deux droites perpendiculaires se coupent en :", choices:["un angle droit","un angle aigu","un angle obtus"], answer:"un angle droit" }, { q: "Les droites parallèles ne :", choices:["se coupent jamais","se croisent une fois","sont confondues"], answer:"se coupent jamais" }, { q: "La médiatrice d’un segment est :", choices:["perpendiculaire et passe par le milieu","parallèle au segment","au hasard"], answer:"perpendiculaire et passe par le milieu" }, { q: "Une demi-droite a :", choices:["une origine et pas de fin","pas d’origine","deux extrémités"], answer:"une origine et pas de fin" }, { q: "Les points d’une même droite sont :", choices:["alignés","perpendiculaires","parallèles"], answer:"alignés" }, { q: "Le symbole de parallèle est :", choices:["∥","⊥","="], answer:"∥" }, { q: "Deux droites sécantes :", choices:["ont un point commun","aucun point commun","plusieurs points communs"], answer:"ont un point commun" }, { q: "L’instrument pour tracer une perpendiculaire :", choices:["équerre","compas","rapporteur"], answer:"équerre" } ] },
-      "quiz-6e-ch5": { titre: "6e - Angles", classe: "6e", questions: [ { q: "Un angle droit mesure :", choices:["90°","45°","180°"], answer:"90°" }, { q: "Un angle plat mesure :", choices:["180°","90°","45°"], answer:"180°" }, { q: "Un angle aigu mesure :", choices:["moins de 90°","plus de 90°","180°"], answer:"moins de 90°" }, { q: "Un angle obtus mesure :", choices:["entre 90° et 180°","plus de 180°","moins de 45°"], answer:"entre 90° et 180°" }, { q: "Instrument pour mesurer un angle :", choices:["rapporteur","équerre","compas"], answer:"rapporteur" }, { q: "Deux droites perpendiculaires forment :", choices:["un angle droit","un angle plat","un angle aigu"], answer:"un angle droit" }, { q: "Somme des angles d’un triangle :", choices:["180°","90°","360°"], answer:"180°" }, { q: "Angle de 0° :", choices:["nul","droit","plat"], answer:"nul" }, { q: "Le sommet d’un angle est :", choices:["le point commun des deux côtés","un des côtés","un segment"], answer:"le point commun des deux côtés" }, { q: "L’unité de mesure des angles :", choices:["le degré","le mètre","le litre"], answer:"le degré" } ] },
-      "quiz-6e-ch6": { titre: "6e - Triangles", classe: "6e", questions: [ { q: "Un triangle équilatéral a :", choices:["3 côtés égaux","2 côtés égaux","aucun côté égal"], answer:"3 côtés égaux" }, { q: "Un triangle isocèle a :", choices:["2 côtés égaux","3 côtés égaux","un angle droit"], answer:"2 côtés égaux" }, { q: "Un triangle rectangle possède :", choices:["un angle droit","3 côtés égaux","un angle obtus"], answer:"un angle droit" }, { q: "Combien de sommets a un triangle ?", choices:["3","4","2"], answer:"3" }, { q: "La somme des angles d’un triangle fait :", choices:["180°","90°","360°"], answer:"180°" }, { q: "Pour tracer un triangle avec des longueurs précises, on utilise :", choices:["règle et compas","juste la règle","l'équerre seule"], answer:"règle et compas" }, { q: "Dans un triangle isocèle en A, le sommet principal est :", choices:["A","B","C"], answer:"A" }, { q: "Un triangle peut-il être rectangle et isocèle ?", choices:["Oui","Non","Jamais"], answer:"Oui" }, { q: "Le côté opposé au sommet A est :", choices:["[BC]","[AB]","[AC]"], answer:"[BC]" }, { q: "Un triangle quelconque a :", choices:["3 côtés de longueurs différentes","2 côtés égaux","un angle droit"], answer:"3 côtés de longueurs différentes" } ] },
-      "quiz-6e-ch7": { titre: "6e - Nombres décimaux", classe: "6e", questions: [ { q: "Dans 12,45 le chiffre des dixièmes est :", choices:["4","5","2"], answer:"4" }, { q: "Une unité contient combien de dixièmes ?", choices:["10","100","0,1"], answer:"10" }, { q: "0,5 peut s'écrire en fraction :", choices:["1/2","1/5","5/100"], answer:"1/2" }, { q: "Quel nombre est le plus grand ?", choices:["4,2","4,15","4,09"], answer:"4,2" }, { q: "12,5 × 10 =", choices:["125","1,25","1250"], answer:"125" }, { q: "Le chiffre des centièmes dans 3,141 est :", choices:["4","1","3"], answer:"4" }, { q: "Écriture décimale de 3 + 1/10 :", choices:["3,1","3,01","0,31"], answer:"3,1" }, { q: "Multiplier par 100 revient à décaler la virgule de :", choices:["2 rangs vers la droite","1 rang","2 rangs vers la gauche"], answer:"2 rangs vers la droite" }, { q: "12,0 est égal à :", choices:["12","120","1,2"], answer:"12" }, { q: "Quel est l'entier le plus proche de 9,9 ?", choices:["10","9","11"], answer:"10" } ] }
-    };
-
-    /* --- LOGIQUE QUIZ --- */
-    const modal = document.getElementById('quiz-backdrop');
-    const bodyEl = document.getElementById('quiz-body');
-    const titleEl = document.getElementById('quiz-title');
-    const metaEl = document.getElementById('quiz-meta');
-    const scoreEl = document.getElementById('quiz-score');
-    const nextBtn = document.getElementById('quiz-next');
-    const closeBtn = document.getElementById('quiz-close');
-    const restartBtn = document.getElementById('quiz-restart');
-
-    let currentQuiz = null;
-    let qIndex = 0;
-    let score = 0;
-    let answered = false;
-
-    function openQuiz(quizKey) {
-      currentQuiz = QUIZZES[quizKey];
-      qIndex = 0; score = 0; answered = false;
-      restartBtn.style.display = 'none';
-      nextBtn.style.display = 'block';
-      nextBtn.textContent = 'Suivant ➜';
-      nextBtn.disabled = true;
-      modal.classList.add('active');
+  // Avancer
+  function nextQuestion() {
+    if (!answered) return; // forcer réponse
+    qIndex++;
+    if (qIndex >= QUIZZES[activeQuiz].questions.length) {
+      finishQuiz();
+    } else {
       renderQuestion();
     }
+  }
 
-    function renderQuestion() {
-      bodyEl.innerHTML = '';
-      const q = currentQuiz.questions[qIndex];
-      titleEl.textContent = currentQuiz.titre;
-      metaEl.textContent = `Question ${qIndex + 1} / ${currentQuiz.questions.length}`;
-      scoreEl.textContent = `Score : ${score}`;
+  // Fin du quiz : afficher résultat et envoyer la première tentative seulement
+  async function finishQuiz() {
+    const total = QUIZZES[activeQuiz].questions.length;
+    bodyEl.innerHTML = '';
+    titleEl.textContent = QUIZZES[activeQuiz].titre + " — Résultat";
+    metaEl.textContent = "Terminé";
 
-      const qDiv = document.createElement('div');
-      qDiv.className = 'quiz-question-box';
-      qDiv.textContent = q.q;
-      bodyEl.appendChild(qDiv);
+    const res = document.createElement('div'); res.style.display='flex'; res.style.flexDirection='column'; res.style.gap='8px';
+    const scoreBig = document.createElement('div'); scoreBig.style.fontWeight='900'; scoreBig.style.fontSize='1.2rem';
+    scoreBig.textContent = `${score} / ${total} bonnes réponses`; res.appendChild(scoreBig);
+    const percent = Math.round(score/total*100);
+    const percentEl = document.createElement('div'); percentEl.style.fontWeight='700'; percentEl.textContent = `${percent}%`; res.appendChild(percentEl);
 
-      const answersDiv = document.createElement('div');
-      answersDiv.className = 'quiz-answers';
-      
-      const shuffled = [...q.choices].sort(() => Math.random() - 0.5);
+    const btns = document.createElement('div'); btns.style.display='flex'; btns.style.gap='8px'; btns.style.marginTop='6px';
+    const r = document.createElement('button'); r.className='btn ghost'; r.textContent='Recommencer'; r.addEventListener('click', ()=>startQuiz(activeQuiz)); btns.appendChild(r);
+    const c = document.createElement('button'); c.className='btn primary'; c.textContent='Fermer'; c.addEventListener('click', closeModal); btns.appendChild(c);
+    res.appendChild(btns);
+    bodyEl.appendChild(res);
 
-      shuffled.forEach(choice => {
-        const btn = document.createElement('button');
-        btn.className = 'answer-btn';
-        btn.textContent = choice;
-        btn.onclick = () => checkAnswer(btn, choice, q.answer);
-        answersDiv.appendChild(btn);
-      });
-      bodyEl.appendChild(answersDiv);
-      nextBtn.disabled = true;
-    }
-
-    function checkAnswer(btn, choice, correct) {
-      if(answered) return;
-      answered = true;
-      
-      const allBtns = document.querySelectorAll('.answer-btn');
-      allBtns.forEach(b => {
-        b.disabled = true;
-        if(b.textContent === correct) b.classList.add('correct');
-      });
-
-      if(choice === correct) {
-        btn.classList.add('correct');
-        score++;
-        playTone('ok');
-        confetti({ particleCount: 20, spread: 30, origin: { y: 0.8 } });
-      } else {
-        btn.classList.add('wrong');
-        playTone('bad');
-      }
-      nextBtn.disabled = false;
-      scoreEl.textContent = `Score : ${score}`;
-    }
-
-    nextBtn.addEventListener('click', () => {
-      qIndex++;
-      answered = false;
-      if(qIndex < currentQuiz.questions.length) {
-        renderQuestion();
-      } else {
-        finishQuiz();
-      }
-    });
-
-    async function finishQuiz() {
-      const total = currentQuiz.questions.length;
-      const percent = Math.round((score/total)*100);
-      
-      bodyEl.innerHTML = `
-        <div style="text-align:center; padding:20px;">
-          <h2 style="justify-content:center; font-size:2rem;">Terminé ! 🏁</h2>
-          <p style="font-size:1.5rem; font-weight:800; margin:10px 0;">${score} / ${total}</p>
-          <p style="color:#64748b;">${percent}% de réussite</p>
-        </div>
-      `;
-      nextBtn.style.display = 'none';
-      restartBtn.style.display = 'block';
-      
-      if(percent >= 50) {
-        confetti({ particleCount: 200, spread: 100, origin: { y: 0.6 } });
-      }
-
-      // Envoi Google Sheet
-      let name = localStorage.getItem('maths-prenom');
-      if(!name) {
-        name = prompt("Ton prénom pour le classement ?") || "Anonyme";
-        localStorage.setItem('maths-prenom', name);
-      }
-
-      try {
-        if(WEBHOOK_URL.includes("script.google")) {
-          // Ajout du mode 'no-cors' pour éviter les erreurs console
-          await fetch(WEBHOOK_URL, {
-            method: 'POST',
-            mode: 'no-cors',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              prenom: name,
-              classe: currentQuiz.classe,
-              chapitre: currentQuiz.titre,
-              score: score,
-              total: total,
-              pourcentage: percent
-            })
-          });
+    // envoyer vers Google Sheet : on envoie la PREMIERE tentative uniquement
+    try {
+      const keySubmitted = 'submitted-' + activeQuiz + '-' + (localStorage.getItem('prenom-eleve') || '').toLowerCase();
+      const alreadySubmitted = localStorage.getItem(keySubmitted);
+      if (!alreadySubmitted) {
+        // prénom : demander / stocker
+        let prenom = localStorage.getItem('prenom-eleve');
+        if (!prenom || prenom.trim() === "") {
+          prenom = prompt("Indique ton prénom (pour enregistrer ton score)");
+          if (prenom && prenom.trim() !== "") localStorage.setItem('prenom-eleve', prenom.trim());
         }
-      } catch(e) { console.log(e); }
-    }
-
-    // LISTENERS QUIZ
-    document.querySelectorAll('.open-quiz').forEach(btn => {
-      btn.addEventListener('click', () => openQuiz(btn.dataset.quiz));
-    });
-    closeBtn.addEventListener('click', () => modal.classList.remove('active'));
-    restartBtn.addEventListener('click', () => openQuiz(Object.keys(QUIZZES).find(k => QUIZZES[k].titre === currentQuiz.titre)));
-
-    // SIMPLE AUDIO SYNTH
-    const AudioCtx = window.AudioContext || window.webkitAudioContext;
-    const audioCtx = AudioCtx ? new AudioCtx() : null;
-    function playTone(type) {
-      if (!audioCtx) return;
-      const o = audioCtx.createOscillator();
-      const g = audioCtx.createGain();
-      o.connect(g); g.connect(audioCtx.destination);
-      if(type==='ok'){ o.frequency.value=880; o.type='triangle'; } else { o.frequency.value=220; o.type='sawtooth'; }
-      g.gain.value=0.1; o.start(); o.stop(audioCtx.currentTime+0.1);
-    }
-
-    // EASTER EGG "MATHS"
-    let keys = [];
-    const code = ['m','a','t','h','s'];
-    window.addEventListener('keydown', (e) => {
-      keys.push(e.key.toLowerCase());
-      if(keys.length > 5) keys.shift();
-      if(JSON.stringify(keys) === JSON.stringify(code)) {
-        alert("🤓 MODE GÉNIE ACTIVÉ !");
-        document.body.style.background = "linear-gradient(to right, #000000, #434343)";
-        confetti({ particleCount: 500, spread: 180 });
+        // uniquement si prenom existe et webhook configuré
+        if ((prenom && prenom.trim() !== "") && WEBHOOK_URL && WEBHOOK_URL !== "WEBHOOK_URL_ICI") {
+          await envoyerScoreGoogle(prenom.trim(), QUIZZES[activeQuiz].classe, QUIZZES[activeQuiz].titre, score, total);
+          // marque localement que l'élève a soumis pour ce quiz (empêche renvoi depuis ce navigateur)
+          localStorage.setItem(keySubmitted, "true");
+        }
       }
-    });
+    } catch (e) {
+      console.warn("Erreur envoi score:", e);
+    }
+  }
 
+  function startQuiz(quizKey) {
+    activeQuiz = quizKey; qIndex=0; score=0; answered=false;
+    backdrop.classList.add('active'); backdrop.setAttribute('aria-hidden','false');
+    renderQuestion();
+  }
+
+  function closeModal() {
+    backdrop.classList.remove('active'); backdrop.setAttribute('aria-hidden','true');
+    bodyEl.innerHTML=''; activeQuiz=null; qIndex=0; score=0; answered=false;
+  }
+
+  // hooks
+  document.querySelectorAll('.open-quiz').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const quizKey = btn.dataset.quiz;
+      if (QUIZZES[quizKey]) startQuiz(quizKey);
+    });
+    // show tooltip best info if available
+    const qk = btn.dataset.quiz;
+    const localBestKey = 'best-' + qk;
+    const best = localStorage.getItem(localBestKey);
+    if (best) btn.title = `Meilleur score local : ${best} / 10`;
+  });
+
+  nextBtn.addEventListener('click', nextQuestion);
+  restartBtn.addEventListener('click', ()=> { if (activeQuiz) startQuiz(activeQuiz); });
+  closeBtn.addEventListener('click', closeModal);
+  backdrop.addEventListener('click', e=> { if (e.target===backdrop) closeModal(); });
+
+  // Keyboard minimal support: Escape closes
+  document.addEventListener('keydown', e=> {
+    if (!backdrop.classList.contains('active')) return;
+    if (e.key === 'Escape') closeModal();
+    // no sound on enter — we don't handle Enter for answering (only click)
+    if (e.key === 'Enter') {
+      // if student already answered current question, Next
+      if (answered && !nextBtn.disabled) nextQuestion();
+    }
+  });
+
+})();
   </script>
 </body>
 </html>
