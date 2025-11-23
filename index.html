@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Cours de maths — Quiz & suivi</title>
   
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
@@ -10,11 +10,13 @@
 
   <style>
     :root {
-      --primary: #4f46e5;
+      --primary: #4f46e5;       /* Indigo */
       --primary-dark: #3730a3;
-      --accent: #db2777;
-      --success: #10b981;
-      --text: #1e293b;
+      --accent: #db2777;        /* Rose */
+      --success: #10b981;       /* Vert */
+      --text: #1e293b;          /* Gris foncé (Slate 800) */
+      --text-light: #64748b;    /* Gris moyen (Slate 500) */
+      
       --glass-bg: rgba(255, 255, 255, 0.90);
       --glass-border: 1px solid rgba(255, 255, 255, 0.6);
       --shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
@@ -24,14 +26,16 @@
     * { box-sizing: border-box; }
 
     body {
-      margin: 0; font-family: 'Outfit', sans-serif;
+      margin: 0; 
+      font-family: 'Outfit', sans-serif;
       color: var(--text);
-      /* Fond animé moderne */
+      /* Fond animé maintenu */
       background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
       background-size: 400% 400%;
       animation: gradientBG 15s ease infinite;
       min-height: 100vh;
-      padding-bottom: 60px;
+      display: flex;
+      flex-direction: column;
     }
 
     @keyframes gradientBG {
@@ -40,46 +44,70 @@
       100% { background-position: 0% 50%; }
     }
 
-    /* HEADER */
+    /* --- NOUVEAU HEADER (Option 1 : Blanc Opaque) --- */
     header {
-      text-align: center; padding: 2rem 1rem 1rem;
-      background: rgba(255,255,255,0.15);
-      backdrop-filter: blur(5px);
+      text-align: center;
+      padding: 2rem 1rem 1.5rem;
+      background: #ffffff;
+      border-bottom: 1px solid #e2e8f0;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+      position: relative;
+      z-index: 50; /* Au-dessus du fond, mais en dessous de la modale */
     }
+
     header h1 {
-      margin: 0; font-size: 2.5rem; font-weight: 800; color: white;
-      text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+      margin: 0;
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: var(--primary-dark); /* Couleur foncée pour le contraste */
+      text-shadow: none; /* Suppression de l'ombre portée */
     }
-    header .citation { color: rgba(255,255,255,0.95); font-weight: 600; margin-top: 8px; font-size: 1rem; }
+
+    header .citation {
+      color: var(--text-light);
+      font-weight: 600;
+      margin-top: 8px;
+      font-size: 1rem;
+      font-style: italic;
+    }
 
     /* --- BARRE DE NAVIGATION ET PROGRESSION (STICKY) --- */
     .nav-sticky-container {
-      position: sticky; top: 0; z-index: 100;
-      background: rgba(255, 255, 255, 0.95);
+      position: sticky; 
+      top: 0; 
+      z-index: 100;
+      background: rgba(255, 255, 255, 0.95); /* Quasi opaque pour cacher le dégradé au scroll */
       backdrop-filter: blur(10px);
       box-shadow: 0 4px 20px rgba(0,0,0,0.05);
-      padding: 10px 0 15px;
-      border-bottom: 1px solid rgba(255,255,255,0.3);
+      padding: 15px 0 15px;
+      border-bottom: 1px solid rgba(0,0,0,0.05);
     }
 
-    nav { display: flex; justify-content: center; gap: 15px; margin-bottom: 10px; }
+    nav { display: flex; justify-content: center; gap: 15px; margin-bottom: 15px; }
     
     nav button {
-      background: white; border: 2px solid #e2e8f0;
-      color: #64748b; padding: 8px 20px; border-radius: 99px;
-      font-weight: 700; font-family: inherit; cursor: pointer;
+      background: white; 
+      border: 2px solid #e2e8f0;
+      color: var(--text-light); 
+      padding: 8px 24px; 
+      border-radius: 99px;
+      font-weight: 700; 
+      font-family: inherit; 
+      cursor: pointer;
       transition: all 0.2s ease;
     }
     nav button:hover { border-color: var(--primary); color: var(--primary); transform: translateY(-2px); }
     nav button.active {
-      background: var(--primary); border-color: var(--primary);
-      color: white; box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+      background: var(--primary); 
+      border-color: var(--primary);
+      color: white; 
+      box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
     }
 
     /* BARRE DE PROGRESSION */
     .progress-wrapper {
       max-width: 700px; margin: 0 auto; padding: 0 20px;
-      display: flex; flex-direction: column; gap: 4px;
+      display: flex; flex-direction: column; gap: 6px;
     }
     .progress-header {
       display: flex; justify-content: space-between;
@@ -89,24 +117,33 @@
       width: 100%; height: 10px; background: #e2e8f0; border-radius: 99px; overflow: hidden;
     }
     .progress-fill {
-      height: 100%; width: 0%; background: linear-gradient(90deg, #10b981, #34d399);
-      border-radius: 99px; transition: width 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+      height: 100%; width: 0%; 
+      background: linear-gradient(90deg, #10b981, #34d399);
+      border-radius: 99px; 
+      transition: width 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
     }
 
     /* CONTENT */
-    main { max-width: 960px; margin: 2rem auto; padding: 0 1rem; }
+    main { 
+      max-width: 960px; 
+      margin: 2rem auto; 
+      padding: 0 1rem; 
+      flex: 1; /* Pousse le footer vers le bas */
+      width: 100%;
+    }
+    
     section { display: none; animation: slideUp 0.5s ease; }
     section.active { display: block; }
     @keyframes slideUp { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
 
-    /* BLOCS DE CONTENU (Style "Verre") */
+    /* BLOCS DE CONTENU */
     .bloc {
       background: var(--glass-bg);
       border: var(--glass-border);
       border-radius: var(--radius);
       padding: 1.5rem; margin-bottom: 1.5rem;
       box-shadow: var(--shadow);
-      transition: transform 0.3s ease;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
     .bloc:hover { transform: translateY(-3px); box-shadow: 0 12px 40px rgba(0,0,0,0.12); }
 
@@ -116,7 +153,7 @@
     ul { padding-left: 0; list-style: none; margin: 0; }
     li {
       display: flex; align-items: center; gap: 12px;
-      padding: 8px 0; border-bottom: 1px solid rgba(0,0,0,0.04);
+      padding: 10px 0; border-bottom: 1px solid rgba(0,0,0,0.04);
     }
     li:last-child { border-bottom: none; }
 
@@ -141,7 +178,7 @@
     .subtabs { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 15px; }
     .subtab {
       background: #f1f5f9; border: none; padding: 6px 14px;
-      border-radius: 99px; font-weight: 700; color: #64748b;
+      border-radius: 99px; font-weight: 700; color: var(--text-light);
       cursor: pointer; transition: all 0.2s; font-size: 0.9rem;
     }
     .subtab:hover, .subtab.active { background: var(--accent); color: white; transform: translateY(-2px); }
@@ -179,7 +216,7 @@
     .btn-sujet { background: var(--primary); }
     .btn-corrige { background: var(--success); }
 
-    footer { text-align: center; padding: 2rem; color: white; font-weight: 600; opacity: 0.8; }
+    footer { text-align: center; padding: 2rem; color: white; font-weight: 600; opacity: 0.9; margin-top: auto; }
 
     /* MODAL QUIZ */
     .quiz-backdrop {
@@ -203,7 +240,7 @@
     .answer-btn {
       padding: 12px 15px; border: 2px solid #f1f5f9; border-radius: 10px;
       background: white; text-align: left; font-weight: 600; font-size: 1rem;
-      cursor: pointer; transition: all 0.2s; font-family: inherit;
+      cursor: pointer; transition: all 0.2s; font-family: inherit; color: var(--text);
     }
     .answer-btn:hover { border-color: #cbd5e1; background: #f8fafc; }
     .answer-btn.correct { background: #dcfce7; border-color: #22c55e; color: #15803d; }
@@ -640,7 +677,7 @@
   </div>
 
   <script>
-    /* --- CONFIG (A REMPLACER) --- */
+    /* --- CONFIG --- */
     const WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbx4u7sxvKJX05ZuuL4W85Sbhq3YVeHXyLjuoNw3hgYFlxXfGZh1Cssb4BpNxVdPj4KWaQ/exec";
 
     /* --- CITATIONS --- */
@@ -706,7 +743,6 @@
         localStorage.setItem(key, cb.checked);
         updateProgressBar();
         if(cb.checked) {
-          // Petit effet confetti
           const rect = cb.getBoundingClientRect();
           confetti({ particleCount: 15, spread: 40, origin: { x: rect.left/window.innerWidth, y: rect.top/window.innerHeight } });
         }
@@ -773,7 +809,6 @@
       const answersDiv = document.createElement('div');
       answersDiv.className = 'quiz-answers';
       
-      // Mélange les réponses
       const shuffled = [...q.choices].sort(() => Math.random() - 0.5);
 
       shuffled.forEach(choice => {
@@ -800,7 +835,6 @@
       if(choice === correct) {
         btn.classList.add('correct');
         score++;
-        // Son Victoire simple (Web Audio API pour éviter de charger des fichiers)
         playTone('ok');
         confetti({ particleCount: 20, spread: 30, origin: { y: 0.8 } });
       } else {
@@ -848,8 +882,11 @@
 
       try {
         if(WEBHOOK_URL.includes("script.google")) {
+          // Ajout du mode 'no-cors' pour éviter les erreurs console même si le script fonctionne
           await fetch(WEBHOOK_URL, {
             method: 'POST',
+            mode: 'no-cors',
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
               prenom: name,
               classe: currentQuiz.classe,
