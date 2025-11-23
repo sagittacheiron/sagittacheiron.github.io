@@ -15,13 +15,13 @@
     body{
       margin:0; font-family:"Segoe UI", Roboto, Arial, sans-serif;
       color:var(--texte); background:var(--rose-clair);
-      -webkit-font-smoothing:antialiased; overflow-x:hidden;
+      -webkit-font-smoothing:antialiased; overflow-x:hidden; padding-bottom: 40px;
     }
 
     /* Header */
     header{
       background:linear-gradient(135deg,var(--bleu),#1e40af);
-      color:white; text-align:center; padding:2.8rem 1rem;
+      color:white; text-align:center; padding:2.8rem 1rem 2rem;
       box-shadow:var(--ombre); position:relative; overflow:hidden;
     }
     header h1{ font-size:2.6rem; font-weight:800; margin:0; z-index:3; display:inline-block; text-shadow:0 2px 8px rgba(0,0,0,0.25); animation:pulseTitle 3s ease-in-out infinite alternate; }
@@ -32,10 +32,37 @@
     .math-symbol{ position:absolute; color:rgba(255,255,255,0.18); font-size:1.8rem; font-weight:700; animation:floatSymbol 12s linear infinite; user-select:none; pointer-events:none; z-index:1; }
     @keyframes floatSymbol{ 0%{ transform:translateY(60vh) rotate(0deg); opacity:0; } 10%{ opacity:0.8; } 70%{ opacity:0.6; } 100%{ transform:translateY(-20vh) rotate(360deg); opacity:0; } }
 
+    /* --- NOUVEAU : Conteneur de navigation et barre de progression (Sticky) --- */
+    .nav-sticky-container {
+      position:sticky; top:0; z-index:100;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(8px);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+      padding-bottom: 12px;
+      border-bottom: 1px solid rgba(0,0,0,0.05);
+    }
+
     /* Nav */
-    nav{ display:flex; justify-content:center; gap:1rem; background:rgba(226,232,240,0.92); padding:0.6rem; position:sticky; top:0; z-index:20; backdrop-filter: blur(3px); }
-    nav button{ background:var(--bleu); color:#fff; border:0; padding:0.55rem 1.1rem; border-radius:999px; cursor:pointer; font-weight:600; transition:var(--transition); }
-    nav button.active, nav button:hover{ background:#1e40af; transform:translateY(-2px); }
+    nav{ display:flex; justify-content:center; gap:1rem; padding:0.8rem; }
+    nav button{ background:white; color:var(--bleu); border:2px solid var(--bleu); padding:0.55rem 1.1rem; border-radius:999px; cursor:pointer; font-weight:700; transition:var(--transition); }
+    nav button.active, nav button:hover{ background:var(--bleu); color:#fff; transform:translateY(-2px); box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3); }
+
+    /* Barre de progression */
+    .progress-wrapper {
+      max-width: 700px; margin: 0 auto; padding: 0 1.2rem;
+      display: flex; flex-direction: column; gap: 5px;
+    }
+    .progress-header {
+      display: flex; justify-content: space-between; align-items: center;
+      font-size: 0.9rem; font-weight: 700; color: var(--texte);
+    }
+    .progress-track {
+      width: 100%; height: 10px; background: #e2e8f0; border-radius: 99px; overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%; width: 0%; background: linear-gradient(90deg, var(--vert), #22c55e);
+      border-radius: 99px; transition: width 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+    }
 
     /* Content */
     main{ max-width:960px; margin:1.6rem auto; padding:0 1rem 3rem; }
@@ -50,7 +77,7 @@
     a:hover{text-decoration:underline}
     footer{ text-align:center; padding:1.25rem; background:rgba(226,232,240,0.9); color:#475569; margin-top:1rem; }
 
-    .checkbox{ margin-right:8px; cursor:pointer; accent-color: var(--vert); }
+    .checkbox{ margin-right:8px; cursor:pointer; accent-color: var(--vert); width: 1.1em; height: 1.1em; }
 
     .subtabs{ display:flex; gap:0.5rem; margin-bottom:0.8rem; flex-wrap:wrap; }
     .subtab{ background:var(--jaune); color:#fff; border:none; border-radius:999px; padding:0.45rem 0.9rem; cursor:pointer; font-weight:600; transition:var(--transition); }
@@ -88,8 +115,18 @@
     .btn.ghost { background:transparent; border:1px solid rgba(0,0,0,0.06); color:var(--texte); }
     .quiz-progress { font-weight:700; color:var(--texte); }
     .quiz-score { padding:10px; border-radius:10px; min-width:160px; text-align:center; background: linear-gradient(180deg, rgba(255,255,255,0.98), rgba(250,250,250,0.98)); border:1px solid rgba(0,0,0,0.04); }
-    .quiz-modal[data-classe="4e"] { box-shadow: 0 20px 60px rgba(37,99,235,0.12); }
-    .quiz-modal[data-classe="6e"] { box-shadow: 0 20px 60px rgba(16,163,74,0.12); }
+    
+    /* CSS unifié pour les cartes de contrôles */
+    .controles-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.2rem; }
+    .controle-card { background: var(--carte); border-radius: var(--radius); padding: 1rem 1.2rem; box-shadow: var(--ombre); text-align: center; transition: all 0.3s ease; }
+    .controle-card:hover { transform: translateY(-4px); box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1); }
+    .controle-card h3 { margin: 0; color: var(--texte); font-size: 1.1rem; }
+    .controle-buttons { margin-top: 0.8rem; display: flex; justify-content: center; gap: 0.8rem; }
+    .btn-sujet, .btn-corrige { display: inline-block; padding: 0.45rem 1.1rem; border-radius: 999px; font-weight: 600; text-decoration: none; color: #fff; box-shadow: var(--ombre); transition: all 0.25s ease; min-width: 120px; text-align: center; }
+    .btn-sujet { background: var(--bleu); }
+    .btn-corrige { background: var(--vert); }
+    .btn-sujet:hover { background: #1e40af; transform: translateY(-2px); }
+    .btn-corrige:hover { background: #15803d; transform: translateY(-2px); }
 
     @media (max-width:640px){
       main{padding:0 0.6rem;} nav{flex-wrap:wrap;} nav button{width:48%}
@@ -109,10 +146,22 @@
     <span class="math-symbol" style="left:82%; animation-delay:5s;">∫</span>
   </header>
 
-  <nav aria-label="Choisir une classe">
-    <button class="tablink active" data-target="4e">Classe de 4e</button>
-    <button class="tablink" data-target="6e">Classe de 6e</button>
-  </nav>
+  <div class="nav-sticky-container">
+    <nav aria-label="Choisir une classe">
+      <button class="tablink active" data-target="4e">Classe de 4e</button>
+      <button class="tablink" data-target="6e">Classe de 6e</button>
+    </nav>
+
+    <div class="progress-wrapper">
+      <div class="progress-header">
+        <span id="progress-text">Progression : 0%</span>
+        <span id="progress-rank">🌱 Débutant</span>
+      </div>
+      <div class="progress-track">
+        <div class="progress-fill" id="main-progress-bar"></div>
+      </div>
+    </div>
+  </div>
 
   <main>
     <section id="4e" class="active">
@@ -152,271 +201,129 @@
       </div>
 
       <div class="bloc planning">
-  <h2>📅 Planning / Déroulé</h2>
-  <ul>
-    <li><input type="checkbox" class="checkbox"><a href="https://1drv.ms/o/c/d85c953a67b75b6b/EnzPP3ny8btPp048h-_SPk8Bi6FQKS9Pary-MzdSyrjayQ?e=9Iccm3" target="_blank">Planning</a></li>
-  </ul>
-</div>
-
-
-<div class="bloc">
-  <h2>🎬 Vidéos</h2>
-  <div class="subtabs">
-    <button class="subtab active" data-target="videos4e-ch1">Chapitre 1 — Nombres relatifs</button>
-    <button class="subtab" data-target="videos4e-ch2">Chapitre 2 — Théorème de Pythagore</button>
-    <button class="subtab" data-target="videos4e-ch3">Chapitre 3 — Proportionnalité</button>
-    <button class="subtab" data-target="videos4e-ch4">Chapitre 4 — Puissances de 10 </button>
-    <button class="subtab" data-target="videos4e-ch5">Chapitre 5 — Calcul littéral </button>
-    <button class="subtab" data-target="videos4e-ch6">Chapitre 6 — Fractions </button>
-  </div>
-
-  <div class="subtab-content active" id="videos4e-ch1">
-    <ul>
-      <li><input type="checkbox" class="checkbox"><a href="https://www.youtube.com/watch?v=u-bqCheDpHc" target="_blank" rel="noopener noreferrer">Vidéo 1 — Effectuer des calculs avec les nombres relatifs</a></li>
-      <li><input type="checkbox" class="checkbox"><a href="https://www.youtube.com/watch?v=--Em_GWSBNM" target="_blank" rel="noopener noreferrer">Vidéo 2 — Simplifications d'écritures dans les sommes algébriques</a></li>
-    </ul>
-  </div>
-
-  <div class="subtab-content" id="videos4e-ch2">
-    <ul>
-      <li><input type="checkbox" class="checkbox"><a href="https://www.youtube.com/watch?v=y2HlgP09Bog" target="_blank" rel="noopener noreferrer">Vidéo 1 — Calculer une racine carrée</a></li>
-      <li><input type="checkbox" class="checkbox"><a href="https://www.youtube.com/watch?v=M9sceJ8gzNc" target="_blank" rel="noopener noreferrer">Vidéo 2 — Appliquer le théorème de Pythagore pour calculer une longueur</a></li>
-    </ul>
-  </div>
-
-  <div class="subtab-content" id="videos4e-ch3">
-    <ul>
-      <li><input type="checkbox" class="checkbox"><a href="https://www.youtube.com/watch?v=qkcuyOJEyHk" target="_blank" rel="noopener noreferrer">Vidéo 1 — Proportionnalité – Méthode 4 : Coefficient de proportionnalité</a></li>
-      <li><input type="checkbox" class="checkbox"><a href="https://www.youtube.com/watch?v=NKdhdmVoY1g" target="_blank" rel="noopener noreferrer">Vidéo 2 — Appliquer les produits en croix</a></li>
-    </ul>
-  </div>
-
-  <div class="subtab-content" id="videos4e-ch4">
-    <ul>
-      <li><input type="checkbox" class="checkbox"><a href="https://www.youtube.com/watch?v=tzhNCpLRtCY" target="_blank" rel="noopener noreferrer">Vidéo 1 — Puissances et notation scientifique</a></li>
-      <li><input type="checkbox" class="checkbox"><a href="https://www.youtube.com/watch?v=ZTPwYAY5VVY" target="_blank" rel="noopener noreferrer">Vidéo 2 — Écrire les grands nombres avec des puissances de 10</a></li>
-    </ul>
-  </div>
-    <div class="subtab-content" id="videos4e-ch5">
-    <ul>
-      <li><input type="checkbox" class="checkbox"><a href="https://www.youtube.com/watch?v=qkcuyOJEyHk" target="_blank" rel="noopener noreferrer">Vidéo 1 — Proportionnalité – Méthode 4 : Coefficient de proportionnalité</a></li>
-      <li><input type="checkbox" class="checkbox"><a href="https://www.youtube.com/watch?v=NKdhdmVoY1g" target="_blank" rel="noopener noreferrer">Vidéo 2 — Appliquer les produits en croix</a></li>
-    </ul>
-  </div>
-    <div class="subtab-content" id="videos4e-ch6">
-    <ul>
-      <li><input type="checkbox" class="checkbox"><a href="https://www.youtube.com/watch?v=XcsbENjMFZo" target="_blank" rel="noopener noreferrer">Vidéo 1 — Effectuer des additions et soustractions de fractions</a></li>
-      <li><input type="checkbox" class="checkbox"><a href="https://www.youtube.com/watch?v=wkimwCoejZ4&list=PLVUDmbpupCarGS9399o4YIbb88_ytmvpc&index=19" target="_blank" rel="noopener noreferrer">Vidéo 2 — Résoudre un problème à l'aide de fractions</a></li>
-      <li><input type="checkbox" class="checkbox"><a href="https://www.youtube.com/watch?v=8vFfzMYi1mM&list=PLVUDmbpupCarGS9399o4YIbb88_ytmvpc&index=17" target="_blank" rel="noopener noreferrer">Vidéo 3 — Effectuer des calculs mêlés</a></li>
-    </ul>
-  </div>
-</div>
-
-
-<style>
-  .controles-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 1rem;
-  }
-
-  .controle-card {
-    background: var(--carte);
-    border-radius: var(--radius);
-    padding: 1rem;
-    box-shadow: var(--ombre);
-    text-align: center;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-  }
-
-  .controle-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
-  }
-
-  .controle-card h3 {
-    margin-top: 0;
-    font-size: 1.1rem;
-    color: var(--texte);
-  }
-
-  .controle-buttons {
-    margin-top: 0.7rem;
-    display: flex;
-    justify-content: center;
-    gap: 0.6rem;
-    flex-wrap: wrap;
-  }
-
-  .btn-sujet, .btn-corrige {
-    display: inline-block;
-    padding: 0.4rem 1rem;
-    border-radius: 999px;
-    font-weight: 600;
-    text-decoration: none;
-    color: #fff;
-    transition: all 0.3s ease;
-    box-shadow: var(--ombre);
-  }
-
-  .btn-sujet {
-    background: var(--bleu);
-  }
-
-  .btn-corrige {
-    background: var(--vert);
-  }
-
-  .btn-sujet:hover {
-    background: #1e40af;
-    transform: translateY(-2px);
-  }
-
-  .btn-corrige:hover {
-    background: #15803d;
-    transform: translateY(-2px);
-  }
-</style>
-
-<style>
-  .controles-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 1.2rem;
-  }
-
-  .controle-card {
-    background: var(--carte);
-    border-radius: var(--radius);
-    padding: 1rem 1.2rem;
-    box-shadow: var(--ombre);
-    text-align: center;
-    transition: all 0.3s ease;
-  }
-
-  .controle-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
-  }
-
-  .controle-card h3 {
-    margin: 0;
-    color: var(--texte);
-    font-size: 1.1rem;
-  }
-
-  .controle-buttons {
-    margin-top: 0.8rem;
-    display: flex;
-    justify-content: center;
-    gap: 0.8rem;
-  }
-
-  .btn-sujet,
-  .btn-corrige {
-    display: inline-block;
-    padding: 0.45rem 1.1rem;
-    border-radius: 999px;
-    font-weight: 600;
-    text-decoration: none;
-    color: #fff;
-    box-shadow: var(--ombre);
-    transition: all 0.25s ease;
-    min-width: 120px;
-    text-align: center;
-  }
-
-  .btn-sujet {
-    background: var(--bleu);
-  }
-
-  .btn-corrige {
-    background: var(--vert);
-  }
-
-  .btn-sujet:hover {
-    background: #1e40af;
-    transform: translateY(-2px);
-  }
-
-  .btn-corrige:hover {
-    background: #15803d;
-    transform: translateY(-2px);
-  }
-</style>
-
-<div class="bloc">
-  <h2>📝 Contrôles</h2>
-  <div class="controles-grid">
-
-    <div class="controle-card">
-      <h3>Chapitre 1 — Nombres relatifs</h3>
-      <div class="controle-buttons">
-        <a href="https://drive.google.com/uc?export=download&id=1JfCpuUWJOT7s2lgqVAQBdMyik4_hxhB-" download class="btn-sujet">📄 Sujet</a>
-        <a href="https://drive.google.com/uc?export=download&id=1L55INklEAsiBL-x3HrrzglHOOrs4dsm2" download class="btn-corrige">✅ Corrigé</a>
+        <h2>📅 Planning / Déroulé</h2>
+        <ul>
+          <li><input type="checkbox" class="checkbox"><a href="https://1drv.ms/o/c/d85c953a67b75b6b/EnzPP3ny8btPp048h-_SPk8Bi6FQKS9Pary-MzdSyrjayQ?e=9Iccm3" target="_blank">Planning</a></li>
+        </ul>
       </div>
-    </div>
 
-    <div class="controle-card">
-      <h3>Chapitre 2 — Théorème de Pythagore</h3>
-      <div class="controle-buttons">
-        <a href="https://drive.google.com/file/d/1DvZiJUKtoo1kXwP3jgBIWJ1zsjE33AZL/view?usp=drive_link" download class="btn-sujet">📄 Sujet</a>
-        <a href="https://drive.google.com/uc?export=download&id=1PLtnmRQhMi3PeaYISIVmBeQ2gslu6_lx" download class="btn-corrige">✅ Corrigé</a>
-      </div>
-    </div>
+      <div class="bloc">
+        <h2>🎬 Vidéos</h2>
+        <div class="subtabs">
+          <button class="subtab active" data-target="videos4e-ch1">Chapitre 1 — Nombres relatifs</button>
+          <button class="subtab" data-target="videos4e-ch2">Chapitre 2 — Théorème de Pythagore</button>
+          <button class="subtab" data-target="videos4e-ch3">Chapitre 3 — Proportionnalité</button>
+          <button class="subtab" data-target="videos4e-ch4">Chapitre 4 — Puissances de 10 </button>
+          <button class="subtab" data-target="videos4e-ch5">Chapitre 5 — Calcul littéral </button>
+          <button class="subtab" data-target="videos4e-ch6">Chapitre 6 — Fractions </button>
+        </div>
 
-    <div class="controle-card">
-      <h3>Chapitre 3 — Proportionnalité</h3>
-      <div class="controle-buttons">
-        <a href="https://drive.google.com/file/d/1rygNA6MbaPitbTFni0W7ACDbbblDW9h9/view?usp=drive_link" download class="btn-sujet">📄 Sujet</a>
-        <a href="https://drive.google.com/uc?export=download&id=1Pp94QGPmn2mlsxA6n49FL-6vo4UoFMKz" download class="btn-corrige">✅ Corrigé</a>
-      </div>
-    </div>
-        <div class="controle-card">
-      <h3>Chapitre 4 — Puissances</h3>
-      <div class="controle-buttons">
-        <a href="https://drive.google.com/file/d/1hKO85iJLAErZX945jdMTbGPC1m15H3IS/view?usp=drive_link" download class="btn-sujet">📄 Sujet</a>
-        <a href="https://drive.google.com/file/d/1EIkeBiuA-CYdmzuf32QUJvcGgUdHze5X/view?usp=drive_link" download class="btn-corrige">✅ Corrigé</a>
-      </div>
-    </div>
+        <div class="subtab-content active" id="videos4e-ch1">
+          <ul>
+            <li><input type="checkbox" class="checkbox"><a href="https://www.youtube.com/watch?v=u-bqCheDpHc" target="_blank" rel="noopener noreferrer">Vidéo 1 — Effectuer des calculs avec les nombres relatifs</a></li>
+            <li><input type="checkbox" class="checkbox"><a href="https://www.youtube.com/watch?v=--Em_GWSBNM" target="_blank" rel="noopener noreferrer">Vidéo 2 — Simplifications d'écritures dans les sommes algébriques</a></li>
+          </ul>
+        </div>
 
-              <div class="controle-card">
-      <h3>Chapitre 5 — Calcul littéral</h3>
-      <div class="controle-buttons">
-        <a href="https://drive.google.com/uc?export=download&id=1PLtnmRQhMi3PeaYISIVmBeQ2gslu6_lx" download class="btn-sujet">📄 Sujet</a>
-        <a href="https://drive.google.com/uc?export=download&id=1PLtnmRQhMi3PeaYISIVmBeQ2gslu6_lx" download class="btn-corrige">✅ Corrigé</a>
-      </div>
-    </div>
-    </div>
+        <div class="subtab-content" id="videos4e-ch2">
+          <ul>
+            <li><input type="checkbox" class="checkbox"><a href="https://www.youtube.com/watch?v=y2HlgP09Bog" target="_blank" rel="noopener noreferrer">Vidéo 1 — Calculer une racine carrée</a></li>
+            <li><input type="checkbox" class="checkbox"><a href="https://www.youtube.com/watch?v=M9sceJ8gzNc" target="_blank" rel="noopener noreferrer">Vidéo 2 — Appliquer le théorème de Pythagore pour calculer une longueur</a></li>
+          </ul>
+        </div>
 
-  </div>
-</div>
+        <div class="subtab-content" id="videos4e-ch3">
+          <ul>
+            <li><input type="checkbox" class="checkbox"><a href="https://www.youtube.com/watch?v=qkcuyOJEyHk" target="_blank" rel="noopener noreferrer">Vidéo 1 — Proportionnalité – Méthode 4 : Coefficient de proportionnalité</a></li>
+            <li><input type="checkbox" class="checkbox"><a href="https://www.youtube.com/watch?v=NKdhdmVoY1g" target="_blank" rel="noopener noreferrer">Vidéo 2 — Appliquer les produits en croix</a></li>
+          </ul>
+        </div>
+
+        <div class="subtab-content" id="videos4e-ch4">
+          <ul>
+            <li><input type="checkbox" class="checkbox"><a href="https://www.youtube.com/watch?v=tzhNCpLRtCY" target="_blank" rel="noopener noreferrer">Vidéo 1 — Puissances et notation scientifique</a></li>
+            <li><input type="checkbox" class="checkbox"><a href="https://www.youtube.com/watch?v=ZTPwYAY5VVY" target="_blank" rel="noopener noreferrer">Vidéo 2 — Écrire les grands nombres avec des puissances de 10</a></li>
+          </ul>
+        </div>
+        <div class="subtab-content" id="videos4e-ch5">
+          <ul>
+            <li><input type="checkbox" class="checkbox"><a href="https://www.youtube.com/watch?v=qkcuyOJEyHk" target="_blank" rel="noopener noreferrer">Vidéo 1 — Proportionnalité – Méthode 4 : Coefficient de proportionnalité</a></li>
+            <li><input type="checkbox" class="checkbox"><a href="https://www.youtube.com/watch?v=NKdhdmVoY1g" target="_blank" rel="noopener noreferrer">Vidéo 2 — Appliquer les produits en croix</a></li>
+          </ul>
+        </div>
+        <div class="subtab-content" id="videos4e-ch6">
+          <ul>
+            <li><input type="checkbox" class="checkbox"><a href="https://www.youtube.com/watch?v=XcsbENjMFZo" target="_blank" rel="noopener noreferrer">Vidéo 1 — Effectuer des additions et soustractions de fractions</a></li>
+            <li><input type="checkbox" class="checkbox"><a href="https://www.youtube.com/watch?v=wkimwCoejZ4&list=PLVUDmbpupCarGS9399o4YIbb88_ytmvpc&index=19" target="_blank" rel="noopener noreferrer">Vidéo 2 — Résoudre un problème à l'aide de fractions</a></li>
+            <li><input type="checkbox" class="checkbox"><a href="https://www.youtube.com/watch?v=8vFfzMYi1mM&list=PLVUDmbpupCarGS9399o4YIbb88_ytmvpc&index=17" target="_blank" rel="noopener noreferrer">Vidéo 3 — Effectuer des calculs mêlés</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="bloc">
+        <h2>📝 Contrôles</h2>
+        <div class="controles-grid">
+          <div class="controle-card">
+            <h3>Chapitre 1 — Nombres relatifs</h3>
+            <div class="controle-buttons">
+              <a href="https://drive.google.com/uc?export=download&id=1JfCpuUWJOT7s2lgqVAQBdMyik4_hxhB-" download class="btn-sujet">📄 Sujet</a>
+              <a href="https://drive.google.com/uc?export=download&id=1L55INklEAsiBL-x3HrrzglHOOrs4dsm2" download class="btn-corrige">✅ Corrigé</a>
+            </div>
+          </div>
+          <div class="controle-card">
+            <h3>Chapitre 2 — Théorème de Pythagore</h3>
+            <div class="controle-buttons">
+              <a href="https://drive.google.com/file/d/1DvZiJUKtoo1kXwP3jgBIWJ1zsjE33AZL/view?usp=drive_link" download class="btn-sujet">📄 Sujet</a>
+              <a href="https://drive.google.com/uc?export=download&id=1PLtnmRQhMi3PeaYISIVmBeQ2gslu6_lx" download class="btn-corrige">✅ Corrigé</a>
+            </div>
+          </div>
+          <div class="controle-card">
+            <h3>Chapitre 3 — Proportionnalité</h3>
+            <div class="controle-buttons">
+              <a href="https://drive.google.com/file/d/1rygNA6MbaPitbTFni0W7ACDbbblDW9h9/view?usp=drive_link" download class="btn-sujet">📄 Sujet</a>
+              <a href="https://drive.google.com/uc?export=download&id=1Pp94QGPmn2mlsxA6n49FL-6vo4UoFMKz" download class="btn-corrige">✅ Corrigé</a>
+            </div>
+          </div>
+          <div class="controle-card">
+            <h3>Chapitre 4 — Puissances</h3>
+            <div class="controle-buttons">
+              <a href="https://drive.google.com/file/d/1hKO85iJLAErZX945jdMTbGPC1m15H3IS/view?usp=drive_link" download class="btn-sujet">📄 Sujet</a>
+              <a href="https://drive.google.com/file/d/1EIkeBiuA-CYdmzuf32QUJvcGgUdHze5X/view?usp=drive_link" download class="btn-corrige">✅ Corrigé</a>
+            </div>
+          </div>
+          <div class="controle-card">
+            <h3>Chapitre 5 — Calcul littéral</h3>
+            <div class="controle-buttons">
+              <a href="https://drive.google.com/uc?export=download&id=1PLtnmRQhMi3PeaYISIVmBeQ2gslu6_lx" download class="btn-sujet">📄 Sujet</a>
+              <a href="https://drive.google.com/uc?export=download&id=1PLtnmRQhMi3PeaYISIVmBeQ2gslu6_lx" download class="btn-corrige">✅ Corrigé</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div class="bloc fourretout">
-    <h2>📚 Fourre-tout</h2>
-    <ul>
-      <li><input type="checkbox" class="checkbox"><a href="https://drive.google.com/file/d/1gYjMPkeJJvwnsSH6Ft9szejX8ttrkBAc/view?usp=drive_link" target="_blank">Rappels géométrie</a></li>
-      <li><input type="checkbox" class="checkbox"><a href="https://www.lumni.fr/college/quatrieme/mathematiques" target="_blank">Lumni</a></li>
-      <li><input type="checkbox" class="checkbox"><a href="https://drive.google.com/file/d/1-W2PmBU-CEfHcjgIB8vQYj2_LWajjrou/view?usp=drive_link" target="_blank">Simplifier les multiplications</a></li>
-       
+        <h2>📚 Fourre-tout</h2>
+        <ul>
+          <li><input type="checkbox" class="checkbox"><a href="https://drive.google.com/file/d/1gYjMPkeJJvwnsSH6Ft9szejX8ttrkBAc/view?usp=drive_link" target="_blank">Rappels géométrie</a></li>
+          <li><input type="checkbox" class="checkbox"><a href="https://www.lumni.fr/college/quatrieme/mathematiques" target="_blank">Lumni</a></li>
+          <li><input type="checkbox" class="checkbox"><a href="https://drive.google.com/file/d/1-W2PmBU-CEfHcjgIB8vQYj2_LWajjrou/view?usp=drive_link" target="_blank">Simplifier les multiplications</a></li>
+        </ul>
+      </div>
 
-    </ul>
-  </div>
-        <div class="bloc automatismes">
-    <h2>⚙️ Automatismes</h2>
-    <ul>
-      <li><input type="checkbox" class="checkbox"><a href="https://drive.google.com/file/d/1HKn-2CIFAxmb-mmTskgOlYV6mh-j9mqh/view?usp=drive_link" target="_blank">Septembre-Octobre</a></li>
-      <li><input type="checkbox" class="checkbox"><a href="#" target="_blank">Novembre-Décembre</a></li>
+      <div class="bloc automatismes">
+        <h2>⚙️ Automatismes</h2>
+        <ul>
+          <li><input type="checkbox" class="checkbox"><a href="https://drive.google.com/file/d/1HKn-2CIFAxmb-mmTskgOlYV6mh-j9mqh/view?usp=drive_link" target="_blank">Septembre-Octobre</a></li>
+          <li><input type="checkbox" class="checkbox"><a href="#" target="_blank">Novembre-Décembre</a></li>
+        </ul>
+      </div>
 
-
-    </ul>
-  </div>
-        <div class="bloc competences">
-    <h2>🎯 Compétences mathématiques</h2>
-    <ul>
-      <li><input type="checkbox" class="checkbox"><a href="#" target="_blank">Septembre-Octobre</a></li>
-    </ul>
-  </div>
-
+      <div class="bloc competences">
+        <h2>🎯 Compétences mathématiques</h2>
+        <ul>
+          <li><input type="checkbox" class="checkbox"><a href="#" target="_blank">Septembre-Octobre</a></li>
+        </ul>
+      </div>
 
       <div class="bloc">
         <h2>❓ Quiz par chapitre — 4e</h2>
@@ -475,230 +382,154 @@
       </div>
 
       <div class="bloc planning">
-  <h2>📅 Planning / Déroulé</h2>
-  <ul>
-    <li><input type="checkbox" class="checkbox"><a href="https://1drv.ms/o/c/d85c953a67b75b6b/EprCpm6XHtpFpgI5Ah1d5-0B6repQfpaCTXJF9A9LiwYkg?e=0KNdvO" target="_blank">Planning</a></li>
-  </ul>
-</div>
-
-
-<div class="bloc">
-  <h2>🎬 Vidéos</h2>
-  <div class="subtabs">
-    <button class="subtab active" data-target="videos6e-ch1">Chapitre 1 — Nombres entiers</button>
-    <button class="subtab" data-target="videos6e-ch2">Chapitre 2 — Géométrie</button>
-    <button class="subtab" data-target="videos6e-ch3">Chapitre 3 — Fractions</button>
-    <button class="subtab" data-target="videos6e-ch4">Chapitre 4 — Droites</button>
-    <button class="subtab" data-target="videos6e-ch5">Chapitre 5 — Angles</button>
-    <button class="subtab" data-target="videos6e-ch6">Chapitre 6 — Triangles</button>
-    <button class="subtab" data-target="videos6e-ch7">Chapitre 7 — Nombres décimaux</button>
-  </div>
-
-  <div class="subtab-content active" id="videos6e-ch1">
-    <ul>
-      <li><input type="checkbox" class="checkbox"><a href="https://www.youtube.com/watch?v=14XxGsJKniI&list=PLVUDmbpupCaoCaqvyj8RGx07Ak0HSjOHi" target="_blank" rel="noopener noreferrer">Vidéo 1 — Décomposer un nombre entier suivant ses rangs</a></li>
-      <li><input type="checkbox" class="checkbox"><a href="https://www.youtube.com/watch?v=icGHAYyXaE4&list=PLVUDmbpupCaoCaqvyj8RGx07Ak0HSjOHi&index=3" target="_blank" rel="noopener noreferrer">Vidéo 2 — Reconnaître le rang des chiffres</a></li>
-    </ul>
-  </div>
-
-  <div class="subtab-content" id="videos6e-ch2">
-    <ul>
-      <li><input type="checkbox" class="checkbox"><a href="https://www.youtube.com/watch?v=4vPWOM6MbYU" target="_blank" rel="noopener noreferrer">Vidéo 1 —  6e-droites,demi-droites,segments</a></li>
-      <li><input type="checkbox" class="checkbox"><a href="https://www.youtube.com/watch?v=aWJmz1oM_O0" target="_blank" rel="noopener noreferrer">Vidéo 2 — Connaître le vocabulaire du cercle</a></li>
-    </ul>
-  </div>
-
-  <div class="subtab-content" id="videos6e-ch3">
-    <ul>
-      <li><input type="checkbox" class="checkbox"><a href="https://www.youtube.com/watch?v=m0HUFgWbgsA&t=598s" target="_blank" rel="noopener noreferrer">Vidéo 1 — Les fractions</a></li>
-      <li><input type="checkbox" class="checkbox"><a href="https://www.youtube.com/watch?v=NKdhdmVoY1g" target="_blank" rel="noopener noreferrer">Vidéo 2 — Représenter un partage à l'aide d'une fraction</a></li>
-      <li><input type="checkbox" class="checkbox"><a href="https://www.youtube.com/watch?v=gnZqJftnNSE" target="_blank" rel="noopener noreferrer">Vidéo 3 — Fraction pour exprimer un quotient</a></li>
-    </ul>
-  </div>
-
-  <div class="subtab-content" id="videos6e-ch4">
-    <ul>
-      <li><input type="checkbox" class="checkbox"><a href="https://www.youtube.com/watch?v=lxKGqW4Ib4U" target="_blank" rel="noopener noreferrer">Vidéo 1 — Médiatrice d'un segment - Méthode de construction</a></li>
-      <li><input type="checkbox" class="checkbox"><a href="https://www.youtube.com/watch?v=0CIm1i4HfEQ&t=50s" target="_blank" rel="noopener noreferrer">Vidéo 2 — Les droites - Sixième</a></li>
-    </ul>
-  </div>
-    <div class="subtab-content" id="videos6e-ch5">
-    <ul>
-      <li><input type="checkbox" class="checkbox"><a href="https://www.youtube.com/watch?v=2VLzp0DzsrM&list=PLVUDmbpupCaqHaIpFwd14iD6BMA-op0pZ" target="_blank" rel="noopener noreferrer">Vidéo 1 — Noter un angle</a></li>
-      <li><input type="checkbox" class="checkbox"><a href="https://www.youtube.com/watch?v=9BKbMshCMZc&list=PLVUDmbpupCaqHaIpFwd14iD6BMA-op0pZ&index=4" target="_blank" rel="noopener noreferrer">Vidéo 2 — Reconnaitre la NATURE des ANGLES</a></li>
-      <li><input type="checkbox" class="checkbox"><a href="https://www.youtube.com/watch?v=9BKbMshCMZc&list=PLVUDmbpupCaqHaIpFwd14iD6BMA-op0pZ&index=4" target="_blank" rel="noopener noreferrer">Vidéo 3 — Mesurer un angle</a></li>
-    </ul>
-  </div>
-
-    <div class="subtab-content" id="videos6e-ch6">
-    <ul>
-      <li><input type="checkbox" class="checkbox"><a href="https://www.youtube.com/watch?v=-7UGauYeTdk&list=PLVUDmbpupCap0jVfo87xmwBhMXxxQ3abt" target="_blank" rel="noopener noreferrer">Vidéo 1 — Construire un triangle</a></li>
-      <li><input type="checkbox" class="checkbox"><a href="https://www.youtube.com/watch?v=wHmGxm3G5ag" target="_blank" rel="noopener noreferrer">Vidéo 2 — Les triangles</a></li>
-      <li><input type="checkbox" class="checkbox"><a href="https://www.youtube.com/watch?v=w7nh0EqzCsM" target="_blank" rel="noopener noreferrer">Vidéo 3 — Triangles particuliers</a></li>
-    </ul>
-  </div>
-
-    <div class="subtab-content" id="videos6e-ch7">
-    <ul>
-      <li><input type="checkbox" class="checkbox"><a href="https://www.youtube.com/watch?v=lzsYQYvEKss" target="_blank" rel="noopener noreferrer">Vidéo 1 — Numérotation et nombres décimaux</a></li>
-      <li><input type="checkbox" class="checkbox"><a href="https://www.youtube.com/watch?v=70UhgN2FssQ&list=PLBmEpUWxReGgHK0G3zxdmfg4FH31UHNYr" target="_blank" rel="noopener noreferrer">Vidéo 2 — Supprimer les zéros inutiles</a></li>
-      <li><input type="checkbox" class="checkbox"><a href="https://www.youtube.com/watch?v=uqBEfHwZTX8" target="_blank" rel="noopener noreferrer">Vidéo 3 — Décomposer un nombre en fractions égales</a></li>
-    </ul>
-  </div>
-
-
-
-
-
-  
-</div>
-
-<style>
-  .controles-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 1rem;
-  }
-
-  .controle-card {
-    background: var(--carte);
-    border-radius: var(--radius);
-    padding: 1rem;
-    box-shadow: var(--ombre);
-    text-align: center;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-  }
-
-  .controle-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
-  }
-
-  .controle-card h3 {
-    margin-top: 0;
-    font-size: 1.1rem;
-    color: var(--texte);
-  }
-
-  .controle-buttons {
-    margin-top: 0.7rem;
-    display: flex;
-    justify-content: center;
-    gap: 0.6rem;
-    flex-wrap: wrap;
-  }
-
-  .btn-sujet, .btn-corrige {
-    display: inline-block;
-    padding: 0.4rem 1rem;
-    border-radius: 999px;
-    font-weight: 600;
-    text-decoration: none;
-    color: #fff;
-    transition: all 0.3s ease;
-    box-shadow: var(--ombre);
-  }
-
-  .btn-sujet {
-    background: var(--bleu);
-  }
-
-  .btn-corrige {
-    background: var(--vert);
-  }
-
-  .btn-sujet:hover {
-    background: #1e40af;
-    transform: translateY(-2px);
-  }
-
-  .btn-corrige:hover {
-    background: #15803d;
-    transform: translateY(-2px);
-  }
-</style>
-
-<div class="bloc">
-  <h2>📝 Contrôles</h2>
-  <div class="controles-grid">
-    <div class="controle-card">
-      <h3>Chapitre 1 — Nombres entiers</h3>
-      <div class="controle-buttons">
-        <a href="https://drive.google.com/file/d/1d-y45Eg0ieW64ac-6QEtXlCQxjey40Z_/view?usp=drive_link" target="_blank" class="btn-sujet">📄 Sujet</a>
-        <a href="https://drive.google.com/file/d/1zFI_1ENImR302b-ZglO8zmKumgWMv5Ek/view?usp=drive_link" target="_blank" class="btn-corrige">✅ Corrigé</a>
+        <h2>📅 Planning / Déroulé</h2>
+        <ul>
+          <li><input type="checkbox" class="checkbox"><a href="https://1drv.ms/o/c/d85c953a67b75b6b/EprCpm6XHtpFpgI5Ah1d5-0B6repQfpaCTXJF9A9LiwYkg?e=0KNdvO" target="_blank">Planning</a></li>
+        </ul>
       </div>
-    </div>
 
-    <div class="controle-card">
-      <h3>Chapitre 2 — Géométrie</h3>
-      <div class="controle-buttons">
-        <a href="https://drive.google.com/file/d/1OqzxiUVfIZQWwNH_8c79YfZiDFpNLvIi/view?usp=drive_link" target="_blank" class="btn-sujet">📄 Sujet</a>
-        <a href="https://drive.google.com/file/d/1Be0zzBKAZ4krbzbQhXGRc-rHuAQHILyI/view?usp=drive_link" target="_blank" class="btn-corrige">✅ Corrigé</a>
-      </div>
-    </div>
+      <div class="bloc">
+        <h2>🎬 Vidéos</h2>
+        <div class="subtabs">
+          <button class="subtab active" data-target="videos6e-ch1">Chapitre 1 — Nombres entiers</button>
+          <button class="subtab" data-target="videos6e-ch2">Chapitre 2 — Géométrie</button>
+          <button class="subtab" data-target="videos6e-ch3">Chapitre 3 — Fractions</button>
+          <button class="subtab" data-target="videos6e-ch4">Chapitre 4 — Droites</button>
+          <button class="subtab" data-target="videos6e-ch5">Chapitre 5 — Angles</button>
+          <button class="subtab" data-target="videos6e-ch6">Chapitre 6 — Triangles</button>
+          <button class="subtab" data-target="videos6e-ch7">Chapitre 7 — Nombres décimaux</button>
+        </div>
 
-    <div class="controle-card">
-      <h3>Chapitre 3 — Fractions</h3>
-      <div class="controle-buttons">
-        <a href="https://drive.google.com/file/d/14__pQ2BFgdeqCUlgfprVfHmoEPJjRZAQ/view?usp=drive_link" target="_blank" class="btn-sujet">📄 Sujet</a>
-        <a href="https://drive.google.com/file/d/17oBFkreBlMnBcG9kNIY03uIMAYFGxWZ_/view?usp=drive_link" target="_blank" class="btn-corrige">✅ Corrigé</a>
-      </div>
-    </div>
+        <div class="subtab-content active" id="videos6e-ch1">
+          <ul>
+            <li><input type="checkbox" class="checkbox"><a href="https://www.youtube.com/watch?v=14XxGsJKniI&list=PLVUDmbpupCaoCaqvyj8RGx07Ak0HSjOHi" target="_blank" rel="noopener noreferrer">Vidéo 1 — Décomposer un nombre entier suivant ses rangs</a></li>
+            <li><input type="checkbox" class="checkbox"><a href="https://www.youtube.com/watch?v=icGHAYyXaE4&list=PLVUDmbpupCaoCaqvyj8RGx07Ak0HSjOHi&index=3" target="_blank" rel="noopener noreferrer">Vidéo 2 — Reconnaître le rang des chiffres</a></li>
+          </ul>
+        </div>
 
-        <div class="controle-card">
-      <h3>Chapitre 4 — Droites</h3>
-      <div class="controle-buttons">
-        <a href="https://drive.google.com/file/d/1uyrz1gutms8jajvHYVczQ_kj41Ojy6v5/view?usp=drive_link" target="_blank" class="btn-sujet">📄 Sujet</a>
-        <a href="https://drive.google.com/file/d/1UWPhERTii1zUQh55-q-d7yezQztWHgl1/view?usp=drive_link" target="_blank" class="btn-corrige">✅ Corrigé</a>
-      </div>
-    </div>
-   
+        <div class="subtab-content" id="videos6e-ch2">
+          <ul>
+            <li><input type="checkbox" class="checkbox"><a href="https://www.youtube.com/watch?v=4vPWOM6MbYU" target="_blank" rel="noopener noreferrer">Vidéo 1 —  6e-droites,demi-droites,segments</a></li>
+            <li><input type="checkbox" class="checkbox"><a href="https://www.youtube.com/watch?v=aWJmz1oM_O0" target="_blank" rel="noopener noreferrer">Vidéo 2 — Connaître le vocabulaire du cercle</a></li>
+          </ul>
+        </div>
 
-        <div class="controle-card">
-      <h3>Chapitre 5 — Angles</h3>
-      <div class="controle-buttons">
-        <a href="https://drive.google.com/file/d/1GEs_8AYmtzgQAQU8VqwGsFjMjWDbm7cH/view?usp=drive_link" target="_blank" class="btn-sujet">📄 Sujet</a>
-        <a href="https://drive.google.com/file/d/1nrudtT19fcr7JN-YQD76Ck108wioVVlH/view?usp=drive_link" target="_blank" class="btn-corrige">✅ Corrigé</a>
+        <div class="subtab-content" id="videos6e-ch3">
+          <ul>
+            <li><input type="checkbox" class="checkbox"><a href="https://www.youtube.com/watch?v=m0HUFgWbgsA&t=598s" target="_blank" rel="noopener noreferrer">Vidéo 1 — Les fractions</a></li>
+            <li><input type="checkbox" class="checkbox"><a href="https://www.youtube.com/watch?v=NKdhdmVoY1g" target="_blank" rel="noopener noreferrer">Vidéo 2 — Représenter un partage à l'aide d'une fraction</a></li>
+            <li><input type="checkbox" class="checkbox"><a href="https://www.youtube.com/watch?v=gnZqJftnNSE" target="_blank" rel="noopener noreferrer">Vidéo 3 — Fraction pour exprimer un quotient</a></li>
+          </ul>
+        </div>
+
+        <div class="subtab-content" id="videos6e-ch4">
+          <ul>
+            <li><input type="checkbox" class="checkbox"><a href="https://www.youtube.com/watch?v=lxKGqW4Ib4U" target="_blank" rel="noopener noreferrer">Vidéo 1 — Médiatrice d'un segment - Méthode de construction</a></li>
+            <li><input type="checkbox" class="checkbox"><a href="https://www.youtube.com/watch?v=0CIm1i4HfEQ&t=50s" target="_blank" rel="noopener noreferrer">Vidéo 2 — Les droites - Sixième</a></li>
+          </ul>
+        </div>
+        <div class="subtab-content" id="videos6e-ch5">
+          <ul>
+            <li><input type="checkbox" class="checkbox"><a href="https://www.youtube.com/watch?v=2VLzp0DzsrM&list=PLVUDmbpupCaqHaIpFwd14iD6BMA-op0pZ" target="_blank" rel="noopener noreferrer">Vidéo 1 — Noter un angle</a></li>
+            <li><input type="checkbox" class="checkbox"><a href="https://www.youtube.com/watch?v=9BKbMshCMZc&list=PLVUDmbpupCaqHaIpFwd14iD6BMA-op0pZ&index=4" target="_blank" rel="noopener noreferrer">Vidéo 2 — Reconnaitre la NATURE des ANGLES</a></li>
+            <li><input type="checkbox" class="checkbox"><a href="https://www.youtube.com/watch?v=9BKbMshCMZc&list=PLVUDmbpupCaqHaIpFwd14iD6BMA-op0pZ&index=4" target="_blank" rel="noopener noreferrer">Vidéo 3 — Mesurer un angle</a></li>
+          </ul>
+        </div>
+
+        <div class="subtab-content" id="videos6e-ch6">
+          <ul>
+            <li><input type="checkbox" class="checkbox"><a href="https://www.youtube.com/watch?v=-7UGauYeTdk&list=PLVUDmbpupCap0jVfo87xmwBhMXxxQ3abt" target="_blank" rel="noopener noreferrer">Vidéo 1 — Construire un triangle</a></li>
+            <li><input type="checkbox" class="checkbox"><a href="https://www.youtube.com/watch?v=wHmGxm3G5ag" target="_blank" rel="noopener noreferrer">Vidéo 2 — Les triangles</a></li>
+            <li><input type="checkbox" class="checkbox"><a href="https://www.youtube.com/watch?v=w7nh0EqzCsM" target="_blank" rel="noopener noreferrer">Vidéo 3 — Triangles particuliers</a></li>
+          </ul>
+        </div>
+
+        <div class="subtab-content" id="videos6e-ch7">
+          <ul>
+            <li><input type="checkbox" class="checkbox"><a href="https://www.youtube.com/watch?v=lzsYQYvEKss" target="_blank" rel="noopener noreferrer">Vidéo 1 — Numérotation et nombres décimaux</a></li>
+            <li><input type="checkbox" class="checkbox"><a href="https://www.youtube.com/watch?v=70UhgN2FssQ&list=PLBmEpUWxReGgHK0G3zxdmfg4FH31UHNYr" target="_blank" rel="noopener noreferrer">Vidéo 2 — Supprimer les zéros inutiles</a></li>
+            <li><input type="checkbox" class="checkbox"><a href="https://www.youtube.com/watch?v=uqBEfHwZTX8" target="_blank" rel="noopener noreferrer">Vidéo 3 — Décomposer un nombre en fractions égales</a></li>
+          </ul>
+        </div>
       </div>
-    </div>
+
+      <div class="bloc">
+        <h2>📝 Contrôles</h2>
+        <div class="controles-grid">
+          <div class="controle-card">
+            <h3>Chapitre 1 — Nombres entiers</h3>
+            <div class="controle-buttons">
+              <a href="https://drive.google.com/file/d/1d-y45Eg0ieW64ac-6QEtXlCQxjey40Z_/view?usp=drive_link" target="_blank" class="btn-sujet">📄 Sujet</a>
+              <a href="https://drive.google.com/file/d/1zFI_1ENImR302b-ZglO8zmKumgWMv5Ek/view?usp=drive_link" target="_blank" class="btn-corrige">✅ Corrigé</a>
+            </div>
+          </div>
 
           <div class="controle-card">
-      <h3>Chapitre 6 — Triangles</h3>
-      <div class="controle-buttons">
-        <a href="#" download class="btn-sujet">📄 Sujet</a>
-        <a href="#" download class="btn-corrige">✅ Corrigé</a>
+            <h3>Chapitre 2 — Géométrie</h3>
+            <div class="controle-buttons">
+              <a href="https://drive.google.com/file/d/1OqzxiUVfIZQWwNH_8c79YfZiDFpNLvIi/view?usp=drive_link" target="_blank" class="btn-sujet">📄 Sujet</a>
+              <a href="https://drive.google.com/file/d/1Be0zzBKAZ4krbzbQhXGRc-rHuAQHILyI/view?usp=drive_link" target="_blank" class="btn-corrige">✅ Corrigé</a>
+            </div>
+          </div>
+
+          <div class="controle-card">
+            <h3>Chapitre 3 — Fractions</h3>
+            <div class="controle-buttons">
+              <a href="https://drive.google.com/file/d/14__pQ2BFgdeqCUlgfprVfHmoEPJjRZAQ/view?usp=drive_link" target="_blank" class="btn-sujet">📄 Sujet</a>
+              <a href="https://drive.google.com/file/d/17oBFkreBlMnBcG9kNIY03uIMAYFGxWZ_/view?usp=drive_link" target="_blank" class="btn-corrige">✅ Corrigé</a>
+            </div>
+          </div>
+
+          <div class="controle-card">
+            <h3>Chapitre 4 — Droites</h3>
+            <div class="controle-buttons">
+              <a href="https://drive.google.com/file/d/1uyrz1gutms8jajvHYVczQ_kj41Ojy6v5/view?usp=drive_link" target="_blank" class="btn-sujet">📄 Sujet</a>
+              <a href="https://drive.google.com/file/d/1UWPhERTii1zUQh55-q-d7yezQztWHgl1/view?usp=drive_link" target="_blank" class="btn-corrige">✅ Corrigé</a>
+            </div>
+          </div>
+
+          <div class="controle-card">
+            <h3>Chapitre 5 — Angles</h3>
+            <div class="controle-buttons">
+              <a href="https://drive.google.com/file/d/1GEs_8AYmtzgQAQU8VqwGsFjMjWDbm7cH/view?usp=drive_link" target="_blank" class="btn-sujet">📄 Sujet</a>
+              <a href="https://drive.google.com/file/d/1nrudtT19fcr7JN-YQD76Ck108wioVVlH/view?usp=drive_link" target="_blank" class="btn-corrige">✅ Corrigé</a>
+            </div>
+          </div>
+
+          <div class="controle-card">
+            <h3>Chapitre 6 — Triangles</h3>
+            <div class="controle-buttons">
+              <a href="#" download class="btn-sujet">📄 Sujet</a>
+              <a href="#" download class="btn-corrige">✅ Corrigé</a>
+            </div>
+          </div>
+        </div>
       </div>
-    </div>
-  
-  </div>
-</div>
 
-      
       <div class="bloc fourretout">
-    <h2>📚 Fourre-tout</h2>
-    <ul>
-      <li><input type="checkbox" class="checkbox"><a href="https://drive.google.com/file/d/1W8OX6Awqe2jMmevSSjMeTOzJNvAL-3zE/view?usp=drive_link" target="_blank">Fiche mémo géométrie</a></li>
-      <li><input type="checkbox" class="checkbox"><a href="https://www.lumni.fr/college/sixieme/mathematiques" target="_blank">Lumni</a></li>
-      <li><input type="checkbox" class="checkbox"><a href="https://drive.google.com/file/d/18FefnQaa4HKvYCNyS0Sw20qq5k5_TZJh/view?usp=drive_link" target="_blank">Comment réviser un contrôle de mathématiques</a></li>
-      <li><input type="checkbox" class="checkbox"><a href="https://drive.google.com/file/d/1Ky-dnJXlFAytxb1Sa8-JqT1wGF5Vd5Wu/view?usp=drive_link" target="_blank">Comment tracer un triangle sur GeoGebra</a></li>
-      <li><input type="checkbox" class="checkbox"><a href="https://drive.google.com/file/d/1-W2PmBU-CEfHcjgIB8vQYj2_LWajjrou/view?usp=drive_link" target="_blank">Simplifier les multiplications - (Co-cours avec Mme LAMBOT)</a></li>
-      <li><input type="checkbox" class="checkbox"><a href="https://drive.google.com/file/d/1fKT6EfDlRAmPBXB2yk_BoQLQSXEwI4Mh/view?usp=drive_link" target="_blank">Correction contrôle surprise (18/11)</a></li>
-    </ul>
-  </div>
-        <div class="bloc automatismes">
-    <h2>⚙️ Automatismes</h2>
-    <ul>
-      <li><input type="checkbox" class="checkbox"><a href="https://drive.google.com/file/d/1BX7KNwY3LGNNQXGexLAZd3uwZe5DHv1g/view?usp=drive_link" target="_blank">Septembre-Octobre</a></li>
-      <li><input type="checkbox" class="checkbox"><a href="#" target="_blank">Novembre-Décembre</a></li>
-    </ul>
-  </div>
-        <div class="bloc competences">
-    <h2>🎯 Compétences mathématiques</h2>
-    <ul>
-      <li><input type="checkbox" class="checkbox"><a href="#" target="_blank">Septembre-Octobre</a></li>
-    </ul>
-  </div>
-
+        <h2>📚 Fourre-tout</h2>
+        <ul>
+          <li><input type="checkbox" class="checkbox"><a href="https://drive.google.com/file/d/1W8OX6Awqe2jMmevSSjMeTOzJNvAL-3zE/view?usp=drive_link" target="_blank">Fiche mémo géométrie</a></li>
+          <li><input type="checkbox" class="checkbox"><a href="https://www.lumni.fr/college/sixieme/mathematiques" target="_blank">Lumni</a></li>
+          <li><input type="checkbox" class="checkbox"><a href="https://drive.google.com/file/d/18FefnQaa4HKvYCNyS0Sw20qq5k5_TZJh/view?usp=drive_link" target="_blank">Comment réviser un contrôle de mathématiques</a></li>
+          <li><input type="checkbox" class="checkbox"><a href="https://drive.google.com/file/d/1Ky-dnJXlFAytxb1Sa8-JqT1wGF5Vd5Wu/view?usp=drive_link" target="_blank">Comment tracer un triangle sur GeoGebra</a></li>
+          <li><input type="checkbox" class="checkbox"><a href="https://drive.google.com/file/d/1-W2PmBU-CEfHcjgIB8vQYj2_LWajjrou/view?usp=drive_link" target="_blank">Simplifier les multiplications - (Co-cours avec Mme LAMBOT)</a></li>
+          <li><input type="checkbox" class="checkbox"><a href="https://drive.google.com/file/d/1fKT6EfDlRAmPBXB2yk_BoQLQSXEwI4Mh/view?usp=drive_link" target="_blank">Correction contrôle surprise (18/11)</a></li>
+        </ul>
+      </div>
+      <div class="bloc automatismes">
+        <h2>⚙️ Automatismes</h2>
+        <ul>
+          <li><input type="checkbox" class="checkbox"><a href="https://drive.google.com/file/d/1BX7KNwY3LGNNQXGexLAZd3uwZe5DHv1g/view?usp=drive_link" target="_blank">Septembre-Octobre</a></li>
+          <li><input type="checkbox" class="checkbox"><a href="#" target="_blank">Novembre-Décembre</a></li>
+        </ul>
+      </div>
+      <div class="bloc competences">
+        <h2>🎯 Compétences mathématiques</h2>
+        <ul>
+          <li><input type="checkbox" class="checkbox"><a href="#" target="_blank">Septembre-Octobre</a></li>
+        </ul>
+      </div>
 
       <div class="bloc">
         <h2>❓ Quiz par chapitre — 6e</h2>
@@ -713,7 +544,6 @@
           <button class="btn primary open-quiz" data-classe="4e" data-quiz="quiz-6e-ch7">🎯 Quiz Chapitre 7 — Nombres décimaux</button>
         </div>
       </div>
-     
     </section>
 
   </main>
@@ -751,56 +581,9 @@
   ================================================================
   Script complet : navigation, sauvegarde, quiz pop-up + envoi GS
   ================================================================
-
-  → IMPORTANT : pour activer l'envoi vers Google Sheets, tu dois :
-    1) Créer un Google Sheet et ouvrir Extensions > Apps Script
-    2) Coller le code Apps Script fourni ci-dessous et déployer en "Application web"
-       (Exécuter en tant que : Toi-même ; Accès : Tout le monde)
-    3) Copier l'URL fournie par Google (qui finit par /exec)
-    4) Remplacer la valeur WEBHOOK_URL ci-dessous par cette URL.
 */
 
-/* -------------------------
-   APPS SCRIPT (à copier dans ton Google Sheet > Extensions > Apps Script)
-   Ce script enregistre la PREMIÈRE tentative d'un élève pour un quiz.
-   Il vérifie si une ligne existe déjà pour (prénom, chapitre) : si oui, NE FAIT RIEN.
-   Sinon ajoute une ligne.
-   Copier-coller exactement ceci dans Apps Script : 
--------------------------
-function doPost(e) {
-  var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
-  var data = JSON.parse(e.postData.contents);
-  var prenom = (data.prenom || "").toString().trim();
-  var chapitre = (data.chapitre || "").toString().trim();
-  var classe = (data.classe || "").toString().trim();
-  var score = data.score;
-  var total = data.total;
-  var pourcentage = data.pourcentage;
-
-  // lire toutes les lignes
-  var rows = sheet.getDataRange().getValues();
-  for (var i = 1; i < rows.length; i++) {
-    var rowPrenom = (rows[i][1] || "").toString().trim();
-    var rowChapitre = (rows[i][3] || "").toString().trim();
-    if (rowPrenom.toLowerCase() === prenom.toLowerCase() && rowChapitre === chapitre) {
-      // Déjà enregistré → ne rien faire (conserver la première tentative)
-      return ContentService.createTextOutput("ALREADY");
-    }
-  }
-
-  // Sinon : ajouter la nouvelle ligne
-  sheet.appendRow([ new Date(), prenom, classe, chapitre, score, total, pourcentage ]);
-  return ContentService.createTextOutput("OK");
-}
--------------------------
-   Ensuite "Déployer > Nouveau déploiement" > Application web > Exécuter en tant que : Moi > Accès : Tout le monde
-   Copie l'URL /exec et remplace WEBHOOK_URL plus bas.
-*/
-
-/* -------------------------
-   Variables & UI initiales
-   ------------------------- */
-const WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbx4u7sxvKJX05ZuuL4W85Sbhq3YVeHXyLjuoNw3hgYFlxXfGZh1Cssb4BpNxVdPj4KWaQ/exec"; // ← remplace par l'URL fournie par Google Apps Script (finissant par /exec)
+const WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbx4u7sxvKJX05ZuuL4W85Sbhq3YVeHXyLjuoNw3hgYFlxXfGZh1Cssb4BpNxVdPj4KWaQ/exec"; 
 
 const citations = [
   "« Les mathématiques sont la poésie des sciences. » — Albert Einstein",
@@ -837,6 +620,36 @@ const citations = [
 
 document.querySelector(".citation").textContent = citations[Math.floor(Math.random() * citations.length)];
 
+/* --- FONCTION DE MISE A JOUR DE LA BARRE DE PROGRESSION --- */
+function updateProgressBar() {
+  const activeSection = document.querySelector('section.active');
+  if (!activeSection) return;
+  
+  // Sélectionne toutes les cases à cocher DANS la section active
+  const checkboxes = activeSection.querySelectorAll('.checkbox');
+  const total = checkboxes.length;
+  const checked = Array.from(checkboxes).filter(cb => cb.checked).length;
+  
+  const percentage = total === 0 ? 0 : Math.round((checked / total) * 100);
+  
+  // Mise à jour de la barre
+  const barFill = document.getElementById('main-progress-bar');
+  const textLabel = document.getElementById('progress-text');
+  const rankLabel = document.getElementById('progress-rank');
+  
+  if (barFill) barFill.style.width = percentage + "%";
+  if (textLabel) textLabel.textContent = `Progression ${activeSection.id} : ${percentage}%`;
+  
+  // Gamification : changer le rang
+  let rank = "🌱 Débutant";
+  if (percentage >= 20) rank = "🚶 En marche";
+  if (percentage >= 40) rank = "🏃 Ça avance !";
+  if (percentage >= 60) rank = "🧗 Expert";
+  if (percentage >= 80) rank = "🚀 Master";
+  if (percentage === 100) rank = "🏆 Légende";
+  
+  if (rankLabel) rankLabel.textContent = rank;
+}
 
 /* NAVIGATION 4e/6e */
 document.querySelectorAll('.tablink').forEach(button => {
@@ -848,6 +661,9 @@ document.querySelectorAll('.tablink').forEach(button => {
     document.querySelectorAll('.tablink').forEach(b => b.classList.remove('active'));
     button.classList.add('active');
     document.getElementById(target).classList.add('active');
+    
+    // Mettre à jour la barre quand on change d'onglet
+    updateProgressBar();
   });
 });
 
@@ -872,21 +688,22 @@ document.querySelectorAll('.checkbox').forEach((checkbox, idx) => {
   const key = 'cours-progress-' + idx;
   const saved = localStorage.getItem(key);
   if (saved === 'true') checkbox.checked = true;
+  
   checkbox.addEventListener('change', () => {
     localStorage.setItem(key, checkbox.checked);
+    // Mettre à jour la barre quand on coche une case
+    updateProgressBar();
   });
 });
 
+// Initialisation au chargement de la page
+updateProgressBar();
+
 /* =========================
-   QUIZ POP-UP (Chapitre 1 — 4e & 6e)
-   - envoi vers Google Sheets : ENREGISTRE LA PREMIÈRE TENTATIVE
-   - localStorage stocke le prénom et un flag 'submitted-<quizKey>' pour éviter renvoi depuis le même navigateur
+   QUIZ POP-UP 
    ========================= */
 (function() {
   const QUIZZES = {
-    /* =========================
-       QUIZZES — CLASSE DE 4e
-       ========================= */
     "quiz-4e-ch1": {
       titre: "Chapitre 1 — Nombres relatifs (4e)",
       classe: "4e",
@@ -903,7 +720,6 @@ document.querySelectorAll('.checkbox').forEach((checkbox, idx) => {
         { q: "Calcule : (-2)² = ?", choices:["4","-4","2"], answer:"4" }
       ]
     },
-
     "quiz-4e-ch2": {
       titre: "Chapitre 2 — Théorème de Pythagore (4e)",
       classe: "4e",
@@ -920,7 +736,6 @@ document.querySelectorAll('.checkbox').forEach((checkbox, idx) => {
         { q: "Le théorème de Pythagore est lié à :", choices:["la géométrie","l’arithmétique","les fonctions"], answer:"la géométrie" }
       ]
     },
-
     "quiz-4e-ch3": {
       titre: "Chapitre 3 — Proportionnalité (4e)",
       classe: "4e",
@@ -937,7 +752,6 @@ document.querySelectorAll('.checkbox').forEach((checkbox, idx) => {
         { q: "Le produit en croix permet de :", choices:["trouver une quatrième proportionnelle","calculer un volume","résoudre une équation"], answer:"trouver une quatrième proportionnelle" }
       ]
     },
-
     "quiz-4e-ch4": {
       titre: "Chapitre 4 — Puissances (4e)",
       classe: "4e",
@@ -954,7 +768,6 @@ document.querySelectorAll('.checkbox').forEach((checkbox, idx) => {
         { q: "√(a²) =", choices:["a","a²","√a"], answer:"a" }
       ]
     },
-
     "quiz-4e-ch5": {
       titre: "Chapitre 5 — Calcul littéral (4e)",
       classe: "4e",
@@ -971,7 +784,6 @@ document.querySelectorAll('.checkbox').forEach((checkbox, idx) => {
         { q: "Opposé de (x - 3) est :", choices:["-x + 3","-x - 3","x + 3"], answer:"-x + 3" }
       ]
     },
-
     "quiz-4e-ch6": {
       titre: "Chapitre 6 — Les fractions (4e)",
       classe: "4e",
@@ -988,10 +800,6 @@ document.querySelectorAll('.checkbox').forEach((checkbox, idx) => {
         { q: "Calcule : 3/4 - 1/4 =", choices:["2/4","1","4/4"], answer:"2/4" }
       ]
     },
-
-    /* =========================
-       QUIZZES — CLASSE DE 6e
-       ========================= */
     "quiz-6e-ch1": {
       titre: "Chapitre 1 — Nombres entiers (6e)",
       classe: "6e",
@@ -1008,7 +816,6 @@ document.querySelectorAll('.checkbox').forEach((checkbox, idx) => {
         { q: "Entre 99 et 101, quel nombre est impair ?", choices:["99","100","101"], answer:"99" }
       ]
     },
-
     "quiz-6e-ch2": {
       titre: "Chapitre 2 — Premiers éléments de géométrie (6e)",
       classe: "6e",
@@ -1025,13 +832,12 @@ document.querySelectorAll('.checkbox').forEach((checkbox, idx) => {
         { q: "Le compas permet de :", choices:["tracer des cercles","mesurer un angle","dessiner des carrés"], answer:"tracer des cercles" }
       ]
     },
-
     "quiz-6e-ch3": {
       titre: "Chapitre 3 — Les fractions (6e)",
       classe: "6e",
       questions: [
         { q: "Dans 3/5, le numérateur est :", choices:["3","5","8"], answer:"3" },
-        { q: "Dans 3/5, le dénominateur est :", choices:["5","3","8"], answer:"5" },
+        { q: "Dans 3/5, le dénominateur est :", choices:["3","5","8"], answer:"5" },
         { q: "1/2 est égal à :", choices:["0,5","2","1,2"], answer:"0,5" },
         { q: "La fraction équivalente à 2/4 est :", choices:["1/2","2/8","4/8"], answer:"1/2" },
         { q: "3/6 simplifié donne :", choices:["1/2","3/12","2/3"], answer:"1/2" },
@@ -1042,7 +848,6 @@ document.querySelectorAll('.checkbox').forEach((checkbox, idx) => {
         { q: "2/3 de 90 =", choices:["60","45","30"], answer:"60" }
       ]
     },
-
     "quiz-6e-ch4": {
       titre: "Chapitre 4 — Droites (6e)",
       classe: "6e",
@@ -1059,7 +864,6 @@ document.querySelectorAll('.checkbox').forEach((checkbox, idx) => {
         { q: "L’instrument pour tracer une perpendiculaire :", choices:["équerre","compas","rapporteur"], answer:"équerre" }
       ]
     },
-
     "quiz-6e-ch5": {
       titre: "Chapitre 5 — Notion d’angle (6e)",
       classe: "6e",
@@ -1076,7 +880,6 @@ document.querySelectorAll('.checkbox').forEach((checkbox, idx) => {
         { q: "L’unité de mesure des angles :", choices:["le degré","le mètre","le litre"], answer:"le degré" }
       ]
     },
-
     "quiz-6e-ch6": {
       titre: "Chapitre 6 — Triangle (6e)",
       classe: "6e",
@@ -1085,7 +888,7 @@ document.querySelectorAll('.checkbox').forEach((checkbox, idx) => {
         { q: "Un triangle isocèle a :", choices:["2 côtés égaux","3 côtés égaux","un angle droit"], answer:"2 côtés égaux" },
         { q: "Un triangle rectangle possède :", choices:["un angle droit","3 côtés égaux","un angle obtus"], answer:"un angle droit" },
         { q: "Combien de sommets a un triangle ?", choices:["3","4","2"], answer:"3" },
-        { q: "La somme des angles d'un triangle fait :", choices:["180°","90°","360°"], answer:"180°" },
+        { q: "La somme des angles d’un triangle fait :", choices:["180°","90°","360°"], answer:"180°" },
         { q: "Pour tracer un triangle avec des longueurs précises, on utilise :", choices:["règle et compas","juste la règle","l'équerre seule"], answer:"règle et compas" },
         { q: "Dans un triangle isocèle en A, le sommet principal est :", choices:["A","B","C"], answer:"A" },
         { q: "Un triangle peut-il être rectangle et isocèle ?", choices:["Oui","Non","Jamais"], answer:"Oui" },
@@ -1093,7 +896,6 @@ document.querySelectorAll('.checkbox').forEach((checkbox, idx) => {
         { q: "Un triangle quelconque a :", choices:["3 côtés de longueurs différentes","2 côtés égaux","un angle droit"], answer:"3 côtés de longueurs différentes" }
       ]
     },
-
     "quiz-6e-ch7": {
       titre: "Chapitre 7 — Nombres décimaux (6e)",
       classe: "6e",
@@ -1111,8 +913,6 @@ document.querySelectorAll('.checkbox').forEach((checkbox, idx) => {
       ]
     }
   };
-
-
 
   // DOM
   const backdrop = document.getElementById('quiz-backdrop');
